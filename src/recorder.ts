@@ -167,11 +167,12 @@ export function saidWord(heard: string[], word: string): boolean {
   const target = word.toLowerCase()
   const exact = new Set([target, ...(ALIASES[target] ?? [])])
   const tolerance = target.length <= 3 ? 1 : 2
-  return heard.some((h) =>
-    h
-      .replace(/[^a-z0-9 ]/g, ' ')
-      .split(/\s+/)
+  return heard.some((h) => {
+    const clean = h.toLowerCase().replace(/[^a-z0-9 ]/g, ' ').replace(/\s+/g, ' ').trim()
+    if (target.includes(' ')) return clean.includes(target) || distance(clean, target) <= tolerance
+    return clean
+      .split(' ')
       .filter(Boolean)
-      .some((w) => exact.has(w) || (w.length > 1 && distance(w, target) <= tolerance)),
-  )
+      .some((w) => exact.has(w) || (w.length > 1 && distance(w, target) <= tolerance))
+  })
 }

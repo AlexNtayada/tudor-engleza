@@ -14,6 +14,19 @@ export interface Word {
   /** Romanian meaning, used in Romanian instructions. */
   ro: string
   visual: Visual
+  /** Word the speech check listens for, when `en` is a phrase (e.g. "love" in "I love you, mom!"). */
+  check?: string
+}
+
+export type Game = 'listen' | 'balloons' | 'house' | 'feed'
+
+export interface World {
+  /** Sky gradient, top to bottom. */
+  sky: [string, string]
+  ground: string
+  /** Emoji scattered on the scenery. */
+  decor: string[]
+  icon: string
 }
 
 export interface Lesson {
@@ -22,6 +35,8 @@ export interface Lesson {
   newWords: string[]
   /** Sticker earned the first time the lesson is finished. */
   sticker: string
+  /** Extra "say it" phrase at the end of the lesson. */
+  bonusSpeak?: Word
 }
 
 export interface Unit {
@@ -31,6 +46,9 @@ export interface Unit {
   colorDark: string
   words: Word[]
   lessons: Lesson[]
+  /** Exercise types used in this unit, in rotation. */
+  games: Game[]
+  world: World
 }
 
 const color = (id: string, ro: string, hex: string): Word => ({
@@ -57,12 +75,24 @@ const number = (n: number, en: string, ro: string): Word => ({
   visual: { kind: 'number', value: n },
 })
 
+const thing = (id: string, ro: string, emoji: string, say = id, en = id): Word => ({
+  id,
+  say,
+  en,
+  ro,
+  visual: { kind: 'emoji', value: emoji },
+})
+
+const BASIC: Game[] = ['listen', 'balloons']
+
 export const UNITS: Unit[] = [
   {
     id: 'colors',
     title: 'Culori',
     color: '#ff8a5c',
     colorDark: '#e0653a',
+    games: BASIC,
+    world: { sky: ['#ffe3f1', '#fff4e0'], ground: '#ffd6a8', decor: ['🌈', '🌸', '🦋', '🌷', '🎨', '🌼'], icon: '🎨' },
     words: [
       color('red', 'roșu', '#ef3b3b'),
       color('blue', 'albastru', '#2f7cf6'),
@@ -88,6 +118,8 @@ export const UNITS: Unit[] = [
     title: 'Animale',
     color: '#3ccf91',
     colorDark: '#22a872',
+    games: BASIC,
+    world: { sky: ['#d6f1ff', '#effbe8'], ground: '#b8e986', decor: ['🌳', '🏡', '🌻', '🐝', '🌾', '🍄'], icon: '🐮' },
     words: [
       animal('cat', 'pisică', '🐱'),
       animal('dog', 'câine', '🐶'),
@@ -113,6 +145,8 @@ export const UNITS: Unit[] = [
     title: 'Numere',
     color: '#5b8cff',
     colorDark: '#3a66d6',
+    games: BASIC,
+    world: { sky: ['#dcd6ff', '#eef2ff'], ground: '#c3d0ff', decor: ['🚀', '⭐', '🪐', '🌙', '✨', '☄️'], icon: '🔢' },
     words: [
       number(1, 'one', 'unu'),
       number(2, 'two', 'doi'),
@@ -133,7 +167,93 @@ export const UNITS: Unit[] = [
       { id: 'numbers-5', newWords: [], sticker: '👑' },
     ],
   },
+  {
+    id: 'family',
+    title: 'Familia',
+    color: '#ff7eb6',
+    colorDark: '#e0558f',
+    games: ['listen', 'house', 'balloons'],
+    world: { sky: ['#ffe9d6', '#fff7ef'], ground: '#ffd0a6', decor: ['🏠', '🌳', '🎈', '🐕', '🌼', '☀️'], icon: '🏠' },
+    words: [
+      thing('mom', 'mama', '👩'),
+      thing('dad', 'tata', '👨'),
+      thing('baby', 'bebeluș', '👶', 'a baby'),
+      thing('brother', 'frate', '👦'),
+      thing('sister', 'soră', '👧'),
+      thing('grandma', 'bunica', '👵'),
+      thing('grandpa', 'bunicul', '👴'),
+      thing('family', 'familie', '👨‍👩‍👧‍👦'),
+      thing('friend', 'prieten', '🧑‍🤝‍🧑', 'a friend'),
+      thing('home', 'acasă', '🏡'),
+    ],
+    lessons: [
+      { id: 'family-1', newWords: ['mom', 'dad', 'baby'], sticker: '💐' },
+      { id: 'family-2', newWords: ['brother', 'sister'], sticker: '🧸' },
+      { id: 'family-3', newWords: ['grandma', 'grandpa'], sticker: '🍪' },
+      { id: 'family-4', newWords: ['family', 'friend', 'home'], sticker: '🏰' },
+      {
+        id: 'family-5',
+        newWords: [],
+        sticker: '💖',
+        bonusSpeak: {
+          id: 'i-love-you',
+          say: 'I love you, mom!',
+          en: 'I love you, mom!',
+          ro: 'Te iubesc, mami!',
+          check: 'love',
+          visual: { kind: 'emoji', value: '❤️' },
+        },
+      },
+    ],
+  },
+  {
+    id: 'food',
+    title: 'Mâncare',
+    color: '#ffb020',
+    colorDark: '#de8f00',
+    games: ['listen', 'feed', 'balloons'],
+    world: { sky: ['#fff1c9', '#fffaf0'], ground: '#ffe0a3', decor: ['🧺', '🍓', '🌼', '🍯', '🥕', '🍉'], icon: '🍎' },
+    words: [
+      thing('apple', 'măr', '🍎', 'an apple'),
+      thing('banana', 'banană', '🍌', 'a banana'),
+      thing('milk', 'lapte', '🥛'),
+      thing('bread', 'pâine', '🍞'),
+      thing('cheese', 'brânză', '🧀'),
+      thing('egg', 'ou', '🥚', 'an egg'),
+      thing('water', 'apă', '💧'),
+      thing('cake', 'tort', '🍰', 'a cake'),
+      thing('pizza', 'pizza', '🍕'),
+      thing('ice-cream', 'înghețată', '🍦', 'ice cream', 'ice cream'),
+    ],
+    lessons: [
+      { id: 'food-1', newWords: ['apple', 'banana', 'milk'], sticker: '🍒' },
+      { id: 'food-2', newWords: ['bread', 'cheese', 'egg'], sticker: '🥐' },
+      { id: 'food-3', newWords: ['water', 'cake'], sticker: '🧁' },
+      { id: 'food-4', newWords: ['pizza', 'ice-cream'], sticker: '🍭' },
+      {
+        id: 'food-5',
+        newWords: [],
+        sticker: '🍔',
+        bonusSpeak: {
+          id: 'i-like-pizza',
+          say: 'I like pizza!',
+          en: 'I like pizza!',
+          ro: 'Îmi place pizza!',
+          check: 'like',
+          visual: { kind: 'emoji', value: '😋' },
+        },
+      },
+    ],
+  },
 ]
+
+/** Scenery for free play and other screens not tied to a unit. */
+export const PLAYGROUND: World = {
+  sky: ['#d8f3ff', '#f4fff0'],
+  ground: '#bdeba0',
+  decor: ['🎈', '🌳', '🪁', '🌼', '⛱️', '🦋'],
+  icon: '🎈',
+}
 
 export const ALL_LESSONS = UNITS.flatMap((u) => u.lessons.map((l) => ({ unit: u, lesson: l })))
 

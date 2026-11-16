@@ -2,29 +2,17 @@ import { useState } from 'react'
 import type React from 'react'
 import { UNITS } from '../content'
 import { Dino, type Mood } from '../components/Dino'
-import { currentLessonIndex, learnedWordIds, totalStars, type Progress } from '../progress'
+import { currentLessonIndex, type Progress } from '../progress'
+import { WorldBackdrop } from '../components/WorldBackdrop'
 import { instruction, speak } from '../speech'
 import { sfx } from '../sfx'
 
 // Horizontal offsets that make the path snake left and right.
 const OFFSETS = [0, 70, 100, 70, 0, -70, -100, -70]
 
-export function Home({
-  progress,
-  onStart,
-  onFreePlay,
-  onAlbum,
-  onParents,
-}: {
-  progress: Progress
-  onStart: (globalIndex: number) => void
-  onFreePlay: () => void
-  onAlbum: () => void
-  onParents: () => void
-}) {
+export function Home({ progress, onStart }: { progress: Progress; onStart: (globalIndex: number) => void }) {
   const current = currentLessonIndex(progress)
   const [mood, setMood] = useState<Mood>('idle')
-  const canFreePlay = learnedWordIds(progress).size > 0
   let globalIndex = 0
 
   const locked = () => {
@@ -36,30 +24,14 @@ export function Home({
 
   return (
     <div className="home">
-      <header className="topbar">
-        <span className="pill" aria-label="Stele">
-          ⭐ {totalStars(progress)}
-        </span>
-        <div className="topbar-right">
-          {canFreePlay && (
-            <button className="pill pill-btn pill-play" onClick={onFreePlay}>
-              🎈 <span className="pill-label">Joacă liberă</span>
-            </button>
-          )}
-          <button className="pill pill-btn" onClick={onAlbum} aria-label="Album">
-            📒
-          </button>
-          <button className="pill pill-btn pill-small" onClick={onParents} aria-label="Pentru părinți">
-            🔒
-          </button>
-        </div>
-      </header>
-
       <div className="path">
         {UNITS.map((unit) => (
           <section key={unit.id} className="unit">
+            <WorldBackdrop world={unit.world} fixed={false} />
             <div className="unit-banner" style={{ background: unit.color, boxShadow: `0 6px 0 ${unit.colorDark}` }}>
-              <span>{unit.title}</span>
+              <span>
+                <span className="unit-icon">{unit.world.icon}</span> {unit.title}
+              </span>
               <span className="unit-banner-sub">{unit.words.length} cuvinte</span>
             </div>
             <div className="nodes">
@@ -109,7 +81,7 @@ export function Home({
         ))}
         <div className="path-end">
           <Dino mood="sleep" size={90} />
-          <p>Urmează: familia, mâncare și altele…</p>
+          <p>Urmează: haine, corpul, vremea…</p>
         </div>
       </div>
     </div>

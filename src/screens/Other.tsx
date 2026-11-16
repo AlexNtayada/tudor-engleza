@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { UNITS } from '../content'
+import { CHEST_STARS } from '../gamify'
 import { Dino } from '../components/Dino'
 import { instruction, speak, hasRomanianVoice, speechSupported } from '../speech'
 import { micSupported, recognitionSupported } from '../recorder'
@@ -37,26 +38,39 @@ export function StartScreen({ name, onGo }: { name: string; onGo: () => void }) 
 export function FinishScreen({
   stars,
   sticker,
+  gained,
+  combos,
+  levelUp,
+  chest,
   name,
   mode,
   suggestBreak,
+  onOpenChest,
   onContinue,
   onBreak,
 }: {
   stars: number
   sticker?: string
+  gained: number
+  combos: number
+  levelUp?: number
+  chest: boolean
   name: string
   mode: Settings['instructions']
   suggestBreak: boolean
+  onOpenChest: () => void
   onContinue: () => void
   onBreak: () => void
 }) {
+  const [chestOpen, setChestOpen] = useState(false)
   useEffect(() => {
     sfx.fanfare()
     const t = setTimeout(() => {
       void speak([
         { text: `Great job, ${name}!`, lang: 'en' },
+        ...(levelUp ? instruction(mode, `Ura! Dino a crescut! Nivelul ${levelUp}!`, `Hooray! Dino is now level ${levelUp}!`) : []),
         ...(sticker ? instruction(mode, 'Bravo! Ai câștigat un abțibild nou!', 'You got a new sticker!') : []),
+        ...(chest ? instruction(mode, 'Uite, un cufăr! Deschide-l!', 'Look, a treasure chest! Open it!') : []),
         ...(suggestBreak
           ? instruction(mode, 'Ai lucrat frumos. Vrei o mică pauză?', 'You worked hard. Do you want a little break?')
           : []),
@@ -80,6 +94,26 @@ export function FinishScreen({
         ))}
       </div>
       <Dino mood="dance" size={200} />
+      <div className="finish-gains">
+        <span className="gain">+{gained} ⭐</span>
+        {combos > 0 && <span className="gain gain-combo">🔥 × {combos}</span>}
+        {levelUp && <span className="gain gain-level">🦖 Nivelul {levelUp}!</span>}
+      </div>
+      {chest && (
+        <button
+          className={`chest ${chestOpen ? 'chest-open' : ''}`}
+          onClick={() => {
+            if (chestOpen) return
+            setChestOpen(true)
+            sfx.fanfare()
+            onOpenChest()
+          }}
+          aria-label="Cufărul zilei"
+        >
+          <span className="chest-icon">{chestOpen ? '✨' : '🎁'}</span>
+          <span>{chestOpen ? `+${CHEST_STARS} ⭐` : 'Cufărul zilei'}</span>
+        </button>
+      )}
       {sticker && (
         <div className="sticker-won">
           <span className="sticker">{sticker}</span>

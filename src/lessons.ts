@@ -1,10 +1,10 @@
-import { UNITS, type Unit, type Word } from './content'
+import { UNITS, type Game, type Unit, type Word } from './content'
 
-export type Step =
-  | { type: 'intro'; word: Word }
-  | { type: 'listen'; target: Word; choices: Word[] }
-  | { type: 'balloons'; target: Word; choices: Word[] }
-  | { type: 'speak'; target: Word }
+export type ChoiceStep = { type: Game; target: Word; choices: Word[] }
+
+export type Step = { type: 'intro'; word: Word } | ChoiceStep | { type: 'speak'; target: Word }
+
+export const CHOICE_COUNT: Record<Game, number> = { listen: 3, balloons: 4, house: 4, feed: 3 }
 
 type Rng = () => number
 
@@ -44,12 +44,15 @@ function spread(targets: Word[], rng: Rng): Word[] {
   return shuffle(targets, rng)
 }
 
-function exercises(targets: Word[], poolFor: (w: Word) => { pool: Word[]; fallback: Word[] }, rng: Rng): Step[] {
+function exercises(
+  targets: Word[],
+  poolFor: (w: Word) => { pool: Word[]; fallback: Word[]; games: Game[] },
+  rng: Rng,
+): Step[] {
   return spread(targets, rng).map((target, i) => {
-    const { pool, fallback } = poolFor(target)
-    return i % 2 === 0
-      ? { type: 'listen' as const, target, choices: pickChoices(target, pool, fallback, 3, rng) }
-      : { type: 'balloons' as const, target, choices: pickChoices(target, pool, fallback, 4, rng) }
+    const { pool, fallback, games } = poolFor(target)
+    const type = games[i % games.length]
+    return { type, target, choices: pickChoices(target, pool, fallback, CHOICE_COUNT[type], rng) }
   })
 }
 
@@ -69,17 +72,18 @@ export function buildLesson(unit: Unit, lessonIndex: number, rng: Rng = Math.ran
     // Each new word twice, plus up to two older words for spaced review.
     targets = [...newWords, ...newWords, ...shuffle(older, rng).slice(0, 2)]
   }
-  const quiz = exercises(targets, () => ({ pool: known, fallback: unit.words }), rng)
+  const quiz = exercises(targets, () => ({ pool: known, fallback: unit.words, games: unit.games }), rng)
   // One "say it yourself" step in the middle of the quiz (dropped later if there is no microphone).
   const speakWord = newWords.length ? newWords[Math.floor(rng() * newWords.length)] : shuffle(known, rng)[0]
   quiz.splice(Math.floor(quiz.length / 2), 0, { type: 'speak', target: speakWord })
   steps.push(...quiz)
+  if (lesson.bonusSpeak) steps.push({ type: 'speak', target: lesson.bonusSpeak })
   return steps
 }
 
 /** Free play: endless-feeling mixed practice over every word already learned. */
-export function buildFreePlay(learnedIds: Set<string>, count = 10, rng: Rng = Math.random): Step[] {
-  const learned = UNITS.flatMap((u) => u.words.filter((w) => learnedIds.has(w.id)))
+export function buildFreePlay(learnedIds: Set<string>, count = 10, rng: Rng = Math.random, unitId?: string): Step[] {
+  const learned = UNITS.filter((u) => !unitId || u.id === unitId).flatMap((u) => u.words.filter((w) => learnedIds.has(w.id)))
   if (learned.length === 0) return []
   const targets: Word[] = []
   while (targets.length < count) targets.push(...shuffle(learned, rng))
@@ -88,7 +92,7 @@ export function buildFreePlay(learnedIds: Set<string>, count = 10, rng: Rng = Ma
     targets.slice(0, count),
     (w) => {
       const unit = unitOf(w)
-      return { pool: unit.words.filter((x) => learnedIds.has(x.id)), fallback: unit.words }
+      return { pool: unit.words.filter((x) => learnedIds.has(x.id)), fallback: unit.words, games: unit.games }
     },
     rng,
   )

@@ -1,5 +1,5 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
-import type { Word } from '../content'
+import { useEffect, useMemo, useRef, useState, type PointerEvent as RPointerEvent } from 'react'
+import { PLAYGROUND, type Word, type World } from '../content'
 import type { Step } from '../lessons'
 import { Dino, type Mood } from '../components/Dino'
 import { Picture } from '../components/Picture'
@@ -8,6 +8,8 @@ import { sfx } from '../sfx'
 import type { Settings } from '../progress'
 import { MicButton, micFeedback, type MicResult } from '../components/MicButton'
 import { micSupported } from '../recorder'
+import { COMBO_EVERY } from '../gamify'
+import { WorldBackdrop } from '../components/WorldBackdrop'
 
 const PRAISE = ['Great job!', 'Yes!', 'Awesome!', 'Super!', 'Well done!']
 const cap = (s: string) => s.charAt(0).toUpperCase() + s.slice(1)
@@ -25,33 +27,51 @@ function promptParts(mode: Settings['instructions'], step: Step): Part[] {
   const w = step.target
   if (step.type === 'speak')
     return [...instruction(mode, 'Acum spune tu:', 'Now you say it:'), { text: w.say, lang: 'en' }]
-  return step.type === 'listen'
-    ? instruction(mode, 'Unde este', `Where is ${w.say}?`, w.say)
-    : instruction(mode, 'Sparge balonul cu', `Pop the balloon with ${w.say}!`, w.say)
+  switch (step.type) {
+    case 'listen':
+      return instruction(mode, 'Unde este', `Where is ${w.say}?`, w.say)
+    case 'house':
+      return instruction(mode, 'Cine e la fereastră? Unde este', `Who is it? Where is ${w.say}?`, w.say)
+    case 'feed':
+      return [...instruction(mode, 'Dino e flămând! Dă-i ce cere.', 'Dino is hungry!'), { text: `I want ${w.say}!`, lang: 'en' }]
+    default:
+      return instruction(mode, 'Sparge balonul cu', `Pop the balloon with ${w.say}!`, w.say)
+  }
 }
 
 function bubbleText(step: Step): string {
   if (step.type === 'intro') return `${cap(step.word.ro)} = ${step.word.en}`
   if (step.type === 'listen') return `Unde este ${step.target.en}?`
-  if (step.type === 'speak') return `Spune tu: ${step.target.en}!`
+  if (step.type === 'speak') return `Spune tu: ${step.target.en}`
+  if (step.type === 'house') return `Cine e? Unde este ${step.target.en}?`
+  if (step.type === 'feed') return `Dino vrea: ${step.target.en}!`
   return `Sparge balonul: ${step.target.en}!`
 }
 
 export function LessonScreen({
   steps,
   settings,
+  world = PLAYGROUND,
   onFinish,
   onExit,
 }: {
   steps: Step[]
   settings: Settings
-  onFinish: (mistakes: number) => void
+  world?: World
+  onFinish: (mistakes: number, combos: number) => void
   onExit: () => void
 }) {
   const [index, setIndex] = useState(0)
   const [mood, setMood] = useState<Mood>('talk')
+  const [combo, setCombo] = useState(0)
   const mistakes = useRef(0)
+  const streak = useRef(0)
+  const combos = useRef(0)
+  const missedThisStep = useRef(false)
   const step = steps[index]
+  useEffect(() => {
+    missedThisStep.current = false
+  }, [index])
 
   const sayPrompt = (slow?: boolean) => {
     setMood('talk')
@@ -69,22 +89,40 @@ export function LessonScreen({
   useEffect(() => () => stopSpeaking(), [])
 
   const next = () => {
-    if (index + 1 >= steps.length) onFinish(mistakes.current)
+    if (index + 1 >= steps.length) onFinish(mistakes.current, combos.current)
     else setIndex(index + 1)
   }
 
-  const onCorrect = (w: Word) => {
+  const onCorrect = (w: Word, praise?: string) => {
     sfx.correct()
     setMood('happy')
-    void speak([{ text: PRAISE[Math.floor(Math.random() * PRAISE.length)], lang: 'en' }, { text: w.say, lang: 'en' }])
-    setTimeout(next, 1700)
+    let isCombo = false
+    if (missedThisStep.current) streak.current = 0
+    else {
+      streak.current++
+      if (streak.current % COMBO_EVERY === 0) {
+        isCombo = true
+        combos.current++
+        setCombo((c) => c + 1)
+        setTimeout(() => sfx.fanfare(), 250)
+      }
+    }
+    void speak([
+      { text: praise ?? PRAISE[Math.floor(Math.random() * PRAISE.length)], lang: 'en' },
+      { text: isCombo ? 'Super combo!' : w.say, lang: 'en' },
+    ])
+    setTimeout(next, isCombo ? 2300 : 1700)
   }
 
-  const onWrong = (target: Word, attempt: number) => {
+  const onWrong = (target: Word, attempt: number, custom?: Part[]) => {
     sfx.wrong()
     setMood('oops')
+    missedThisStep.current = true
+    streak.current = 0
     if (attempt <= 2) mistakes.current++
-    void speak([...instruction(settings.instructions, 'Mai încearcă!', 'Try again!'), { text: target.say, lang: 'en' }])
+    void speak(
+      custom ?? [...instruction(settings.instructions, 'Mai încearcă!', 'Try again!'), { text: target.say, lang: 'en' }],
+    )
     setTimeout(() => setMood('idle'), 1400)
   }
 
@@ -95,6 +133,8 @@ export function LessonScreen({
   }
 
   return (
+    <div className="lesson-wrap">
+      <WorldBackdrop world={world} />
     <div className="lesson">
       <header className="lesson-top">
         <button className="icon-btn" onClick={onExit} aria-label="Ieșire">
@@ -106,7 +146,7 @@ export function LessonScreen({
       </header>
 
       <div className="lesson-guide">
-        <Dino mood={mood} size={130} />
+        {step.type !== 'feed' && <Dino mood={mood} size={130} />}
         <div className="bubble">
           <span className="bubble-text">{bubbleText(step)}</span>
           <span className="speak-btns">
@@ -133,7 +173,31 @@ export function LessonScreen({
         {step.type === 'balloons' && (
           <Balloons target={step.target} choices={step.choices} onCorrect={onCorrect} onWrong={onWrong} />
         )}
+        {step.type === 'house' && (
+          <House target={step.target} choices={step.choices} onCorrect={onCorrect} onWrong={onWrong} />
+        )}
+        {step.type === 'feed' && (
+          <Feed
+            target={step.target}
+            choices={step.choices}
+            mood={mood}
+            onCorrect={(w) => onCorrect(w, 'Yummy!')}
+            onWrong={(t, a) =>
+              onWrong(t, a, [
+                { text: 'No, thank you!', lang: 'en' },
+                { text: `I want ${t.say}!`, lang: 'en' },
+              ])
+            }
+          />
+        )}
       </main>
+      {combo > 0 && (
+        <div className="combo" key={combo} aria-live="polite">
+          <span>🔥 Super combo!</span>
+          <span className="combo-plus">+1 ⭐</span>
+        </div>
+      )}
+    </div>
     </div>
   )
 }
@@ -220,6 +284,119 @@ interface ChoiceProps {
   choices: Word[]
   onCorrect: (w: Word) => void
   onWrong: (target: Word, attempt: number) => void
+}
+
+function House(props: ChoiceProps) {
+  const { wrong, done, hint, pick } = useChoice(props)
+  return (
+    <div className="house">
+      <div className="house-roof">
+        <span className="house-chimney" />
+      </div>
+      <div className="house-wall">
+        {props.choices.map((w, i) => {
+          const isTarget = w.id === props.target.id
+          const cls = [
+            'window',
+            wrong.includes(w.id) ? 'window-wrong' : '',
+            done && isTarget ? 'window-right' : '',
+            hint && isTarget ? 'window-hint' : '',
+          ].join(' ')
+          return (
+            <button key={w.id} className={cls} onClick={() => pick(w)} aria-label={w.en} style={{ animationDelay: `${i * 120}ms` }}>
+              <span className="window-glass">
+                <Picture word={w} size={96} />
+              </span>
+              <span className="shutter shutter-l" style={{ animationDelay: `${300 + i * 150}ms` }} />
+              <span className="shutter shutter-r" style={{ animationDelay: `${300 + i * 150}ms` }} />
+            </button>
+          )
+        })}
+        <span className="house-door" />
+      </div>
+    </div>
+  )
+}
+
+function Feed(props: ChoiceProps & { mood: Mood }) {
+  const { wrong, done, hint, pick } = useChoice(props)
+  const dinoRef = useRef<HTMLDivElement>(null)
+  const [drag, setDrag] = useState<{ id: string; x: number; y: number; sx: number; sy: number; moved: boolean } | null>(null)
+  const [eaten, setEaten] = useState<{ id: string; dx: number; dy: number } | null>(null)
+
+  const overDino = (x: number, y: number) => {
+    const r = dinoRef.current?.getBoundingClientRect()
+    return !!r && x > r.left && x < r.right && y > r.top && y < r.bottom
+  }
+
+  const feed = (w: Word, el: HTMLElement) => {
+    const ok = pick(w)
+    if (ok) {
+      const a = el.getBoundingClientRect()
+      const b = dinoRef.current!.getBoundingClientRect()
+      setEaten({ id: w.id, dx: b.left + b.width * 0.55 - (a.left + a.width / 2), dy: b.top + b.height * 0.45 - (a.top + a.height / 2) })
+    }
+  }
+
+  const down = (e: RPointerEvent<HTMLButtonElement>, w: Word) => {
+    if (done) return
+    e.currentTarget.setPointerCapture(e.pointerId)
+    setDrag({ id: w.id, x: 0, y: 0, sx: e.clientX, sy: e.clientY, moved: false })
+  }
+  const move = (e: RPointerEvent<HTMLButtonElement>) => {
+    if (!drag) return
+    const x = e.clientX - drag.sx
+    const y = e.clientY - drag.sy
+    setDrag({ ...drag, x, y, moved: drag.moved || Math.hypot(x, y) > 12 })
+  }
+  const up = (e: RPointerEvent<HTMLButtonElement>, w: Word) => {
+    if (!drag) return
+    const wasDrag = drag.moved
+    setDrag(null)
+    if (!wasDrag || overDino(e.clientX, e.clientY)) feed(w, e.currentTarget)
+  }
+
+  return (
+    <div className="feed">
+      <div className="feed-dino" ref={dinoRef}>
+        <Dino mood={done ? 'happy' : props.mood === 'oops' ? 'oops' : 'talk'} size={210} />
+        {done && <span className="yum">😋</span>}
+      </div>
+      <div className="feed-table">
+        {props.choices.map((w) => {
+          const isTarget = w.id === props.target.id
+          const d = drag?.id === w.id ? drag : null
+          const gone = eaten?.id === w.id ? eaten : null
+          const style = gone
+            ? { transform: `translate(${gone.dx}px, ${gone.dy}px) scale(0.2)`, opacity: 0, transition: 'transform 0.6s ease-in, opacity 0.6s 0.3s' }
+            : d
+              ? { transform: `translate(${d.x}px, ${d.y}px) scale(1.1)`, zIndex: 5, transition: 'none' }
+              : undefined
+          const cls = [
+            'food',
+            wrong.includes(w.id) ? 'food-wrong' : '',
+            hint && isTarget ? 'food-hint' : '',
+            done && !isTarget ? 'food-fade' : '',
+          ].join(' ')
+          return (
+            <button
+              key={`${w.id}-${wrong.filter((x) => x === w.id).length}`}
+              className={cls}
+              style={style}
+              onPointerDown={(e) => down(e, w)}
+              onPointerMove={move}
+              onPointerUp={(e) => up(e, w)}
+              onPointerCancel={() => setDrag(null)}
+              onClick={(e) => e.detail === 0 && feed(w, e.currentTarget)}
+              aria-label={w.en}
+            >
+              <Picture word={w} size={110} />
+            </button>
+          )
+        })}
+      </div>
+    </div>
+  )
 }
 
 function useChoice({ target, onCorrect, onWrong }: ChoiceProps) {
