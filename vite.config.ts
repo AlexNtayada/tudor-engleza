@@ -10,9 +10,9 @@ export default defineConfig({
       registerType: 'autoUpdate',
       includeAssets: ['icon.svg'],
       manifest: {
-        name: 'Dino English',
-        short_name: 'Dino English',
-        description: 'Engleză pentru Tudor, cu Dino',
+        name: 'Ninja English',
+        short_name: 'Ninja English',
+        description: 'Engleză pentru Tudor, cu Ninja',
         lang: 'ro',
         theme_color: '#ffc21a',
         background_color: '#ffc21a',

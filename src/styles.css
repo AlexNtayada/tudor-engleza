@@ -1612,7 +1612,7 @@ button:focus-visible {
 }
 
 /* ======================================================
-   Feed Dino
+   Feed Ninja
    ====================================================== */
 
 .feed {
@@ -1794,7 +1794,7 @@ button:focus-visible {
 }
 
 /* ======================================================
-   Playground & Dino's room
+   Playground & Ninja's room
    ====================================================== */
 
 .play-grid {
@@ -2010,7 +2010,7 @@ button:focus-visible {
 
 /* ======================================================
    Sunny cartoon look: yellow + teal accents, white pages,
-   thick dark outlines like Dino.
+   thick dark outlines like Ninja.
    ====================================================== */
 
 .appbar {
@@ -2058,7 +2058,7 @@ button:focus-visible {
   background: var(--teal-soft);
 }
 
-/* start screen: the sunny yellow from Dino's posters */
+/* start screen: the sunny yellow from Ninja's posters */
 .start {
   background: radial-gradient(circle at 50% 45%, #ffd54a 0%, var(--yellow) 55%, #ffb800 100%);
 }

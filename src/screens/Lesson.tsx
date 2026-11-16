@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState, type PointerEvent as RPointerEvent } from 'react'
 import { PLAYGROUND, type Word, type World } from '../content'
 import type { Step } from '../lessons'
-import { Dino, type Mood } from '../components/Dino'
+import { Ninja, type Mood } from '../components/Ninja'
 import { Picture } from '../components/Picture'
 import { instruction, speak, stopSpeaking, type Part } from '../speech'
 import { sfx } from '../sfx'
@@ -33,7 +33,7 @@ function promptParts(mode: Settings['instructions'], step: Step): Part[] {
     case 'house':
       return instruction(mode, 'Cine e la fereastră? Unde este', `Who is it? Where is ${w.say}?`, w.say)
     case 'feed':
-      return [...instruction(mode, 'Dino e flămând! Dă-i ce cere.', 'Dino is hungry!'), { text: `I want ${w.say}!`, lang: 'en' }]
+      return [...instruction(mode, 'Ninja e flămând! Dă-i ce cere.', 'Ninja is hungry!'), { text: `I want ${w.say}!`, lang: 'en' }]
     default:
       return instruction(mode, 'Sparge balonul cu', `Pop the balloon with ${w.say}!`, w.say)
   }
@@ -44,7 +44,7 @@ function bubbleText(step: Step): string {
   if (step.type === 'listen') return `Unde este ${step.target.en}?`
   if (step.type === 'speak') return `Spune tu: ${step.target.en}`
   if (step.type === 'house') return `Cine e? Unde este ${step.target.en}?`
-  if (step.type === 'feed') return `Dino vrea: ${step.target.en}!`
+  if (step.type === 'feed') return `Ninja vrea: ${step.target.en}!`
   return `Sparge balonul: ${step.target.en}!`
 }
 
@@ -146,7 +146,7 @@ export function LessonScreen({
       </header>
 
       <div className="lesson-guide">
-        {step.type !== 'feed' && <Dino mood={mood} size={130} />}
+        {step.type !== 'feed' && <Ninja mood={mood} size={130} />}
         <div className="bubble">
           <span className="bubble-text">{bubbleText(step)}</span>
           <span className="speak-btns">
@@ -359,7 +359,7 @@ function Feed(props: ChoiceProps & { mood: Mood }) {
   return (
     <div className="feed">
       <div className="feed-dino" ref={dinoRef}>
-        <Dino mood={done ? 'happy' : props.mood === 'oops' ? 'oops' : 'talk'} size={210} />
+        <Ninja mood={done ? 'happy' : props.mood === 'oops' ? 'oops' : 'talk'} size={210} />
         {done && <span className="yum">😋</span>}
       </div>
       <div className="feed-table">

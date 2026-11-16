@@ -1,6 +1,6 @@
-# Dino English
+# Ninja English
 
-O aplicație jucăușă pentru ca Tudor (5 ani) să învețe engleză, cu Dino, un dinozaur prietenos.
+O aplicație jucăușă pentru ca Tudor (5 ani) să învețe engleză, cu Ninja, un mic ninja prietenos.
 Merge în browser pe calculator și se poate instala pe telefon (PWA).
 
 ## Ce are prototipul

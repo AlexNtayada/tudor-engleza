@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { UNITS } from '../content'
 import { CHEST_STARS } from '../gamify'
-import { Dino } from '../components/Dino'
+import { Ninja } from '../components/Ninja'
 import { instruction, speak, hasRomanianVoice, speechSupported } from '../speech'
 import { micSupported, recognitionSupported } from '../recorder'
 import { sfx } from '../sfx'
@@ -19,8 +19,8 @@ import {
 export function StartScreen({ name, onGo }: { name: string; onGo: () => void }) {
   return (
     <div className="center-screen start">
-      <h1 className="title">Dino English</h1>
-      <Dino mood="happy" size={220} />
+      <h1 className="title">Ninja English</h1>
+      <Ninja mood="happy" size={220} />
       <button
         className="big-btn"
         onClick={() => {
@@ -68,7 +68,7 @@ export function FinishScreen({
     const t = setTimeout(() => {
       void speak([
         { text: `Great job, ${name}!`, lang: 'en' },
-        ...(levelUp ? instruction(mode, `Ura! Dino a crescut! Nivelul ${levelUp}!`, `Hooray! Dino is now level ${levelUp}!`) : []),
+        ...(levelUp ? instruction(mode, `Ura! Ninja a crescut! Nivelul ${levelUp}!`, `Hooray! Ninja is now level ${levelUp}!`) : []),
         ...(sticker ? instruction(mode, 'Bravo! Ai câștigat un abțibild nou!', 'You got a new sticker!') : []),
         ...(chest ? instruction(mode, 'Uite, un cufăr! Deschide-l!', 'Look, a treasure chest! Open it!') : []),
         ...(suggestBreak
@@ -93,11 +93,11 @@ export function FinishScreen({
           </span>
         ))}
       </div>
-      <Dino mood="dance" size={200} />
+      <Ninja mood="dance" size={200} />
       <div className="finish-gains">
         <span className="gain">+{gained} ⭐</span>
         {combos > 0 && <span className="gain gain-combo">🔥 × {combos}</span>}
-        {levelUp && <span className="gain gain-level">🦖 Nivelul {levelUp}!</span>}
+        {levelUp && <span className="gain gain-level">🥷 Nivelul {levelUp}!</span>}
       </div>
       {chest && (
         <button
@@ -137,8 +137,8 @@ export function FinishScreen({
 export function BreakScreen({ onBack }: { onBack: () => void }) {
   return (
     <div className="center-screen break">
-      <Dino mood="sleep" size={220} />
-      <p className="break-text">Dino se odihnește puțin. Bea apă, sari de 5 ori și revino!</p>
+      <Ninja mood="sleep" size={220} />
+      <p className="break-text">Ninja se odihnește puțin. Bea apă, sari de 5 ori și revino!</p>
       <button className="big-btn" onClick={onBack}>
         ▶ Gata, înapoi!
       </button>
@@ -290,7 +290,7 @@ export function Parents({
           <input value={s.childName} onChange={(e) => set({ childName: e.target.value })} maxLength={20} />
         </label>
         <div className="field">
-          <span>Instrucțiunile lui Dino</span>
+          <span>Instrucțiunile lui Ninja</span>
           <div className="seg">
             <button className={s.instructions === 'ro' ? 'on' : ''} onClick={() => set({ instructions: 'ro' })}>
               Română
@@ -311,13 +311,13 @@ export function Parents({
             </button>
           </div>
         </div>
-        <button className="link-btn" onClick={() => void speak(instruction(s.instructions, 'Salut! Eu sunt Dino.', 'Hi! I am Dino.'))}>
+        <button className="link-btn" onClick={() => void speak(instruction(s.instructions, 'Salut! Eu sunt Ninja.', 'Hi! I am Ninja.'))}>
           🔊 Testează vocea
         </button>
         {!speechSupported() && <p className="note warn">Browserul acesta nu poate vorbi. Folosește Chrome sau Edge.</p>}
         {speechSupported() && !roVoice && s.instructions === 'ro' && (
           <p className="note warn">
-            Pe acest dispozitiv nu am găsit o voce în română, așa că Dino spune instrucțiunile în engleză (textul în
+            Pe acest dispozitiv nu am găsit o voce în română, așa că Ninja spune instrucțiunile în engleză (textul în
             română apare în bulă). Cea mai simplă soluție pe PC: deschide aplicația în <b>Microsoft Edge</b>, care are
             voci românești incluse. Pe Windows mai poți adăuga vocea din Setări → Oră și limbă → Vorbire → Adaugă voci →
             Română.
@@ -351,7 +351,7 @@ export function Parents({
         </div>
         <p className="note">
           Tudor apasă 🎤, spune cuvântul și își aude imediat vocea. Înregistrarea rămâne doar pe acest dispozitiv și nu
-          se salvează. Dino nu spune niciodată „greșit”: dacă nu e sigur, îl roagă să mai spună o dată.
+          se salvează. Ninja nu spune niciodată „greșit”: dacă nu e sigur, îl roagă să mai spună o dată.
         </p>
         {s.micCheck && recognitionSupported() && (
           <p className="note">
@@ -362,7 +362,7 @@ export function Parents({
         )}
         {s.micCheck && !recognitionSupported() && (
           <p className="note warn">
-            Browserul acesta nu poate verifica ce a spus; Dino îl laudă oricum după ce se aude. Verificarea merge în Chrome și
+            Browserul acesta nu poate verifica ce a spus; Ninja îl laudă oricum după ce se aude. Verificarea merge în Chrome și
             Edge.
           </p>
         )}
@@ -372,7 +372,7 @@ export function Parents({
       <section className="panel">
         <h3>Despre timp</h3>
         <p className="note">
-          Nu există limită de timp. Dino propune o pauză după aproximativ 15 minute de joacă, dar nu blochează nimic.
+          Nu există limită de timp. Ninja propune o pauză după aproximativ 15 minute de joacă, dar nu blochează nimic.
         </p>
         <button
           className="link-btn danger"

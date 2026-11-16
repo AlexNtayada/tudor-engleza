@@ -73,7 +73,7 @@ export function MicButton({
   )
 }
 
-/** What Dino says after the child speaks. Never negative. */
+/** What Ninja says after the child speaks. Never negative. */
 export function micFeedback(result: MicResult, word: Word, mode: 'ro' | 'en') {
   if (result === 'heard') {
     sfx.correct()

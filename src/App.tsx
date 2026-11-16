@@ -6,7 +6,7 @@ import { chestAvailable, CHEST_STARS, levelFor } from './gamify'
 import { Home } from './screens/Home'
 import { LessonScreen } from './screens/Lesson'
 import { Album, BreakScreen, FinishScreen, ParentGate, Parents, StartScreen } from './screens/Other'
-import { DinoRoom, Playground } from './screens/Rewards'
+import { NinjaRoom, Playground } from './screens/Rewards'
 import { Nav, type Tab } from './components/Nav'
 import { OutfitContext } from './components/Outfit'
 import { instruction, setSlowVoice, speak } from './speech'
@@ -124,7 +124,7 @@ export default function App() {
             onGo={() => {
               void speak([
                 { text: `Hello, ${name}!`, lang: 'en' },
-                ...instruction(progress.settings.instructions, 'Eu sunt Dino. Hai să învățăm engleză!', "I'm Dino. Let's learn English!"),
+                ...instruction(progress.settings.instructions, 'Eu sunt Ninja. Hai să învățăm engleză!', "I'm Ninja. Let's learn English!"),
               ])
               setScreen({ name: 'home' })
             }}
@@ -135,7 +135,7 @@ export default function App() {
       case 'play':
         return <Playground progress={progress} onPlay={startFreePlay} />
       case 'dino':
-        return <DinoRoom progress={progress} onChange={setProgress} />
+        return <NinjaRoom progress={progress} onChange={setProgress} />
       case 'lesson':
         return (
           <LessonScreen

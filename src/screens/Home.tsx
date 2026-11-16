@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import type React from 'react'
 import { UNITS } from '../content'
-import { Dino, type Mood } from '../components/Dino'
+import { Ninja, type Mood } from '../components/Ninja'
 import { currentLessonIndex, type Progress } from '../progress'
 import { WorldBackdrop } from '../components/WorldBackdrop'
 import { instruction, speak } from '../speech'
@@ -45,7 +45,7 @@ export function Home({ progress, onStart }: { progress: Progress; onStart: (glob
                   <div key={lesson.id} className="node-row" style={{ '--x': offset } as React.CSSProperties}>
                     {state === 'current' && (
                       <div className={`node-dino ${offset > 0 ? 'node-dino-left' : 'node-dino-right'}`}>
-                        <Dino mood={mood} size={110} />
+                        <Ninja mood={mood} size={110} />
                       </div>
                     )}
                     <button
@@ -80,7 +80,7 @@ export function Home({ progress, onStart }: { progress: Progress; onStart: (glob
           </section>
         ))}
         <div className="path-end">
-          <Dino mood="sleep" size={90} />
+          <Ninja mood="sleep" size={90} />
           <p>Urmează: haine, corpul, vremea…</p>
         </div>
       </div>
