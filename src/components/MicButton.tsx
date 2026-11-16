@@ -8,6 +8,8 @@ export type MicResult = 'heard' | 'tried' | 'no-mic'
 
 type State = 'idle' | 'recording' | 'playing'
 
+let spaceOwner: symbol | undefined
+
 /**
  * Big microphone button: tap, say the word, hear yourself back.
  * `onResult` tells the parent whether recognition heard the word ('heard'),
@@ -35,6 +37,34 @@ export function MicButton({
     [],
   )
 
+  // Keyboard: Space starts recording (and stops it early if pressed again).
+  // Only the most recently shown mic listens, so one press never starts two.
+  const startRef = useRef<() => void>(() => {})
+  useEffect(() => {
+    const me = Symbol('mic')
+    spaceOwner = me
+    const isSpace = (e: KeyboardEvent) => e.code === 'Space' || e.key === ' '
+    const down = (e: KeyboardEvent) => {
+      if (!isSpace(e) || spaceOwner !== me) return
+      const t = e.target as HTMLElement | null
+      if (t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.isContentEditable)) return
+      e.preventDefault()
+      e.stopPropagation()
+      if (!e.repeat) startRef.current()
+    }
+    // Stop the focused button from also "clicking" on Space release.
+    const up = (e: KeyboardEvent) => {
+      if (isSpace(e) && spaceOwner === me) e.preventDefault()
+    }
+    window.addEventListener('keydown', down, true)
+    window.addEventListener('keyup', up, true)
+    return () => {
+      if (spaceOwner === me) spaceOwner = undefined
+      window.removeEventListener('keydown', down, true)
+      window.removeEventListener('keyup', up, true)
+    }
+  }, [])
+
   const start = async () => {
     if (state === 'recording') {
       rec.current?.stop()
@@ -61,6 +91,8 @@ export function MicButton({
     onResult(take.heard.length && saidWord(take.heard, word.check ?? word.en) ? 'heard' : 'tried')
   }
 
+  startRef.current = () => void start()
+
   return (
     <button
       className={`mic mic-${size} mic-${state}`}
@@ -69,6 +101,9 @@ export function MicButton({
     >
       <span className="mic-icon">{state === 'playing' ? '👂' : '🎤'}</span>
       {state === 'recording' && <span className="mic-ring" />}
+      <span className="mic-key" aria-hidden>
+        Space
+      </span>
     </button>
   )
 }
