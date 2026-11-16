@@ -2239,3 +2239,10 @@ button:focus-visible {
   gap: 18px;
   margin-bottom: 20px;
 }
+
+/* a balloon stops while the mouse is on it, so it is easy to hit */
+@media (hover: hover) {
+  .balloon:hover {
+    animation-play-state: paused;
+  }
+}

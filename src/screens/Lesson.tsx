@@ -447,6 +447,8 @@ function ListenTap(props: ChoiceProps) {
   )
 }
 
+/** Seconds for a balloon to float from bottom to top (slowest adds up to 4 more). */
+const BALLOON_SECONDS = 20
 const BALLOON_COLORS = ['#ff6b8b', '#ffc93c', '#6bcBff', '#b98bff', '#7be495', '#ff9f5a']
 
 function Balloons(props: ChoiceProps) {
@@ -454,12 +456,16 @@ function Balloons(props: ChoiceProps) {
   const [popped, setPopped] = useState<string | null>(null)
   const layout = useMemo(
     () =>
-      props.choices.map((_, i) => ({
-        left: Math.min(1, Math.max(0, (i + (Math.random() - 0.5) * 0.3) / (props.choices.length - 1))),
-        delay: -Math.random() * 6,
-        duration: 9 + Math.random() * 3,
-        color: BALLOON_COLORS[(i + Math.floor(Math.random() * 6)) % BALLOON_COLORS.length],
-      })),
+      props.choices.map((_, i) => {
+        // Slow, calm float so a 5-year-old has time to aim and tap.
+        const duration = BALLOON_SECONDS + Math.random() * 4
+        return {
+          left: Math.min(1, Math.max(0, (i + (Math.random() - 0.5) * 0.3) / (props.choices.length - 1))),
+          delay: -(0.15 + Math.random() * 0.55) * duration,
+          duration,
+          color: BALLOON_COLORS[(i + Math.floor(Math.random() * 6)) % BALLOON_COLORS.length],
+        }
+      }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [],
   )
