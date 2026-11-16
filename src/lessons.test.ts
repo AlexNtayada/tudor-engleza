@@ -129,3 +129,9 @@ describe('rewards', () => {
     expect(levelFor(15)).toBe(2)
   })
 })
+
+describe('spoken words', () => {
+  it('says every word without "a"/"an" in front', () => {
+    for (const u of UNITS) for (const w of u.words) expect(w.say).not.toMatch(/^an? /)
+  })
+})

@@ -7,7 +7,7 @@ export type Visual =
 
 export interface Word {
   id: string
-  /** What the voice says in English, e.g. "a cat". */
+  /** What the voice says in English: just the word, e.g. "cat" (no article). */
   say: string
   /** The English word shown small under the picture. */
   en: string
@@ -59,9 +59,10 @@ const color = (id: string, ro: string, hex: string): Word => ({
   visual: { kind: 'color', value: hex },
 })
 
-const animal = (id: string, ro: string, emoji: string, article = 'a'): Word => ({
+// Dino says just the word ("cow", not "a cow") so Tudor learns the word itself.
+const animal = (id: string, ro: string, emoji: string): Word => ({
   id,
-  say: `${article} ${id}`,
+  say: id,
   en: id,
   ro,
   visual: { kind: 'emoji', value: emoji },
@@ -177,13 +178,13 @@ export const UNITS: Unit[] = [
     words: [
       thing('mom', 'mama', '👩'),
       thing('dad', 'tata', '👨'),
-      thing('baby', 'bebeluș', '👶', 'a baby'),
+      thing('baby', 'bebeluș', '👶'),
       thing('brother', 'frate', '👦'),
       thing('sister', 'soră', '👧'),
       thing('grandma', 'bunica', '👵'),
       thing('grandpa', 'bunicul', '👴'),
       thing('family', 'familie', '👨‍👩‍👧‍👦'),
-      thing('friend', 'prieten', '🧑‍🤝‍🧑', 'a friend'),
+      thing('friend', 'prieten', '🧑‍🤝‍🧑'),
       thing('home', 'acasă', '🏡'),
     ],
     lessons: [
@@ -214,14 +215,14 @@ export const UNITS: Unit[] = [
     games: ['listen', 'feed', 'balloons'],
     world: { sky: ['#fff1c9', '#fffaf0'], ground: '#ffe0a3', decor: ['🧺', '🍓', '🌼', '🍯', '🥕', '🍉'], icon: '🍎' },
     words: [
-      thing('apple', 'măr', '🍎', 'an apple'),
-      thing('banana', 'banană', '🍌', 'a banana'),
+      thing('apple', 'măr', '🍎'),
+      thing('banana', 'banană', '🍌'),
       thing('milk', 'lapte', '🥛'),
       thing('bread', 'pâine', '🍞'),
       thing('cheese', 'brânză', '🧀'),
-      thing('egg', 'ou', '🥚', 'an egg'),
+      thing('egg', 'ou', '🥚'),
       thing('water', 'apă', '💧'),
-      thing('cake', 'tort', '🍰', 'a cake'),
+      thing('cake', 'tort', '🍰'),
       thing('pizza', 'pizza', '🍕'),
       thing('ice-cream', 'înghețată', '🍦', 'ice cream', 'ice cream'),
     ],
