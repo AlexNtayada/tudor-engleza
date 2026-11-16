@@ -18,6 +18,17 @@ export interface Progress {
   /** Seconds played per day, keyed YYYY-MM-DD. */
   playSeconds: Record<string, number>
   settings: Settings
+  /** Stars Tudor can spend in Dino's wardrobe. */
+  wallet: number
+  /** All stars ever earned (drives Dino's level). */
+  earned: number
+  /** Days (YYYY-MM-DD) with at least one finished lesson. */
+  daysPlayed: string[]
+  /** Last day the daily chest was opened. */
+  lastChest: string
+  /** Wardrobe items bought, and what Dino wears per slot. */
+  owned: string[]
+  outfit: Partial<Record<'head' | 'face' | 'neck', string>>
 }
 
 const KEY = 'dino-english-progress-v1'
@@ -26,6 +37,12 @@ export const DEFAULT_PROGRESS: Progress = {
   stars: {},
   stickers: [],
   playSeconds: {},
+  wallet: 0,
+  earned: 0,
+  daysPlayed: [],
+  lastChest: '',
+  owned: [],
+  outfit: {},
   settings: { childName: 'Tudor', instructions: 'ro', slowVoice: false, mic: true, micCheck: true },
 }
 
@@ -34,8 +51,12 @@ export function loadProgress(): Progress {
     const raw = localStorage.getItem(KEY)
     if (!raw) return structuredClone(DEFAULT_PROGRESS)
     const parsed = JSON.parse(raw) as Partial<Progress>
+    // Older saves had no wallet: start it from the stars already won.
+    const fromStars = Object.values(parsed.stars ?? {}).reduce((a, b) => a + b, 0)
     return {
       ...structuredClone(DEFAULT_PROGRESS),
+      wallet: fromStars,
+      earned: fromStars,
       ...parsed,
       settings: { ...DEFAULT_PROGRESS.settings, ...parsed.settings },
     }

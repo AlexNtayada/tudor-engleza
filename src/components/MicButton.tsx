@@ -58,7 +58,7 @@ export function MicButton({
     if (take.audio) await playBlob(take.audio)
     if (!alive.current) return
     setState('idle')
-    onResult(take.heard.length && saidWord(take.heard, word.en) ? 'heard' : 'tried')
+    onResult(take.heard.length && saidWord(take.heard, word.check ?? word.en) ? 'heard' : 'tried')
   }
 
   return (

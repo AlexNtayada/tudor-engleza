@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { UNITS } from './content'
-import { buildFreePlay, buildLesson, starsFor, wordsUpTo } from './lessons'
+import { buildFreePlay, buildLesson, CHOICE_COUNT, starsFor, wordsUpTo } from './lessons'
 
 describe('buildLesson', () => {
   it('introduces every new word, then quizzes each new word at least twice', () => {
@@ -9,7 +9,7 @@ describe('buildLesson', () => {
         const steps = buildLesson(unit, i)
         const intros = steps.filter((s) => s.type === 'intro').map((s) => (s.type === 'intro' ? s.word.id : ''))
         expect(intros).toEqual(unit.words.filter((w) => lesson.newWords.includes(w.id)).map((w) => w.id))
-        const quiz = steps.filter((s) => s.type === 'listen' || s.type === 'balloons')
+        const quiz = steps.filter((s) => s.type !== 'intro' && s.type !== 'speak')
         expect(quiz.length).toBeGreaterThanOrEqual(lesson.newWords.length === 0 ? 8 : 4)
         for (const id of lesson.newWords) {
           expect(quiz.filter((s) => 'target' in s && s.target.id === id).length).toBeGreaterThanOrEqual(2)
@@ -25,7 +25,7 @@ describe('buildLesson', () => {
           if (s.type === 'intro' || s.type === 'speak') continue
           expect(s.choices.filter((c) => c.id === s.target.id)).toHaveLength(1)
           expect(new Set(s.choices.map((c) => c.id)).size).toBe(s.choices.length)
-          expect(s.choices.length).toBe(s.type === 'listen' ? 3 : 4)
+          expect(s.choices.length).toBe(CHOICE_COUNT[s.type])
         }
       }
     }
@@ -35,10 +35,28 @@ describe('buildLesson', () => {
     for (const unit of UNITS) {
       unit.lessons.forEach((_, i) => {
         const speakSteps = buildLesson(unit, i).filter((s) => s.type === 'speak')
-        expect(speakSteps).toHaveLength(1)
+        expect(speakSteps).toHaveLength(unit.lessons[i].bonusSpeak ? 2 : 1)
         const known = new Set(wordsUpTo(unit, i).map((w) => w.id))
         expect(known.has(speakSteps[0].type === 'speak' ? speakSteps[0].target.id : '')).toBe(true)
       })
+    }
+  })
+
+  it('uses every game of the unit, including the special family and food games', () => {
+    for (const unit of UNITS) {
+      const types = new Set(unit.lessons.flatMap((_, i) => buildLesson(unit, i).map((s) => s.type)))
+      for (const g of unit.games) expect(types.has(g)).toBe(true)
+    }
+    expect(UNITS.find((u) => u.id === 'family')!.games).toContain('house')
+    expect(UNITS.find((u) => u.id === 'food')!.games).toContain('feed')
+  })
+
+  it('ends family and food review lessons with a phrase to say', () => {
+    for (const id of ['family', 'food']) {
+      const unit = UNITS.find((u) => u.id === id)!
+      const steps = buildLesson(unit, unit.lessons.length - 1)
+      const last = steps[steps.length - 1]
+      expect(last.type).toBe('speak')
     }
   })
 
@@ -46,7 +64,8 @@ describe('buildLesson', () => {
     for (const unit of UNITS) {
       unit.lessons.forEach((_, i) => {
         const known = new Set(wordsUpTo(unit, i).map((w) => w.id))
-        for (const s of buildLesson(unit, i)) if (s.type !== 'intro') expect(known.has(s.target.id)).toBe(true)
+        for (const s of buildLesson(unit, i))
+          if (s.type !== 'intro' && s.target !== unit.lessons[i].bonusSpeak) expect(known.has(s.target.id)).toBe(true)
       })
     }
   })
@@ -79,10 +98,34 @@ describe('saidWord', () => {
     expect(saidWord(['to'], 'two')).toBe(true)
     expect(saidWord(['yello'], 'yellow')).toBe(true)
     expect(saidWord(['Purple!'], 'purple')).toBe(true)
+    expect(saidWord(['I like ice cream'], 'ice cream')).toBe(true)
+    expect(saidWord(['i love you mom'], 'love')).toBe(true)
   })
   it('rejects a different word', () => {
     expect(saidWord(['dog'], 'cat')).toBe(false)
     expect(saidWord(['banana'], 'yellow')).toBe(false)
     expect(saidWord([], 'cat')).toBe(false)
+  })
+})
+
+import { buy, ITEMS, levelFor, toggleWear } from './gamify'
+import { DEFAULT_PROGRESS } from './progress'
+
+describe('rewards', () => {
+  it('buys an item only with enough stars and wears it', () => {
+    const hat = ITEMS[0]
+    const poor = { ...structuredClone(DEFAULT_PROGRESS), wallet: hat.price - 1 }
+    expect(buy(poor, hat)).toBe(poor)
+    const rich = buy({ ...structuredClone(DEFAULT_PROGRESS), wallet: 30 }, hat)
+    expect(rich.wallet).toBe(30 - hat.price)
+    expect(rich.owned).toContain(hat.id)
+    expect(rich.outfit[hat.slot]).toBe(hat.id)
+    expect(buy(rich, hat)).toBe(rich)
+    expect(toggleWear(rich, hat).outfit[hat.slot]).toBeUndefined()
+  })
+  it('levels up every 15 stars', () => {
+    expect(levelFor(0)).toBe(1)
+    expect(levelFor(14)).toBe(2 - 1)
+    expect(levelFor(15)).toBe(2)
   })
 })
