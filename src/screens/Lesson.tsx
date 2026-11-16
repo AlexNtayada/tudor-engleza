@@ -6,6 +6,8 @@ import { Picture } from '../components/Picture'
 import { instruction, speak, stopSpeaking, type Part } from '../speech'
 import { sfx } from '../sfx'
 import type { Settings } from '../progress'
+import { MicButton, micFeedback, type MicResult } from '../components/MicButton'
+import { micSupported } from '../recorder'
 
 const PRAISE = ['Great job!', 'Yes!', 'Awesome!', 'Super!', 'Well done!']
 const cap = (s: string) => s.charAt(0).toUpperCase() + s.slice(1)
@@ -21,6 +23,8 @@ function introParts(mode: Settings['instructions'], w: Word): Part[] {
 function promptParts(mode: Settings['instructions'], step: Step): Part[] {
   if (step.type === 'intro') return introParts(mode, step.word)
   const w = step.target
+  if (step.type === 'speak')
+    return [...instruction(mode, 'Acum spune tu:', 'Now you say it:'), { text: w.say, lang: 'en' }]
   return step.type === 'listen'
     ? instruction(mode, 'Unde este', `Where is ${w.say}?`, w.say)
     : instruction(mode, 'Sparge balonul cu', `Pop the balloon with ${w.say}!`, w.say)
@@ -29,6 +33,7 @@ function promptParts(mode: Settings['instructions'], step: Step): Part[] {
 function bubbleText(step: Step): string {
   if (step.type === 'intro') return `${cap(step.word.ro)} = ${step.word.en}`
   if (step.type === 'listen') return `Unde este ${step.target.en}?`
+  if (step.type === 'speak') return `Spune tu: ${step.target.en}!`
   return `Sparge balonul: ${step.target.en}!`
 }
 
@@ -83,6 +88,12 @@ export function LessonScreen({
     setTimeout(() => setMood('idle'), 1400)
   }
 
+  const onMic = (w: Word, r: MicResult) => {
+    if (r === 'no-mic') return
+    setMood(r === 'heard' ? 'happy' : 'talk')
+    void micFeedback(r, w, settings.instructions).then(() => setMood('idle'))
+  }
+
   return (
     <div className="lesson">
       <header className="lesson-top">
@@ -110,7 +121,12 @@ export function LessonScreen({
       </div>
 
       <main className="lesson-stage" key={index}>
-        {step.type === 'intro' && <Intro word={step.word} onNext={next} />}
+        {step.type === 'intro' && (
+          <Intro word={step.word} onNext={next} settings={settings} onMic={(r) => onMic(step.word, r)} />
+        )}
+        {step.type === 'speak' && (
+          <SayIt word={step.target} settings={settings} onNext={next} onMic={(r) => onMic(step.target, r)} />
+        )}
         {step.type === 'listen' && (
           <ListenTap target={step.target} choices={step.choices} onCorrect={onCorrect} onWrong={onWrong} />
         )}
@@ -122,7 +138,55 @@ export function LessonScreen({
   )
 }
 
-function Intro({ word, onNext }: { word: Word; onNext: () => void }) {
+function SayIt({
+  word,
+  settings,
+  onNext,
+  onMic,
+}: {
+  word: Word
+  settings: Settings
+  onNext: () => void
+  onMic: (r: MicResult) => void
+}) {
+  const [canSkip, setCanSkip] = useState(false)
+  const [tries, setTries] = useState(0)
+  useEffect(() => {
+    const t = setTimeout(() => setCanSkip(true), 4000)
+    return () => clearTimeout(t)
+  }, [])
+  const handle = (r: MicResult) => {
+    if (r === 'no-mic') return onNext()
+    onMic(r)
+    setTries((n) => n + 1)
+    setCanSkip(true)
+    if (r === 'heard' || tries + 1 >= 3) setTimeout(onNext, 2600)
+  }
+  return (
+    <div className="intro">
+      <div className="card card-big pop-in">
+        <Picture word={word} size={180} />
+        <span className="card-word">{word.en}</span>
+      </div>
+      <MicButton word={word} recognize={settings.micCheck} onResult={handle} />
+      <button className={`go-btn ${canSkip ? 'go-ready' : ''}`} onClick={onNext} aria-label="Mai departe">
+        ➜
+      </button>
+    </div>
+  )
+}
+
+function Intro({
+  word,
+  onNext,
+  settings,
+  onMic,
+}: {
+  word: Word
+  onNext: () => void
+  settings: Settings
+  onMic: (r: MicResult) => void
+}) {
   const [ready, setReady] = useState(false)
   useEffect(() => {
     const t = setTimeout(() => setReady(true), 1800)
@@ -141,6 +205,9 @@ function Intro({ word, onNext }: { word: Word; onNext: () => void }) {
         <Picture word={word} size={200} />
         <span className="card-word">{word.en}</span>
       </button>
+      {settings.mic && micSupported() && (
+        <MicButton word={word} recognize={settings.micCheck} size="small" onResult={onMic} />
+      )}
       <button className={`go-btn ${ready ? 'go-ready' : ''}`} onClick={onNext} aria-label="Mai departe">
         ➜
       </button>

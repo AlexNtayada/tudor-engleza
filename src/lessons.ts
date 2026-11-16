@@ -4,6 +4,7 @@ export type Step =
   | { type: 'intro'; word: Word }
   | { type: 'listen'; target: Word; choices: Word[] }
   | { type: 'balloons'; target: Word; choices: Word[] }
+  | { type: 'speak'; target: Word }
 
 type Rng = () => number
 
@@ -68,7 +69,11 @@ export function buildLesson(unit: Unit, lessonIndex: number, rng: Rng = Math.ran
     // Each new word twice, plus up to two older words for spaced review.
     targets = [...newWords, ...newWords, ...shuffle(older, rng).slice(0, 2)]
   }
-  steps.push(...exercises(targets, () => ({ pool: known, fallback: unit.words }), rng))
+  const quiz = exercises(targets, () => ({ pool: known, fallback: unit.words }), rng)
+  // One "say it yourself" step in the middle of the quiz (dropped later if there is no microphone).
+  const speakWord = newWords.length ? newWords[Math.floor(rng() * newWords.length)] : shuffle(known, rng)[0]
+  quiz.splice(Math.floor(quiz.length / 2), 0, { type: 'speak', target: speakWord })
+  steps.push(...quiz)
   return steps
 }
 

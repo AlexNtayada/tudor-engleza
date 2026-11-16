@@ -7,7 +7,7 @@ Merge în browser pe calculator și se poate instala pe telefon (PWA).
 
 - Harta cu lecții (3 teme: culori, animale, numere 1–10, câte 5 lecții)
 - Prezentarea cuvintelor cu poză mare și voce (normal și rar 🐢)
-- Exerciții: „Ascultă și atinge” și „Sparge balonul”
+- Exerciții: „Ascultă și atinge”, „Sparge balonul” și „Spune tu!” cu microfon 🎤
 - Stele, abțibilduri, album, mod „Joacă liberă”
 - Zona părinților (poartă cu numere): progres, minute pe zi, setări
 - Instrucțiuni în română (dacă dispozitivul are voce românească) sau engleză; cuvintele sunt mereu cu voce americană

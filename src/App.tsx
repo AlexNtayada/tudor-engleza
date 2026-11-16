@@ -6,6 +6,7 @@ import { Home } from './screens/Home'
 import { LessonScreen } from './screens/Lesson'
 import { Album, BreakScreen, FinishScreen, ParentGate, Parents, StartScreen } from './screens/Other'
 import { instruction, setSlowVoice, speak } from './speech'
+import { micSupported } from './recorder'
 
 type Screen =
   | { name: 'start' }
@@ -43,7 +44,8 @@ export default function App() {
 
   const startLesson = (globalIndex: number) => {
     const { unit, lesson } = ALL_LESSONS[globalIndex]
-    const steps = buildLesson(unit, unit.lessons.indexOf(lesson))
+    const useMic = progress.settings.mic && micSupported()
+    const steps = buildLesson(unit, unit.lessons.indexOf(lesson)).filter((s) => useMic || s.type !== 'speak')
     setScreen({ name: 'lesson', steps, lessonIndex: globalIndex, id: Date.now() })
   }
 
