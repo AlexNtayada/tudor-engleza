@@ -1,4 +1,4 @@
-// Rewards: Dino's wardrobe, levels, daily chest. No lives, no timers, nothing is ever taken away.
+// Rewards: Ninja's wardrobe, levels, daily chest. No lives, no timers, nothing is ever taken away.
 import type { Progress } from './progress'
 
 export type Slot = 'head' | 'face' | 'neck'

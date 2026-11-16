@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { UNITS } from "../content";
-import { Dino, type Mood } from "../components/Dino";
+import { Ninja, type Mood } from '../components/Ninja';
 import {
   buy,
   ITEMS,
@@ -29,13 +29,13 @@ export function Playground({
       <h2 className="page-title">Locul de joacă</h2>
       {units.length === 0 ? (
         <div className="empty">
-          <Dino mood="talk" size={150} />
+          <Ninja mood="talk" size={150} />
           <p>Termină prima lecție de pe hartă și aici se deschid jocurile!</p>
         </div>
       ) : (
         <>
           <div className="play-hello">
-            <Dino mood="talk" size={110} />
+            <Ninja mood="talk" size={110} />
             <span className="bubble">Alege un joc!</span>
           </div>
           <div className="play-grid">
@@ -73,8 +73,8 @@ function lastDays(n: number): { key: string; label: string }[] {
   });
 }
 
-/** Dino's room: level, wardrobe bought with stars, and sunny days. */
-export function DinoRoom({
+/** Ninja's room: level, wardrobe bought with stars, and sunny days. */
+export function NinjaRoom({
   progress,
   onChange,
 }: {
@@ -120,7 +120,7 @@ export function DinoRoom({
   return (
     <div className="page page-white">
       <div className="room-hero room-stage">
-        <Dino mood={mood} size={220} />
+        <Ninja mood={mood} size={220} />
         <div className="room-level">
           <span className="level-badge">Nivelul {level}</span>
           <div className="level-bar">
@@ -136,7 +136,7 @@ export function DinoRoom({
       </div>
 
       <section className="panel panel-kid">
-        <h3>Garderoba lui Dino</h3>
+        <h3>Garderoba lui Ninja</h3>
         <div className="wardrobe">
           {ITEMS.map((item) => {
             const owned = progress.owned.includes(item.id);
@@ -149,7 +149,7 @@ export function DinoRoom({
                 onClick={() => tapItem(item)}
                 aria-label={item.name}
               >
-                <Dino size={92} outfit={{ [item.slot]: item.id }} />
+                <Ninja size={92} outfit={{ [item.slot]: item.id }} />
                 <span className="ward-tag">
                   {owned ? (wearing ? "✓" : "👕") : `⭐ ${item.price}`}
                 </span>

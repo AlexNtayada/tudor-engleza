@@ -1,4 +1,4 @@
-import { Dino } from './Dino'
+import { Ninja } from './Ninja'
 import { levelFor } from '../gamify'
 import type { Progress } from '../progress'
 
@@ -8,16 +8,16 @@ const TABS: { id: Tab; icon: string; label: string }[] = [
   { id: 'home', icon: '🗺️', label: 'Hartă' },
   { id: 'play', icon: '🎈', label: 'Joacă' },
   { id: 'album', icon: '📒', label: 'Album' },
-  { id: 'dino', icon: '🦖', label: 'Dino' },
+  { id: 'dino', icon: '🥷', label: 'Ninja' },
   { id: 'parents', icon: '🔒', label: 'Părinți' },
 ]
 
 function Logo() {
   return (
     <span className="logo">
-      <Dino size={52} mood="idle" />
+      <Ninja size={52} mood="idle" />
       <span className="logo-text">
-        Dino <b>English</b>
+        Ninja <b>English</b>
       </span>
     </span>
   )
@@ -48,7 +48,7 @@ export function Nav({ tab, progress, onTab }: { tab: Tab; progress: Progress; on
             ⭐ {progress.wallet}
           </span>
           <span className="pill pill-level" aria-label="Nivel">
-            🦖 {levelFor(progress.earned)}
+            🥷 {levelFor(progress.earned)}
           </span>
         </div>
       </header>

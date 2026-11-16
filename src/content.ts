@@ -59,7 +59,7 @@ const color = (id: string, ro: string, hex: string): Word => ({
   visual: { kind: 'color', value: hex },
 })
 
-// Dino says just the word ("cow", not "a cow") so Tudor learns the word itself.
+// Ninja says just the word ("cow", not "a cow") so Tudor learns the word itself.
 const animal = (id: string, ro: string, emoji: string): Word => ({
   id,
   say: id,

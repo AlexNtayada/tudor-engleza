@@ -18,15 +18,15 @@ export interface Progress {
   /** Seconds played per day, keyed YYYY-MM-DD. */
   playSeconds: Record<string, number>
   settings: Settings
-  /** Stars Tudor can spend in Dino's wardrobe. */
+  /** Stars Tudor can spend in Ninja's wardrobe. */
   wallet: number
-  /** All stars ever earned (drives Dino's level). */
+  /** All stars ever earned (drives Ninja's level). */
   earned: number
   /** Days (YYYY-MM-DD) with at least one finished lesson. */
   daysPlayed: string[]
   /** Last day the daily chest was opened. */
   lastChest: string
-  /** Wardrobe items bought, and what Dino wears per slot. */
+  /** Wardrobe items bought, and what Ninja wears per slot. */
   owned: string[]
   outfit: Partial<Record<'head' | 'face' | 'neck', string>>
 }

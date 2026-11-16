@@ -4,7 +4,7 @@ import type { Progress } from '../progress'
 export const OutfitContext = createContext<Progress['outfit']>({})
 export const useOutfit = () => useContext(OutfitContext)
 
-/** Accessories drawn in Dino's 200×200 coordinate space. */
+/** Accessories drawn in Ninja's 200×200 coordinate space. */
 export function Accessory({ id }: { id: string }) {
   switch (id) {
     case 'party-hat':
