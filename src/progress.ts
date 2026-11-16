@@ -5,6 +5,10 @@ export interface Settings {
   /** Language the mascot uses for instructions. English words are always English. */
   instructions: 'ro' | 'en'
   slowVoice: boolean
+  /** Show the microphone ("say it yourself") steps. */
+  mic: boolean
+  /** Use the browser's speech recognition to check the word (audio goes to the browser's speech service). */
+  micCheck: boolean
 }
 
 export interface Progress {
@@ -22,7 +26,7 @@ export const DEFAULT_PROGRESS: Progress = {
   stars: {},
   stickers: [],
   playSeconds: {},
-  settings: { childName: 'Tudor', instructions: 'ro', slowVoice: false },
+  settings: { childName: 'Tudor', instructions: 'ro', slowVoice: false, mic: true, micCheck: true },
 }
 
 export function loadProgress(): Progress {

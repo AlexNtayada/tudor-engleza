@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { UNITS } from '../content'
 import { Dino } from '../components/Dino'
 import { instruction, speak, hasRomanianVoice, speechSupported } from '../speech'
+import { micSupported, recognitionSupported } from '../recorder'
 import { sfx } from '../sfx'
 import {
   ALL_LESSONS_COUNT,
@@ -288,6 +289,50 @@ export function Parents({
             Română.
           </p>
         )}
+      </section>
+
+      <section className="panel">
+        <h3>Microfon</h3>
+        <div className="field">
+          <span>Exerciții „Spune tu!” 🎤</span>
+          <div className="seg">
+            <button className={s.mic ? 'on' : ''} onClick={() => set({ mic: true })}>
+              Pornit
+            </button>
+            <button className={!s.mic ? 'on' : ''} onClick={() => set({ mic: false })}>
+              Oprit
+            </button>
+          </div>
+        </div>
+        <div className="field">
+          <span>Verifică dacă a spus cuvântul</span>
+          <div className="seg">
+            <button className={s.micCheck ? 'on' : ''} onClick={() => set({ micCheck: true })}>
+              Da
+            </button>
+            <button className={!s.micCheck ? 'on' : ''} onClick={() => set({ micCheck: false })}>
+              Nu
+            </button>
+          </div>
+        </div>
+        <p className="note">
+          Tudor apasă 🎤, spune cuvântul și își aude imediat vocea. Înregistrarea rămâne doar pe acest dispozitiv și nu
+          se salvează. Dino nu spune niciodată „greșit”: dacă nu e sigur, îl roagă să mai spună o dată.
+        </p>
+        {s.micCheck && recognitionSupported() && (
+          <p className="note">
+            Verificarea folosește recunoașterea vocală a browserului; în Chrome și Edge sunetul e trimis serviciului de
+            recunoaștere vocală al browserului (Google, respectiv Microsoft). Dacă nu vrei asta, alege „Nu”: înregistrarea
+            și redarea merg în continuare.
+          </p>
+        )}
+        {s.micCheck && !recognitionSupported() && (
+          <p className="note warn">
+            Browserul acesta nu poate verifica ce a spus; Dino îl laudă oricum după ce se aude. Verificarea merge în Chrome și
+            Edge.
+          </p>
+        )}
+        {!micSupported() && <p className="note warn">Browserul acesta nu are acces la microfon.</p>}
       </section>
 
       <section className="panel">

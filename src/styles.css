@@ -614,6 +614,78 @@ button:focus-visible {
   }
 }
 
+/* microphone */
+
+.mic {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 130px;
+  height: 130px;
+  border-radius: 50%;
+  background: #ff6b8b;
+  box-shadow: 0 8px 0 #d94a6a;
+  transition: transform 0.08s;
+  animation: micInvite 1.6s ease-in-out infinite;
+}
+
+.mic-small {
+  width: 96px;
+  height: 96px;
+}
+
+.mic-icon {
+  font-size: 58px;
+  line-height: 1;
+}
+
+.mic-small .mic-icon {
+  font-size: 42px;
+}
+
+.mic:active {
+  transform: translateY(6px);
+  box-shadow: 0 2px 0 #d94a6a;
+}
+
+.mic-recording {
+  background: #ff3b5c;
+  animation: none;
+  transform: scale(1.08);
+}
+
+.mic-playing {
+  background: #5b8cff;
+  box-shadow: 0 8px 0 #3a66d6;
+  animation: none;
+}
+
+.mic-ring {
+  position: absolute;
+  inset: -10px;
+  border-radius: 50%;
+  border: 6px solid rgba(255, 59, 92, 0.5);
+  animation: micRing 1s ease-out infinite;
+}
+
+@keyframes micInvite {
+  50% {
+    transform: scale(1.06);
+  }
+}
+
+@keyframes micRing {
+  from {
+    transform: scale(0.9);
+    opacity: 1;
+  }
+  to {
+    transform: scale(1.35);
+    opacity: 0;
+  }
+}
+
 /* pictures */
 
 .pic {
@@ -1088,6 +1160,22 @@ button:focus-visible {
   }
   .card-word {
     font-size: 36px;
+  }
+  .card-big {
+    width: min(230px, 62vw);
+    padding: 12px;
+  }
+  .intro {
+    gap: 18px;
+  }
+  .mic {
+    width: 104px;
+    height: 104px;
+  }
+  .go-btn {
+    width: 92px;
+    height: 92px;
+    font-size: 44px;
   }
   .stats {
     grid-template-columns: repeat(2, 1fr);
