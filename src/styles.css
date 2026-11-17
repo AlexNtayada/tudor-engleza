@@ -4865,7 +4865,10 @@ button.avatar:active {
 }
 
 .intro-play {
-  padding: 10px 26px;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 26px 6px 6px;
   border-radius: 999px;
   background: #fff;
   font-size: 20px;
@@ -4873,6 +4876,28 @@ button.avatar:active {
   color: var(--green-dark);
   border: 2px solid var(--edge);
   box-shadow: 0 5px 0 var(--lift);
+}
+
+/* The chosen friend's face in a small circle, so the child sees who they'll play with. */
+.intro-play-face {
+  position: relative;
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  overflow: hidden;
+  background: radial-gradient(circle at 50% 35%, #fff3c4, #ffd45c);
+  box-shadow: 0 0 0 2px var(--yellow);
+}
+
+.intro-play-face .dino {
+  position: absolute;
+  left: -16px;
+  top: -4px;
+}
+
+.intro-play-face .dino-body {
+  animation: none;
 }
 
 @media (max-width: 640px) {
