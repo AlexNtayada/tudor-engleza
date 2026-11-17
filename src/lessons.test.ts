@@ -173,3 +173,12 @@ describe('streakDays', () => {
     expect(streakDays([], now)).toBe(0)
   })
 })
+
+describe('unit bosses', () => {
+  it('gives every unit its own boss with a unique name', async () => {
+    const { BOSSES, bossFor } = await import('./components/Boss')
+    const names = UNITS.map((u) => bossFor(u.id).name)
+    expect(new Set(names).size).toBe(UNITS.length)
+    for (const u of UNITS) expect(BOSSES[u.id]).toBeDefined()
+  })
+})
