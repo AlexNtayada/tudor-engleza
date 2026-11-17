@@ -3190,19 +3190,7 @@ body {
   color: var(--ink);
 }
 
-.hero-icon {
-  width: 52px;
-  height: 52px;
-  border-radius: 16px;
-  background: #fff;
-  font-size: 26px;
-  box-shadow: 0 5px 0 #e8b23a;
-}
 
-.hero-icon:active {
-  transform: translateY(3px);
-  box-shadow: 0 2px 0 #e8b23a;
-}
 
 .hero-stage {
   display: flex;
