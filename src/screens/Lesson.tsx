@@ -290,7 +290,7 @@ export function LessonScreen({
       </main>
       {combo > 0 && (
         <div className="combo" key={combo} aria-live="polite">
-          <span>🔥 Super combo!</span>
+          <span>⚡ Super combo!</span>
           <span className="combo-plus">+1 ⭐</span>
         </div>
       )}
