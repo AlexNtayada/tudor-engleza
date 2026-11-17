@@ -18,7 +18,7 @@ describe('voice clips', () => {
     expect(keys.size).toBe(lines.length)
     for (const u of UNITS) for (const w of u.words) expect(lines.some((l) => l.voice === 'en' && l.text === w.say)).toBe(true)
     for (const m of MASCOTS) {
-      expect(lines.some((l) => l.voice === m.id && l.text === 'Hai să învățăm engleză!')).toBe(true)
+      expect(lines.some((l) => l.voice === m.id && l.text === 'Hai să învățăm engleză.')).toBe(true)
       expect(lines.some((l) => l.voice === m.id && l.text === 'Mai încearcă!')).toBe(true)
     }
   })

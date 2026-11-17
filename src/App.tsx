@@ -223,15 +223,15 @@ export default function App() {
             chosen={progress.mascot}
             onPick={() => {
               void speak([
-                { text: 'Hello!', lang: 'en' },
+                { text: 'Hello.', lang: 'en' },
                 ...instruction(progress.settings.instructions, 'Alege-ți un prieten!', 'Pick a friend!'),
               ])
               setScreen({ name: 'pick', back: 'start' })
             }}
             onPlay={() => {
               void speak([
-                { text: 'Hello!', lang: 'en' },
-                ...instruction(progress.settings.instructions, 'Hai să învățăm engleză!', "Let's learn English!"),
+                { text: 'Hello.', lang: 'en' },
+                ...instruction(progress.settings.instructions, 'Hai să învățăm engleză.', "Let's learn English!"),
               ])
               setScreen({ name: 'home' })
             }}
@@ -272,8 +272,8 @@ export default function App() {
               setProgress((p) => ({ ...p, mascot: id }))
               if (screen.back === 'start') {
                 void speak([
-                  { text: 'Hello!', lang: 'en' },
-                  ...instruction(progress.settings.instructions, 'Hai să învățăm engleză!', "Let's learn English!"),
+                  { text: 'Hello.', lang: 'en' },
+                  ...instruction(progress.settings.instructions, 'Hai să învățăm engleză.', "Let's learn English!"),
                 ])
                 setScreen({ name: 'home' })
               } else {
