@@ -280,19 +280,19 @@ export function FinishScreen({
             </span>
           </div>
           <div className="stat-tile">
-            <span className="stat-icon">🔥</span>
+            <span className="stat-icon">⚡</span>
             <span>
               <b>× {combos}</b>
-              <small>serii la rând</small>
+              <small>combo</small>
             </span>
           </div>
           <div className="stat-tile">
-            <span className="stat-icon stat-icon-sun">☀️</span>
+            <span className="stat-icon stat-icon-sun">🔥</span>
             <span>
               <b className="stat-orange">
                 {streak} {streak === 1 ? 'zi' : 'zile'}
               </b>
-              <small>cu soare</small>
+              <small>la rând</small>
             </span>
           </div>
         </div>
