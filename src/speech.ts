@@ -36,7 +36,8 @@ function pickVoice(lang: 'en' | 'ro'): SpeechSynthesisVoice | undefined {
 
 /** Romanian can be spoken: recorded lines for the current friend, or a Romanian device voice. */
 export function hasRomanianVoice(): boolean {
-  if (hasVoiceClips(mascot().id)) return true
+  // A friend with only a few recorded lines doesn't count: the rest would be silent.
+  if (hasVoiceClips(mascot().id) && hasClip(mascot().id, 'Mai încearcă!')) return true
   refreshVoices()
   return !!pickVoice('ro')
 }
@@ -169,7 +170,8 @@ export function instruction(
   en: string,
   englishWord?: string,
 ): Part[] {
-  if (mode === 'ro' && hasRomanianVoice()) {
+  // Romanian only when this line can really be heard: the friend's clip, or a Romanian device voice.
+  if (mode === 'ro' && (hasClip(mascot().id, ro) || hasRomanianVoice())) {
     return englishWord ? [{ text: ro, lang: 'ro' }, { text: englishWord, lang: 'en' }] : [{ text: ro, lang: 'ro' }]
   }
   return [{ text: en, lang: 'en' }]
