@@ -427,6 +427,194 @@ const drawBush: Draw = (mood) => {
   )
 }
 
+// ---------- 14. Marea: Clănțănilă, the pinching crab ----------
+const drawCrab: Draw = (mood) => {
+  const c = '#ff6b4a'
+  const dark = '#d9452a'
+  return (
+    <>
+      {[0, 1, 2].map((i) => (
+        <g key={i}>
+          <path d={`M${44 - i * 4} ${150 + i * 10} L ${16 - i * 4} ${168 + i * 10} L ${10 - i * 4} ${186}`} fill="none" {...ink} strokeWidth={7} />
+          <path d={`M${156 + i * 4} ${150 + i * 10} L ${184 + i * 4} ${168 + i * 10} L ${190 + i * 4} ${186}`} fill="none" {...ink} strokeWidth={7} />
+          <path d={`M${44 - i * 4} ${150 + i * 10} L ${16 - i * 4} ${168 + i * 10} L ${10 - i * 4} ${186}`} fill="none" stroke={dark} strokeWidth={3} strokeLinecap="round" />
+          <path d={`M${156 + i * 4} ${150 + i * 10} L ${184 + i * 4} ${168 + i * 10} L ${190 + i * 4} ${186}`} fill="none" stroke={dark} strokeWidth={3} strokeLinecap="round" />
+        </g>
+      ))}
+      <g className="boss-arm-left">
+        <path d="M40 112 L 24 70" {...ink} strokeWidth={8} />
+        <path d="M40 112 L 24 70" stroke={c} strokeWidth={4} strokeLinecap="round" />
+        <path d="M24 72 C 0 66 -2 34 18 26 L 26 46 L 38 30 C 50 44 44 70 24 72 Z" fill={c} {...ink} strokeWidth={4} />
+      </g>
+      <g className="boss-arm-right">
+        <path d="M160 112 L 176 70" {...ink} strokeWidth={8} />
+        <path d="M160 112 L 176 70" stroke={c} strokeWidth={4} strokeLinecap="round" />
+        <path d="M176 72 C 200 66 202 34 182 26 L 174 46 L 162 30 C 150 44 156 70 176 72 Z" fill={c} {...ink} strokeWidth={4} />
+      </g>
+      <path d="M100 60 C 160 60 180 100 172 136 C 164 168 132 178 100 178 C 68 178 36 168 28 136 C 20 100 40 60 100 60 Z" fill={c} {...ink} />
+      <path d="M34 138 C 44 166 72 174 100 174 C 70 164 50 150 42 128 Z" fill={dark} opacity="0.5" />
+      <circle cx="56" cy="92" r="5" fill="#fff" opacity="0.5" />
+      <circle cx="150" cy="104" r="4" fill="#fff" opacity="0.5" />
+      {/* eye stalks */}
+      <path d="M78 64 L 74 40 M 122 64 L 126 40" {...ink} strokeWidth={6} />
+      <Face mood={mood} y={116} s={0.78} />
+    </>
+  )
+}
+
+// ---------- 15. Jungla: Cocotilă, the grumpy coconut ----------
+const drawCoconut: Draw = (mood) => (
+  <>
+    <ellipse cx="72" cy="186" rx="18" ry="8" fill="#5a3418" {...ink} />
+    <ellipse cx="128" cy="186" rx="18" ry="8" fill="#5a3418" {...ink} />
+    {/* palm leaves on top */}
+    <path d="M100 40 Q 60 0 18 22 Q 60 18 92 46 Z" fill="#3fae4a" {...ink} strokeWidth={4} />
+    <path d="M100 40 Q 140 0 182 22 Q 140 18 108 46 Z" fill="#55c057" {...ink} strokeWidth={4} />
+    <path d="M100 42 Q 96 4 120 -6 Q 108 20 106 44 Z" fill="#2f9a3e" {...ink} strokeWidth={4} />
+    <Arms color="#8a5a2b" y={118} x={28}>
+      {/* banana */}
+      <path d="M178 84 Q 206 62 196 30 Q 190 56 172 74 Z" fill="#ffd23f" {...ink} strokeWidth={3.5} />
+    </Arms>
+    <circle cx="100" cy="114" r="74" fill="#8a5a2b" {...ink} />
+    <path d="M34 128 C 42 162 72 184 108 186 C 74 172 52 150 44 120 Z" fill="#5a3418" opacity="0.5" />
+    {/* hairy texture */}
+    <path d="M52 70 l 8 4 M 64 58 l 6 6 M 140 60 l -6 6 M 152 74 l -8 4 M 160 120 l -8 0 M 40 120 l 8 0" stroke="#5a3418" strokeWidth="3.5" strokeLinecap="round" />
+    <ellipse cx="100" cy="122" rx="48" ry="40" fill="#fff4dc" opacity="0.18" />
+    <Face mood={mood} y={116} s={0.84} />
+  </>
+)
+
+// ---------- 16. Gâzele: Zumzilă, the buzzing mosquito ----------
+const drawMosquito: Draw = (mood) => (
+  <>
+    {/* wings */}
+    <g className="boss-arm-left">
+      <ellipse cx="38" cy="70" rx="34" ry="20" fill="rgba(200,236,255,0.85)" {...ink} strokeWidth={3.5} transform="rotate(-30 38 70)" />
+    </g>
+    <g className="boss-arm-right">
+      <ellipse cx="162" cy="70" rx="34" ry="20" fill="rgba(200,236,255,0.85)" {...ink} strokeWidth={3.5} transform="rotate(30 162 70)" />
+    </g>
+    {/* thin legs */}
+    <path d="M70 160 L 44 190 M 100 168 L 100 196 M 130 160 L 156 190" fill="none" {...ink} strokeWidth={4} />
+    {/* striped body */}
+    <ellipse cx="100" cy="118" rx="62" ry="58" fill="#9ba7c4" {...ink} />
+    <path d="M44 140 Q 100 160 156 140" fill="none" stroke="#5d6888" strokeWidth="10" />
+    <path d="M40 112 Q 100 130 160 112" fill="none" stroke="#5d6888" strokeWidth="8" opacity="0.6" />
+    {/* nose stinger */}
+    <path d="M100 132 L 100 186" stroke={L} strokeWidth="6" strokeLinecap="round" />
+    <path d="M100 132 L 100 182" stroke="#ff6b8b" strokeWidth="2.5" strokeLinecap="round" />
+    {/* antennae */}
+    <path d="M82 64 Q 70 34 54 26 M 118 64 Q 130 34 146 26" fill="none" {...ink} strokeWidth={4} />
+    <circle cx="54" cy="26" r="6" fill="#ff6b8b" stroke={L} strokeWidth="3" />
+    <circle cx="146" cy="26" r="6" fill="#ff6b8b" stroke={L} strokeWidth="3" />
+    {mood !== 'down' && (
+      <text x="160" y="160" fontSize="20" fontWeight="900" fill="#5d6888" fontFamily="inherit">
+        bzz
+      </text>
+    )}
+    <Face mood={mood} y={104} s={0.7} />
+  </>
+)
+
+// ---------- 17. Fructe și legume: Plângăcel, the onion that makes you cry ----------
+const drawOnion: Draw = (mood) => (
+  <>
+    <path d="M86 186 q -6 8 -14 6 M 100 188 l 0 8 M 114 186 q 6 8 14 6" fill="none" stroke="#c9a46a" strokeWidth="3.5" strokeLinecap="round" />
+    <Arms color="#c99ae8" y={120} x={30} />
+    <path
+      d="M100 30 C 112 50 168 70 170 122 C 172 162 140 186 100 186 C 60 186 28 162 30 122 C 32 70 88 50 100 30 Z"
+      fill="#c99ae8"
+      {...ink}
+    />
+    <path d="M100 40 C 70 70 62 130 80 182 M 100 40 C 130 70 138 130 120 182" fill="none" stroke="#9d6cc4" strokeWidth="3.5" />
+    <path d="M38 132 C 44 166 70 182 96 184 C 68 170 52 152 46 124 Z" fill="#9d6cc4" opacity="0.5" />
+    {/* green sprouts */}
+    <path d="M100 32 Q 92 10 80 2 M 100 32 Q 104 6 114 -4 M 100 32 Q 112 16 126 12" fill="none" stroke={L} strokeWidth="9" strokeLinecap="round" />
+    <path d="M100 32 Q 92 10 80 2 M 100 32 Q 104 6 114 -4 M 100 32 Q 112 16 126 12" fill="none" stroke="#4cbf4a" strokeWidth="5" strokeLinecap="round" />
+    {/* tears */}
+    {mood !== 'laugh' && (
+      <g>
+        <path d="M60 128 q -6 12 0 16 q 6 -4 0 -16 Z" fill="#7fd0ff" stroke={L} strokeWidth="2" />
+        <path d="M140 128 q -6 12 0 16 q 6 -4 0 -16 Z" fill="#7fd0ff" stroke={L} strokeWidth="2" />
+      </g>
+    )}
+    <Face mood={mood} y={116} s={0.74} />
+  </>
+)
+
+// ---------- 18. Emoții: Bosumflici, the pouting balloon ----------
+const drawBalloon: Draw = (mood) => (
+  <>
+    <path d="M100 172 Q 86 184 100 194 Q 112 200 104 200" fill="none" {...ink} strokeWidth={3.5} />
+    <Arms color="#8e9bb8" y={110} x={30} />
+    <path d="M100 18 C 160 18 180 64 176 102 C 172 140 134 166 100 166 C 66 166 28 140 24 102 C 20 64 40 18 100 18 Z" fill="#8e9bb8" {...ink} />
+    <path d="M90 166 L 110 166 L 104 176 L 96 176 Z" fill="#6b7896" {...ink} strokeWidth={3.5} />
+    <path d="M32 112 C 40 144 66 162 98 162 C 66 150 48 132 42 104 Z" fill="#6b7896" opacity="0.5" />
+    <path d="M56 44 Q 66 34 80 32" fill="none" stroke="#fff" strokeWidth="7" strokeLinecap="round" opacity="0.7" />
+    {/* puffed cheeks of a pout */}
+    {mood === 'idle' && (
+      <g>
+        <circle cx="48" cy="112" r="11" fill="#ff8fb0" opacity="0.5" />
+        <circle cx="152" cy="112" r="11" fill="#ff8fb0" opacity="0.5" />
+      </g>
+    )}
+    <Face mood={mood} y={96} s={0.86} />
+  </>
+)
+
+// ---------- 19. Mișcare: Leneșel, the lazy pillow ----------
+const drawPillow: Draw = (mood) => (
+  <>
+    <Arms color="#bfe0ff" y={124} x={30} />
+    <path
+      d="M24 66 Q 30 50 46 52 Q 100 40 154 52 Q 170 50 176 66 Q 186 120 176 168 Q 170 184 154 180 Q 100 192 46 180 Q 30 184 24 168 Q 14 120 24 66 Z"
+      fill="#bfe0ff"
+      {...ink}
+    />
+    <path d="M26 150 Q 34 176 60 178 Q 100 184 140 180 Q 100 176 64 172 Q 40 166 32 140 Z" fill="#8cc4f2" opacity="0.6" />
+    {/* stitched corners */}
+    <path d="M34 64 l -12 -12 M 166 64 l 12 -12 M 34 172 l -12 12 M 166 172 l 12 12" {...ink} strokeWidth={5} />
+    {/* polka dots */}
+    <circle cx="50" cy="80" r="5" fill="#fff" opacity="0.8" />
+    <circle cx="156" cy="88" r="6" fill="#fff" opacity="0.8" />
+    <circle cx="152" cy="156" r="5" fill="#fff" opacity="0.8" />
+    <circle cx="46" cy="150" r="4" fill="#fff" opacity="0.8" />
+    {/* sleeping mask pushed up */}
+    <path d="M58 58 Q 100 46 142 58 L 140 72 Q 100 62 60 72 Z" fill="#9b6bff" {...ink} strokeWidth={3.5} />
+    {mood === 'idle' && (
+      <text x="160" y="40" fontSize="22" fontWeight="900" fill="#5b8cff" fontFamily="inherit">
+        zzz
+      </text>
+    )}
+    <Face mood={mood} y={118} s={0.76} />
+  </>
+)
+
+// ---------- 20. Meserii: Fumărel, the puff of smoke the firefighters chase ----------
+const drawSmoke: Draw = (mood) => (
+  <>
+    <Arms color="#7d7f8c" y={118} x={22} />
+    <path
+      d="M54 170 C 26 170 14 146 24 126 C 10 108 22 82 46 82 C 44 56 68 40 90 48 C 100 26 136 24 148 48 C 174 46 190 70 180 94 C 196 108 190 140 168 150 C 166 168 146 178 128 170 C 116 182 84 184 74 170 C 68 174 60 174 54 170 Z"
+      fill="#7d7f8c"
+      {...ink}
+    />
+    <path d="M28 132 C 34 156 52 166 74 164 C 54 154 40 142 36 124 Z" fill="#55575f" opacity="0.6" />
+    <path d="M66 62 Q 80 52 96 58" fill="none" stroke="#b9bbc6" strokeWidth="6" strokeLinecap="round" />
+    {/* little sparks */}
+    {mood !== 'down' && (
+      <g>
+        <path d="M30 60 l 6 -10 l 4 8 Z" fill="#ffb020" stroke={L} strokeWidth="2.5" strokeLinejoin="round" />
+        <path d="M172 40 l 6 -12 l 5 10 Z" fill="#ff5a3d" stroke={L} strokeWidth="2.5" strokeLinejoin="round" />
+      </g>
+    )}
+    {mood === 'down' && (
+      <path d="M150 20 q -4 10 0 14 q 4 -4 0 -14 Z M 166 34 q -4 10 0 14 q 4 -4 0 -14 Z" fill="#5fb6ff" stroke={L} strokeWidth="2.5" />
+    )}
+    <Face mood={mood} y={106} s={0.84} />
+  </>
+)
+
 export const BOSSES: Record<string, BossInfo> = {
   colors: {
     id: 'colors',
@@ -518,6 +706,55 @@ export const BOSSES: Record<string, BossInfo> = {
     title: 'tufișul țepos',
     taunt: 'Înțeapă pe oricine trece prin pădure!',
     draw: drawBush,
+  },
+  ocean: {
+    id: 'ocean',
+    name: 'Clănțănilă',
+    title: 'crabul care ciupește',
+    taunt: 'Clanț-clanț! Ciupește pe oricine intră în mare!',
+    draw: drawCrab,
+  },
+  jungle: {
+    id: 'jungle',
+    name: 'Cocotilă',
+    title: 'nuca de cocos morocănoasă',
+    taunt: 'Bum! Cade din palmier peste animale!',
+    draw: drawCoconut,
+  },
+  bugs: {
+    id: 'bugs',
+    name: 'Zumzilă',
+    title: 'țânțarul care bâzâie',
+    taunt: 'Bzzz! Bâzâie și nu lasă gâzele să doarmă!',
+    draw: drawMosquito,
+  },
+  garden: {
+    id: 'garden',
+    name: 'Plângăcel',
+    title: 'ceapa care te face să plângi',
+    taunt: 'Vrea să plângă toată grădina!',
+    draw: drawOnion,
+  },
+  feelings: {
+    id: 'feelings',
+    name: 'Bosumflici',
+    title: 'balonul bosumflat',
+    taunt: 'Nu vrea să zâmbească nimeni!',
+    draw: drawBalloon,
+  },
+  actions: {
+    id: 'actions',
+    name: 'Leneșel',
+    title: 'perna leneșă',
+    taunt: 'Vrea ca toată lumea să stea în pat!',
+    draw: drawPillow,
+  },
+  jobs: {
+    id: 'jobs',
+    name: 'Fumărel',
+    title: 'norul de fum',
+    taunt: 'Pufff! Vrea să umple orașul de fum!',
+    draw: drawSmoke,
   },
 }
 

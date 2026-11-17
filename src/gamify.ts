@@ -56,6 +56,13 @@ export const ITEMS: Item[] = [
   { id: 'pilot-goggles', name: 'Ochelari de pilot', slot: 'face', price: 0, setOf: 'transport' },
   { id: 'giant-pencil', name: 'Creion uriaș', slot: 'hand', price: 0, setOf: 'school' },
   { id: 'butterfly-wings', name: 'Aripi de fluture', slot: 'back', price: 0, setOf: 'nature' },
+  { id: 'diving-mask', name: 'Mască de scafandru', slot: 'face', price: 0, setOf: 'ocean' },
+  { id: 'explorer-hat', name: 'Pălărie de explorator', slot: 'head', price: 0, setOf: 'jungle' },
+  { id: 'bee-antennae', name: 'Antene de albină', slot: 'head', price: 0, setOf: 'bugs' },
+  { id: 'watering-can', name: 'Stropitoare', slot: 'hand', price: 0, setOf: 'garden' },
+  { id: 'smile-badge', name: 'Insignă cu zâmbet', slot: 'neck', price: 0, setOf: 'feelings' },
+  { id: 'gold-cup', name: 'Cupa de campion', slot: 'hand', price: 0, setOf: 'actions' },
+  { id: 'fire-helmet', name: 'Cască de pompier', slot: 'head', price: 0, setOf: 'jobs' },
 ]
 
 export const itemById = (id: string) => ITEMS.find((i) => i.id === id)

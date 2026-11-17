@@ -756,6 +756,291 @@ const cloudPuff: Draw = () => (
   </>
 )
 
+const palm: Draw = (v) => {
+  const lean = (v - 0.5) * 16
+  return (
+    <>
+      {shadow(22)}
+      <path d={`M-4 0 Q ${lean * 0.4} -30 ${lean} -62 L ${lean + 6} -62 Q ${lean * 0.4 + 6} -30 5 0 Z`} fill="#b07a45" />
+      {[0, 1, 2, 3, 4].map((i) => (
+        <path key={i} d={`M-4 ${-8 - i * 11} L 5 ${-10 - i * 11}`} stroke="#8a5a2b" strokeWidth="2" />
+      ))}
+      <g transform={`translate(${lean + 3} -62)`}>
+        {[-150, -110, -60, -20, 20].map((a, i) => (
+          <path key={a} d="M0 0 Q 14 -12 32 -4 Q 16 -4 0 4 Z" fill={i % 2 ? '#3fae4a' : '#2f9a3e'} transform={`rotate(${a + 90})`} />
+        ))}
+        <circle cx="-3" cy="4" r="4" fill="#7a4a24" />
+        <circle cx="4" cy="5" r="4" fill="#8a5a2b" />
+      </g>
+    </>
+  )
+}
+
+const beachUmbrella: Draw = (v) => {
+  const c = pick(['#ef3b3b', '#2f7cf6', '#ff8a1f'], v)
+  return (
+    <>
+      {shadow(22)}
+      <rect x="10" y="-6" width="22" height="6" rx="2" fill={pick(['#ffd23f', '#5fd0ff', '#ff7eb6'], v)} />
+      <path d="M0 0 L 2 -46" stroke="#8a6a4a" strokeWidth="3" />
+      <path d="M-26 -38 Q 2 -66 30 -42 Z" fill="#fff" />
+      <path d="M-26 -38 Q -14 -56 2 -54 L 2 -44 Z M 12 -52 Q 24 -50 30 -42 L 16 -42 Z" fill={c} />
+    </>
+  )
+}
+
+const sandcastle: Draw = () => (
+  <>
+    {shadow(20)}
+    <rect x="-18" y="-18" width="36" height="18" fill="#e9c27a" />
+    <rect x="-22" y="-30" width="12" height="30" fill="#f2d08e" />
+    <rect x="10" y="-30" width="12" height="30" fill="#dfb46a" />
+    <rect x="-6" y="-36" width="12" height="20" fill="#f2d08e" />
+    <path d="M-22 -30 l 0 -4 l 3 0 l 0 3 l 3 0 l 0 -3 l 3 0 l 0 3 l 3 0 l 0 -3 l 0 4 Z" fill="#f2d08e" />
+    <path d="M0 -36 L 0 -48" stroke="#8a6a4a" strokeWidth="1.5" />
+    <path d="M0 -48 L 9 -45 L 0 -42 Z" fill="#ef3b3b" />
+    <path d="M-4 0 L -4 -8 Q 0 -12 4 -8 L 4 0 Z" fill="#b98a4a" />
+  </>
+)
+
+const shell: Draw = (v) => {
+  const c = pick(['#ffb3c9', '#ffe0b0', '#fff'], v)
+  return (
+    <>
+      <path d="M-8 0 Q -10 -12 0 -14 Q 10 -12 8 0 Z" fill={c} />
+      <path d="M-4 -1 L -2 -11 M 0 -1 L 0 -13 M 4 -1 L 2 -11" stroke={shade(c, -0.25)} strokeWidth="1.3" />
+    </>
+  )
+}
+
+const starfish: Draw = (v) => (
+  <path
+    d="M0 -16 L 3 -8 L 11 -8 L 5 -3 L 7 5 L 0 0 L -7 5 L -5 -3 L -11 -8 L -3 -8 Z"
+    fill={pick(['#ff8a5c', '#ffb020', '#ff7eb6'], v)}
+    transform="translate(0 -2)"
+  />
+)
+
+const bigLeaf: Draw = (v) => {
+  const c = pick(['#2f9a3e', '#3fae4a', '#1e7e40'], v)
+  return (
+    <>
+      {shadow(16)}
+      {[-40, -10, 22].map((a) => (
+        <g key={a} transform={`rotate(${a})`}>
+          <path d="M0 0 Q -14 -20 0 -40 Q 14 -20 0 0 Z" fill={c} />
+          <path d="M0 -2 L 0 -36" stroke={shade(c, 0.25)} strokeWidth="1.5" />
+        </g>
+      ))}
+    </>
+  )
+}
+
+const jungleFlower: Draw = (v) => {
+  const c = pick(['#ff5a6e', '#ff8a1f', '#ff7eb6'], v)
+  return (
+    <>
+      <path d="M0 0 L 0 -14" stroke="#2f9a3e" strokeWidth="2.5" />
+      <g transform="translate(0 -18)">
+        {[0, 72, 144, 216, 288].map((a) => (
+          <ellipse key={a} cx="0" cy="-6" rx="4" ry="7" fill={c} transform={`rotate(${a})`} />
+        ))}
+        <circle r="3" fill="#ffd23f" />
+      </g>
+    </>
+  )
+}
+
+const anthill: Draw = () => (
+  <>
+    {shadow(20)}
+    <path d="M-20 0 Q -8 -26 0 -26 Q 8 -26 20 0 Z" fill="#c98a4b" />
+    <path d="M4 -25 Q 12 -20 20 0 L 8 0 Z" fill="#a8693a" />
+    <ellipse cx="0" cy="-22" rx="4" ry="2.5" fill="#5a3418" />
+    <circle cx="-12" cy="-6" r="1.6" fill="#2b2118" />
+    <circle cx="-8" cy="-4" r="1.6" fill="#2b2118" />
+    <circle cx="13" cy="-3" r="1.6" fill="#2b2118" />
+  </>
+)
+
+const daisy: Draw = (v) => (
+  <>
+    <path d="M0 0 Q 3 -20 0 -40" stroke="#3f9a3a" strokeWidth="3" fill="none" />
+    <path d="M0 -16 Q 10 -22 14 -16 Q 6 -12 0 -16" fill="#4cbf4a" />
+    <g transform="translate(0 -44)">
+      {Array.from({ length: 10 }, (_, i) => (
+        <ellipse key={i} cx="0" cy="-9" rx="3.5" ry="8" fill={v > 0.5 ? '#fff' : '#ffd6ea'} transform={`rotate(${i * 36})`} />
+      ))}
+      <circle r="5" fill="#ffc21a" />
+    </g>
+  </>
+)
+
+const ladybug: Draw = () => (
+  <g transform="translate(0 -6)">
+    <ellipse cx="0" cy="0" rx="7" ry="6" fill="#ef3b3b" />
+    <path d="M0 -6 L 0 6" stroke="#2b2118" strokeWidth="1.2" />
+    <circle cx="0" cy="-6" r="3" fill="#2b2118" />
+    <circle cx="-3" cy="0" r="1.4" fill="#2b2118" />
+    <circle cx="3" cy="2" r="1.4" fill="#2b2118" />
+  </g>
+)
+
+const veggieRow: Draw = (v) => {
+  const leaf = pick(['#4cbf4a', '#3fae4a'], v)
+  const fruit = pick(['#ef3b3b', '#ff8a1f', '#9b4dde'], v)
+  return (
+    <>
+      <path d="M-34 0 Q 0 -10 34 0 Q 0 6 -34 0 Z" fill="#8a5a2b" />
+      {[-24, -8, 8, 24].map((x) => (
+        <g key={x} transform={`translate(${x} -3)`}>
+          <path d="M0 0 Q -6 -10 -2 -14 M 0 0 Q 6 -10 2 -14 M 0 0 L 0 -12" stroke={leaf} strokeWidth="3" strokeLinecap="round" fill="none" />
+          {v > 0.4 && <circle cx="0" cy="-3" r="3" fill={fruit} />}
+        </g>
+      ))}
+    </>
+  )
+}
+
+const pumpkin: Draw = () => (
+  <>
+    {shadow(14)}
+    <ellipse cx="-6" cy="-10" rx="8" ry="10" fill="#e0701a" />
+    <ellipse cx="6" cy="-10" rx="8" ry="10" fill="#e0701a" />
+    <ellipse cx="0" cy="-10" rx="8" ry="11" fill="#ff8a1f" />
+    <path d="M0 -20 Q 2 -26 6 -27" stroke="#3f9a3a" strokeWidth="3" fill="none" strokeLinecap="round" />
+  </>
+)
+
+const scarecrow: Draw = () => (
+  <>
+    {shadow(14)}
+    <path d="M0 0 L 0 -44 M -22 -34 L 22 -34" stroke="#8a5a2b" strokeWidth="4" strokeLinecap="round" />
+    <path d="M-12 -38 L 12 -38 L 10 -16 L -10 -16 Z" fill="#2f7cf6" />
+    <path d="M-12 -38 L -6 -38 L -6 -16 L -10 -16 Z" fill="#ef3b3b" opacity="0.8" />
+    <circle cx="0" cy="-48" r="8" fill="#f6d58e" />
+    <path d="M-14 -52 L 14 -52 L 8 -58 Q 0 -66 -8 -58 Z" fill="#a8693a" />
+    <circle cx="-3" cy="-48" r="1.3" fill="#2b2118" />
+    <circle cx="3" cy="-48" r="1.3" fill="#2b2118" />
+    <path d="M-24 -34 l -4 4 M -24 -34 l -4 -2 M 24 -34 l 4 4 M 24 -34 l 4 -2" stroke="#e9b949" strokeWidth="2" />
+  </>
+)
+
+const cabbage: Draw = (v) => (
+  <>
+    {shadow(10)}
+    <circle cx="0" cy="-8" r="9" fill={v > 0.5 ? '#9fd86b' : '#b07ad6'} />
+    <path d="M-8 -4 Q -12 -14 -4 -16 M 8 -4 Q 12 -14 4 -16" stroke={v > 0.5 ? '#6fb33f' : '#8a52b0'} strokeWidth="2.5" fill="none" />
+  </>
+)
+
+const cloudTree: Draw = (v) => {
+  const c = pick(['#ffc4df', '#d6c4ff', '#c4ecff', '#fff1b8'], v)
+  return (
+    <>
+      {shadow(22)}
+      <path d="M-3 0 L -2 -26 L 2 -26 L 3 0 Z" fill="#d9b58a" />
+      <circle cx="-12" cy="-34" r="13" fill={c} />
+      <circle cx="12" cy="-34" r="13" fill={shade(c, -0.08)} />
+      <circle cx="0" cy="-46" r="15" fill={c} />
+      <circle cx="-5" cy="-50" r="5" fill="#fff" opacity="0.6" />
+    </>
+  )
+}
+
+const balloons: Draw = (v) => (
+  <>
+    {[-8, 0, 8].map((x, i) => (
+      <g key={x}>
+        <path d={`M0 0 Q ${x * 0.6} -20 ${x} ${-38 - i * 4}`} stroke="#8a8a9a" strokeWidth="1" fill="none" />
+        <ellipse cx={x} cy={-46 - i * 4} rx="7" ry="9" fill={pick(['#ff5a6e', '#ffd23f', '#5b8cff', '#3ccf91', '#ff7eb6'], (v + i * 0.27) % 1)} />
+      </g>
+    ))}
+  </>
+)
+
+const heartBush: Draw = () => (
+  <>
+    {shadow(14)}
+    <path d="M0 -4 C -22 -18 -16 -36 -6 -34 Q 0 -32 0 -26 Q 0 -32 6 -34 C 16 -36 22 -18 0 -4 Z" fill="#ff7eb6" />
+    <path d="M-8 -28 Q -4 -30 -2 -26" stroke="#fff" strokeWidth="2" fill="none" opacity="0.7" />
+  </>
+)
+
+const goal: Draw = () => (
+  <>
+    {shadow(30, 6)}
+    <path d="M-28 0 L -28 -30 L 28 -30 L 28 0" fill="none" stroke="#fff" strokeWidth="4" />
+    <path d="M-24 -26 L 24 -26 L 24 -2 L -24 -2 Z" fill="rgba(255,255,255,0.25)" />
+    {[-16, -6, 4, 14].map((x) => (
+      <path key={x} d={`M${x} -28 L ${x} 0`} stroke="#fff" strokeWidth="1" opacity="0.7" />
+    ))}
+    <path d="M-26 -18 L 26 -18 M -26 -8 L 26 -8" stroke="#fff" strokeWidth="1" opacity="0.7" />
+  </>
+)
+
+const flag: Draw = (v) => (
+  <>
+    {shadow(6)}
+    <path d="M0 0 L 0 -42" stroke="#8a9bb0" strokeWidth="2.5" />
+    <path d="M0 -42 L 18 -37 L 0 -30 Z" fill={pick(['#ef3b3b', '#ffd23f', '#2f7cf6', '#3cc35a'], v)} />
+  </>
+)
+
+const cone: Draw = () => (
+  <>
+    <rect x="-8" y="-3" width="16" height="3" rx="1" fill="#e0651a" />
+    <path d="M-6 -3 L 0 -18 L 6 -3 Z" fill="#ff8a1f" />
+    <path d="M-3.5 -9 L 3.5 -9" stroke="#fff" strokeWidth="2.5" />
+  </>
+)
+
+const trampoline: Draw = () => (
+  <>
+    {shadow(24, 6)}
+    <path d="M-18 0 L -14 -10 M 18 0 L 14 -10 M 0 0 L 0 -8" stroke="#3a4a66" strokeWidth="3" />
+    <ellipse cx="0" cy="-11" rx="24" ry="6" fill="#2f7cf6" />
+    <ellipse cx="0" cy="-11" rx="18" ry="4" fill="#2b2b38" />
+  </>
+)
+
+const fireStation: Draw = () => (
+  <>
+    {shadow(36)}
+    <rect x="-32" y="-40" width="64" height="40" fill="#e04848" />
+    <rect x="12" y="-40" width="20" height="40" fill="#bb2c2c" />
+    <rect x="-34" y="-46" width="68" height="8" rx="2" fill="#8a2020" />
+    <rect x="-26" y="-26" width="22" height="26" fill="#fff6e8" />
+    <path d="M-26 -18 L -4 -18 M -26 -10 L -4 -10" stroke="#e0c8a8" strokeWidth="2" />
+    <rect x="2" y="-26" width="22" height="26" fill="#fff6e8" />
+    <path d="M2 -18 L 24 -18 M 2 -10 L 24 -10" stroke="#e0c8a8" strokeWidth="2" />
+    <circle cx="0" cy="-34" r="4" fill="#ffd23f" />
+    <rect x="-8" y="-62" width="16" height="18" fill="#c42b2b" />
+    <path d="M-10 -62 L 0 -70 L 10 -62 Z" fill="#8a2020" />
+  </>
+)
+
+const hospital: Draw = () => (
+  <>
+    {shadow(32)}
+    <rect x="-28" y="-56" width="56" height="56" rx="3" fill="#f4f7fb" />
+    <rect x="10" y="-56" width="18" height="56" fill="#dfe6f0" />
+    <rect x="-8" y="-50" width="16" height="16" rx="2" fill="#fff" />
+    <path d="M0 -48 L 0 -36 M -6 -42 L 6 -42" stroke="#ef3b3b" strokeWidth="4" />
+    {[-20, 12].map((x) => [-28, -16].map((y) => <rect key={`${x}${y}`} x={x} y={y} width="8" height="8" rx="1.5" fill="#9fd4ff" />))}
+    <rect x="-6" y="-14" width="12" height="14" fill="#5fb6ff" />
+  </>
+)
+
+const hydrant: Draw = () => (
+  <>
+    {shadow(7)}
+    <rect x="-5" y="-16" width="10" height="16" rx="2" fill="#ef3b3b" />
+    <path d="M-6 -16 Q 0 -24 6 -16 Z" fill="#c42b2b" />
+    <rect x="-9" y="-12" width="18" height="4" rx="2" fill="#c42b2b" />
+  </>
+)
+
 export type PropDef = { draw: Draw; r: number }
 
 const P = (draw: Draw, r: number): PropDef => ({ draw, r })
@@ -826,6 +1111,32 @@ export const PROPS = {
   doghouse: P(doghouse, 20),
   flowerPot: P(flowerPot, 10),
   cloudPuff: P(cloudPuff, 22),
+  palm: P(palm, 28),
+  beachUmbrella: P(beachUmbrella, 30),
+  sandcastle: P(sandcastle, 22),
+  shell: P(shell, 8),
+  starfish: P(starfish, 9),
+  jungleTree: P(roundTree(['#1e7e40', '#2f9a3e', '#3a8f35']), 34),
+  bigLeaf: P(bigLeaf, 20),
+  jungleFlower: P(jungleFlower, 9),
+  anthill: P(anthill, 20),
+  daisy: P(daisy, 14),
+  ladybug: P(ladybug, 7),
+  veggieRow: P(veggieRow, 34),
+  pumpkin: P(pumpkin, 14),
+  scarecrow: P(scarecrow, 24),
+  cabbage: P(cabbage, 10),
+  cloudTree: P(cloudTree, 28),
+  cloudBush: P(bush(['#ffffff', '#f3f0ff']), 22),
+  balloons: P(balloons, 12),
+  heartBush: P(heartBush, 16),
+  goal: P(goal, 30),
+  flag: P(flag, 8),
+  cone: P(cone, 8),
+  trampoline: P(trampoline, 24),
+  fireStation: P(fireStation, 38),
+  hospital: P(hospital, 34),
+  hydrant: P(hydrant, 7),
 } satisfies Record<string, PropDef>
 
 export type PropId = keyof typeof PROPS

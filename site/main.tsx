@@ -46,6 +46,10 @@ document.querySelectorAll<HTMLElement>('[data-stat]').forEach((el) => {
     const names = UNITS.map((u) => u.title.toLocaleLowerCase('ro-RO'))
     const text = names.length > 1 ? `${names.slice(0, -1).join(', ')} și ${names[names.length - 1]}` : names.join('')
     el.textContent = text.charAt(0).toLocaleUpperCase('ro-RO') + text.slice(1)
+  } else if (key === 'unitsDe') {
+    // Romanian puts "de" between a number and the noun from 20 on ("13 lumi", "20 de lumi").
+    const n = STATS.units
+    el.textContent = n % 100 >= 20 || n % 100 === 0 ? `${n} de` : String(n)
   } else if (key in STATS) el.textContent = String(STATS[key])
 })
 
