@@ -3476,12 +3476,13 @@ body {
 }
 
 .finish-screen .finish-stars span {
-  text-shadow: 0 4px 0 #dfd0b0;
+  display: inline-flex;
+  filter: drop-shadow(0 4px 0 #dfd0b0);
 }
 
 .finish-screen .finish-stars .on {
   color: var(--gold);
-  text-shadow: 0 4px 0 #e09a00, 0 8px 16px rgba(224, 154, 0, 0.35);
+  filter: drop-shadow(0 4px 0 #e09a00) drop-shadow(0 8px 10px rgba(224, 154, 0, 0.3));
 }
 
 .finish-screen .finish-stars span:nth-child(1),
@@ -3530,7 +3531,7 @@ body {
 
 .stat-tiles {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 12px;
 }
 
@@ -4803,5 +4804,24 @@ button.avatar:active {
   .intro-bubble-7,
   .intro-bubble-8 {
     display: none;
+  }
+}
+
+/* results screen on phones: the three stat tiles stand icon-over-text so they fit one row */
+@media (max-width: 560px) {
+  .stat-tiles {
+    gap: 8px;
+  }
+  .stat-tile {
+    flex-direction: column;
+    gap: 4px;
+    padding: 10px 6px;
+    text-align: center;
+  }
+  .stat-tile > span:not(.stat-icon):not(.stat-flag):not(.stat-level) {
+    align-items: center;
+  }
+  .stat-tile small {
+    font-size: 13px;
   }
 }

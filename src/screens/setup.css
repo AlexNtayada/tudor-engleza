@@ -790,3 +790,13 @@
   font-weight: 700;
   color: var(--muted);
 }
+
+/* Parents' weekly chart: days still to come are faded, today is bold. */
+.week-future {
+  opacity: 0.4;
+}
+
+.week-today .week-label {
+  color: var(--ink);
+  font-weight: 800;
+}

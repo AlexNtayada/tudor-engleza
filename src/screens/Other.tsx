@@ -23,6 +23,21 @@ import {
   type Settings,
 } from '../progress'
 
+/** A star with rounded points (the lesson stars on the results screen). */
+function RoundStar() {
+  return (
+    <svg viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true">
+      <path
+        d="M12 2.8l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 16.8l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"
+        fill="currentColor"
+        stroke="currentColor"
+        strokeWidth="2.6"
+        strokeLinejoin="round"
+      />
+    </svg>
+  )
+}
+
 /** Intro: the app name, the whole crew of friends on a hill, and "pick your friend". */
 export function StartScreen({
   name,
@@ -232,7 +247,7 @@ export function FinishScreen({
           <div className="finish-stars">
             {[1, 2, 3].map((s) => (
               <span key={s} className={s <= stars ? 'on' : ''} style={{ animationDelay: `${0.3 + s * 0.25}s` }}>
-                ★
+                <RoundStar />
               </span>
             ))}
           </div>
@@ -271,15 +286,14 @@ export function FinishScreen({
               <small>serii la rând</small>
             </span>
           </div>
-          <div className="stat-tile stat-wide">
+          <div className="stat-tile">
             <span className="stat-icon stat-icon-sun">☀️</span>
             <span>
               <b className="stat-orange">
-                {streak} {streak === 1 ? 'zi' : 'zile'} cu soare
+                {streak} {streak === 1 ? 'zi' : 'zile'}
               </b>
-              <small>la rând</small>
+              <small>cu soare</small>
             </span>
-            {levelUp && <span className="stat-level">🥷 Nivelul {levelUp}!</span>}
           </div>
         </div>
 
@@ -457,11 +471,14 @@ export function Parents({
 }) {
   const s = progress.settings
   const set = (patch: Partial<Settings>) => onChange({ ...progress, settings: { ...s, ...patch } })
+  // This calendar week, Monday to Sunday (days still to come stay empty).
+  const now = new Date()
+  const sinceMonday = (now.getDay() + 6) % 7
   const days = Array.from({ length: 7 }, (_, i) => {
-    const d = new Date()
-    d.setDate(d.getDate() - (6 - i))
+    const d = new Date(now)
+    d.setDate(now.getDate() - sinceMonday + i)
     const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
-    return { key, label: d.toLocaleDateString('ro-RO', { weekday: 'short' }), min: Math.round((progress.playSeconds[key] ?? 0) / 60) }
+    return { key, label: d.toLocaleDateString('ro-RO', { weekday: 'short' }), future: i > sinceMonday, today: i === sinceMonday, min: Math.round((progress.playSeconds[key] ?? 0) / 60) }
   })
   const maxMin = Math.max(10, ...days.map((d) => d.min))
   const lessonsDone = Object.keys(progress.stars).length
@@ -507,9 +524,9 @@ export function Parents({
             <span>azi</span>
           </div>
         </div>
-        <div className="week" aria-label="Minute pe zi, ultimele 7 zile">
+        <div className="week" aria-label="Minute pe zi, săptămâna aceasta (luni–duminică)">
           {days.map((d) => (
-            <div key={d.key} className="week-day">
+            <div key={d.key} className={`week-day ${d.future ? 'week-future' : ''} ${d.today ? 'week-today' : ''}`}>
               <span className="week-min">{d.min || ''}</span>
               <div className="week-bar" style={{ height: `${(d.min / maxMin) * 100}%` }} />
               <span className="week-label">{d.label}</span>
