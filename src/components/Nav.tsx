@@ -27,7 +27,38 @@ function Logo() {
 }
 
 /** Top bar (logo, links on desktop, stars and level) plus a bottom tab bar on phones. */
-export function Nav({ tab, progress, onTab }: { tab: Tab; progress: Progress; onTab: (t: Tab) => void }) {
+export function Nav({
+  tab,
+  progress,
+  onTab,
+  onSettings,
+}: {
+  tab: Tab
+  progress: Progress
+  onTab: (t: Tab) => void
+  /** Settings, behind the parents' gate. */
+  onSettings: () => void
+}) {
+  const [menu, setMenu] = useState(false)
+  const menuRef = useRef<HTMLDivElement>(null)
+  useEffect(() => {
+    if (!menu) return
+    const close = (e: PointerEvent) => {
+      if (!menuRef.current?.contains(e.target as Node)) setMenu(false)
+    }
+    const esc = (e: KeyboardEvent) => e.key === 'Escape' && setMenu(false)
+    document.addEventListener('pointerdown', close)
+    document.addEventListener('keydown', esc)
+    return () => {
+      document.removeEventListener('pointerdown', close)
+      document.removeEventListener('keydown', esc)
+    }
+  }, [menu])
+  const childName = progress.settings.childName || 'Profil'
+  const go = (fn: () => void) => () => {
+    setMenu(false)
+    fn()
+  }
   const links = TABS.map((t) => (
     <button
       key={t.id}
@@ -61,21 +92,52 @@ export function Nav({ tab, progress, onTab }: { tab: Tab; progress: Progress; on
   return (
     <>
       <header ref={bar} className={`appbar ${overHero && !scrolled ? 'appbar-hero' : ''}`}>
-        <button className="logo-btn" onClick={() => onTab('home')} aria-label="Acasă">
+        <a className="logo-btn" href="../" aria-label="Tudoo! – pagina principală">
           <Logo />
-        </button>
+        </a>
         <nav className="appbar-links">{links}</nav>
-        <div className="profile" aria-label={`${mascot().name}, nivelul ${levelFor(progress.earned)}, ${progress.wallet} stele`}>
+        <div className="profile" ref={menuRef} aria-label={`${mascot().name}, nivelul ${levelFor(progress.earned)}, ${progress.wallet} stele`}>
           <span className="profile-stars">
             <span className="profile-star">⭐</span>
             <b>{progress.wallet}</b>
           </span>
-          <button className={`avatar ${tab === 'dino' ? 'avatar-on' : ''}`} onClick={() => onTab('dino')} aria-label={`Pagina lui ${mascot().name}`} title={`Pagina lui ${mascot().name}`}>
+          <button
+            className={`avatar ${tab === 'dino' || menu ? 'avatar-on' : ''}`}
+            onClick={() => setMenu((m) => !m)}
+            aria-label={`Profilul lui ${childName}`}
+            aria-haspopup="menu"
+            aria-expanded={menu}
+            title={`Profilul lui ${childName}`}
+          >
             <span className="avatar-face">
               <Mascot size={92} mood="idle" />
             </span>
             <span className="avatar-level">{levelFor(progress.earned)}</span>
           </button>
+          {menu && (
+            <div className="profile-menu" role="menu">
+              <div className="profile-menu-head">
+                <span className="profile-menu-face">
+                  <Mascot size={110} mood="happy" />
+                </span>
+                <span className="profile-menu-who">
+                  <b>{childName}</b>
+                  <span>
+                    cu {mascot().name} · nivelul {levelFor(progress.earned)}
+                  </span>
+                </span>
+              </div>
+              <button role="menuitem" onClick={go(() => onTab('dino'))}>
+                <span aria-hidden="true">👕</span> Garderoba lui {mascot().name}
+              </button>
+              <button role="menuitem" onClick={go(() => onTab('album'))}>
+                <span aria-hidden="true">📒</span> Albumul meu
+              </button>
+              <button role="menuitem" onClick={go(onSettings)}>
+                <span aria-hidden="true">⚙️</span> Setări <small>pentru părinți</small>
+              </button>
+            </div>
+          )}
         </div>
       </header>
       <nav className="tabbar">{links}</nav>

@@ -53,7 +53,8 @@ type Screen =
       pack?: string
     }
   | { name: 'sentence'; pack: string; steps: SentenceStep[]; id: number }
-  | { name: 'gate' }
+  /** The parents' number gate; `next` is where it leads (the Parents area by default). */
+  | { name: 'gate'; next?: 'settings' }
   /** Pick the friend: from the intro (then go home) or from the friend's page / Parents (then go back). */
   | { name: 'pick'; back: 'start' | 'dino' | 'settings' | 'onboard' }
   | { name: 'break' }
@@ -445,7 +446,12 @@ export default function App() {
       case 'album':
         return <Album progress={progress} onBack={() => setScreen({ name: 'home' })} />
       case 'gate':
-        return <ParentGate onPass={() => setScreen({ name: 'parents' })} onBack={() => setScreen({ name: 'home' })} />
+        return (
+          <ParentGate
+            onPass={() => setScreen(screen.next === 'settings' ? { name: 'settings' } : { name: 'parents' })}
+            onBack={() => setScreen({ name: 'home' })}
+          />
+        )
       case 'parents':
         return (
           <Parents
@@ -548,7 +554,7 @@ export default function App() {
   return (
     <OutfitContext.Provider value={progress.outfit}>
       {withNav && (
-        <Nav tab={screen.name === 'gate' || screen.name === 'settings' ? 'parents' : (screen.name as Tab)} progress={progress} onTab={goTab} />
+        <Nav tab={screen.name === 'gate' || screen.name === 'settings' ? 'parents' : (screen.name as Tab)} progress={progress} onTab={goTab} onSettings={() => setScreen({ name: 'gate', next: 'settings' })} />
       )}
       <div className={withNav ? 'with-nav' : ''}>{page()}</div>
     </OutfitContext.Provider>
