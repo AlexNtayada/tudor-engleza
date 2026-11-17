@@ -130,12 +130,6 @@ export function Nav({
                   </span>
                 </span>
               </div>
-              <button role="menuitem" onClick={go(() => onTab('dino'))}>
-                <span aria-hidden="true">👕</span> Garderoba lui {mascot().name}
-              </button>
-              <button role="menuitem" onClick={go(() => onTab('album'))}>
-                <span aria-hidden="true">📒</span> Albumul meu
-              </button>
               <button role="menuitem" onClick={go(onSettings)}>
                 <span aria-hidden="true">⚙️</span> Setări <small>pentru părinți</small>
               </button>
