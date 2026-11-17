@@ -18,6 +18,9 @@ import { Propozitii, SentenceLesson } from './propozitii/Propozitii'
 import { PACKS } from './propozitii/data'
 import { buildSentenceLesson, type SentenceStep } from './propozitii/lessons'
 
+/** The greeting when the app opens is played softer, so it doesn't startle. */
+const GREETING_VOLUME = 0.55
+
 type Screen =
   | { name: 'start' }
   | { name: Tab }
@@ -225,14 +228,14 @@ export default function App() {
               void speak([
                 { text: 'Hello.', lang: 'en' },
                 ...instruction(progress.settings.instructions, 'Alege-ți un prieten!', 'Pick a friend!'),
-              ])
+              ], { volume: GREETING_VOLUME })
               setScreen({ name: 'pick', back: 'start' })
             }}
             onPlay={() => {
               void speak([
                 { text: 'Hello.', lang: 'en' },
                 ...instruction(progress.settings.instructions, 'Hai să învățăm engleză.', "Let's learn English!"),
-              ])
+              ], { volume: GREETING_VOLUME })
               setScreen({ name: 'home' })
             }}
           />
@@ -274,7 +277,7 @@ export default function App() {
                 void speak([
                   { text: 'Hello.', lang: 'en' },
                   ...instruction(progress.settings.instructions, 'Hai să învățăm engleză.', "Let's learn English!"),
-                ])
+                ], { volume: GREETING_VOLUME })
                 setScreen({ name: 'home' })
               } else {
                 void speak([{ text: m.hello, lang: 'en' }])
