@@ -1,3 +1,4 @@
+import './characters.css'
 import type { ReactNode } from 'react'
 import { Accessory, useOutfit } from './Outfit'
 import type { Slot } from '../gamify'

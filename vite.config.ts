@@ -2,8 +2,11 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import { VitePWA } from 'vite-plugin-pwa'
 
+// The app is served at /app/ (tudoo.ro/app/); the homepage in site/ is built next to it by
+// vite.site.config.ts. Every path stays relative, so the build also works under any sub-folder.
 export default defineConfig({
   base: './',
+  build: { outDir: 'dist/app' },
   plugins: [
     react(),
     VitePWA({

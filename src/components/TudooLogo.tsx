@@ -1,3 +1,5 @@
+import './characters.css'
+
 /** The app's name, "Tudoo!", where the two o's are a pair of googly eyes. */
 export function TudooLogo({ className = '' }: { className?: string }) {
   return (

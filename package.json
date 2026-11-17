@@ -5,8 +5,9 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build",
-    "preview": "vite preview",
+    "dev:site": "vite -c vite.site.config.ts",
+    "build": "tsc -b && vite build && vite build -c vite.site.config.ts",
+    "preview": "vite preview --outDir dist",
     "test": "vitest run"
   },
   "dependencies": {

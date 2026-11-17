@@ -14,6 +14,8 @@ import { SpeechPanel } from '../logopedie/Recordings'
 import {
   ALL_LESSONS_COUNT,
   DEFAULT_PROGRESS,
+  exportProgress,
+  importProgress,
   learnedWordIds,
   today,
   totalStars,
@@ -646,6 +648,8 @@ export function Parents({
 
       <SpeechPanel save={s.speechSave} onSave={(v) => set({ speechSave: v })} speechLog={progress.speechLog} />
 
+      <MoveProgress progress={progress} onChange={onChange} />
+
       <section className="panel">
         <h3>Despre timp</h3>
         <p className="note">
@@ -663,5 +667,56 @@ export function Parents({
         </button>
       </section>
     </div>
+  )
+}
+
+/** Parents area: save the progress to a file and load it on another device (or at a new address). */
+function MoveProgress({ progress, onChange }: { progress: Progress; onChange: (p: Progress) => void }) {
+  const [msg, setMsg] = useState('')
+  const save = () => {
+    const blob = new Blob([exportProgress(progress)], { type: 'application/json' })
+    const a = document.createElement('a')
+    a.href = URL.createObjectURL(blob)
+    a.download = `progres-tudoo-${today()}.json`
+    a.click()
+    setTimeout(() => URL.revokeObjectURL(a.href), 1000)
+    setMsg('Fișierul s-a descărcat. Deschide-l din „Încarcă progresul” pe celălalt dispozitiv.')
+  }
+  const load = async (file: File | undefined) => {
+    if (!file) return
+    const p = importProgress(await file.text())
+    if (!p) {
+      setMsg('Fișierul ales nu este un progres Tudoo!.')
+      return
+    }
+    if (window.confirm(`Înlocuiești progresul de aici cu cel din fișier (${Object.keys(p.stars).length} lecții terminate)?`)) {
+      onChange(p)
+      setMsg('Gata! Progresul a fost încărcat.')
+    }
+  }
+  return (
+    <section className="panel">
+      <h3>Mută progresul</h3>
+      <p className="note">
+        Progresul stă doar pe acest dispozitiv. Ca să-l muți pe alt telefon sau calculator, salvează-l într-un fișier și
+        încarcă-l acolo. Înregistrările din „Sunete” nu se mută.
+      </p>
+      <div className="seg">
+        <button onClick={save}>💾 Salvează progresul</button>
+        <label className="seg-file">
+          📂 Încarcă progresul
+          <input
+            type="file"
+            accept="application/json,.json"
+            hidden
+            onChange={(e) => {
+              void load(e.target.files?.[0])
+              e.target.value = ''
+            }}
+          />
+        </label>
+      </div>
+      {msg && <p className="note">{msg}</p>}
+    </section>
   )
 }

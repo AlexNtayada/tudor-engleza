@@ -13,5 +13,5 @@
     "resolveJsonModule": true,
     "types": ["vite/client", "vite-plugin-pwa/client"]
   },
-  "include": ["src"], "exclude": ["src/**/*.test.ts"]
+  "include": ["src", "site"], "exclude": ["src/**/*.test.ts"]
 }
