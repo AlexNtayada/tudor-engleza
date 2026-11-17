@@ -157,3 +157,19 @@ describe('spoken words', () => {
     for (const u of UNITS) for (const w of u.words) expect(w.say).not.toMatch(/^an? /)
   })
 })
+
+import { streakDays } from './gamify'
+
+describe('streakDays', () => {
+  const now = new Date(2026, 10, 17, 10)
+  it('counts days in a row ending today', () => {
+    expect(streakDays(['2026-11-15', '2026-11-16', '2026-11-17'], now)).toBe(3)
+  })
+  it('keeps yesterday\'s streak before today\'s lesson', () => {
+    expect(streakDays(['2026-11-15', '2026-11-16'], now)).toBe(2)
+  })
+  it('breaks on a missed day', () => {
+    expect(streakDays(['2026-11-13', '2026-11-17'], now)).toBe(1)
+    expect(streakDays([], now)).toBe(0)
+  })
+})

@@ -103,3 +103,18 @@ export function toggleWear(p: Progress, item: Item): Progress {
   const wearing = p.outfit[item.slot] === item.id
   return { ...p, outfit: { ...p.outfit, [item.slot]: wearing ? undefined : item.id } }
 }
+
+/** Days in a row with a finished lesson, ending today (or yesterday, so the streak isn't lost before today's lesson). */
+export function streakDays(daysPlayed: string[], now = new Date()): number {
+  const played = new Set(daysPlayed)
+  const key = (d: Date) =>
+    `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
+  const d = new Date(now)
+  if (!played.has(key(d))) d.setDate(d.getDate() - 1)
+  let n = 0
+  while (played.has(key(d))) {
+    n++
+    d.setDate(d.getDate() - 1)
+  }
+  return n
+}
