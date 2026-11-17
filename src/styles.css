@@ -2900,9 +2900,11 @@ body {
   inset: 0;
   display: grid;
   place-items: center;
-  font-size: 15px;
+  font-size: 16px;
   font-weight: 800;
-  color: #8f7f63;
+  color: #fff;
+  -webkit-text-stroke: 3px #17925a;
+  paint-order: stroke fill;
 }
 
 .lv-pill,
@@ -3917,5 +3919,85 @@ body {
   .finish-cheer .dino svg {
     width: 84px !important;
     height: 84px !important;
+  }
+}
+
+/* profile in the top bar: Ninja's portrait with his level, stars beside it (not a button) */
+.profile {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+.profile-stars {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 26px;
+  line-height: 1;
+  color: var(--ink);
+}
+
+.profile-star {
+  font-size: 24px;
+  font-family: 'Apple Color Emoji', 'Segoe UI Emoji', 'Noto Color Emoji', sans-serif;
+}
+
+.avatar {
+  position: relative;
+  width: 54px;
+  height: 54px;
+  flex-shrink: 0;
+}
+
+.avatar-face {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  overflow: hidden;
+  background: radial-gradient(circle at 50% 35%, #fff3c4, #ffd45c);
+  border: 3px solid #fff;
+  box-shadow: 0 0 0 2px var(--yellow), 0 4px 12px rgba(176, 124, 30, 0.2);
+}
+
+.avatar-face .dino {
+  position: absolute;
+  left: -20px;
+  top: -6px;
+}
+
+.avatar-face .dino-body {
+  animation: none;
+}
+
+.avatar-level {
+  position: absolute;
+  right: -6px;
+  bottom: -4px;
+  min-width: 22px;
+  height: 22px;
+  padding: 0 5px;
+  border-radius: 999px;
+  display: grid;
+  place-items: center;
+  background: var(--green);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 800;
+  border: 2px solid #fff;
+}
+
+@media (max-width: 420px) {
+  .profile-stars {
+    font-size: 22px;
+  }
+  .avatar {
+    width: 48px;
+    height: 48px;
+  }
+  .avatar-face .dino {
+    left: -22px;
+    top: -8px;
   }
 }
