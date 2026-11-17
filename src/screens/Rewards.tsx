@@ -142,7 +142,6 @@ export function NinjaRoom({
       sfx.fanfare();
       onChange(buy(progress, item));
       celebrate();
-      void speak([{ text: "Thank you!", lang: "en" }]);
       return;
     }
     sfx.wrong();

@@ -1,4 +1,4 @@
-import { mascotById, setActiveMascot, type MascotId } from './mascots'
+import { setActiveMascot, type MascotId } from './mascots'
 import { MascotPicker } from './screens/MascotPicker'
 import { useEffect, useRef, useState } from 'react'
 import { ALL_LESSONS, PLAYGROUND, UNITS, type World } from './content'
@@ -388,10 +388,8 @@ export default function App() {
               )
             }
             onPick={(id: MascotId) => {
-              const m = mascotById(id)
               setProgress((p) => ({ ...p, mascot: id }))
               if (screen.back === 'onboard') {
-                void speak([{ text: m.hello, lang: 'en' }])
                 setScreen({ name: 'onboard', step: 'level' })
               } else if (screen.back === 'start') {
                 void speak([
@@ -400,7 +398,6 @@ export default function App() {
                 ], { volume: GREETING_VOLUME })
                 setScreen({ name: 'home' })
               } else {
-                void speak([{ text: m.hello, lang: 'en' }])
                 setScreen(screen.back === 'settings' ? { name: 'settings', section: 'profil' } : { name: 'dino' })
               }
             }}

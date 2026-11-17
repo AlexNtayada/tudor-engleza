@@ -264,7 +264,7 @@ export function LessonScreen({
             choices={step.choices}
             mood={mood}
             happy="✨"
-            onCorrect={(w) => onCorrect(w, 'Thank you!')}
+            onCorrect={(w) => onCorrect(w)}
             onWrong={(t, a) =>
               onWrong(t, a, [
                 { text: 'Not that one!', lang: 'en' },
@@ -281,7 +281,6 @@ export function LessonScreen({
             onCorrect={(w) => onCorrect(w, 'Yummy!')}
             onWrong={(t, a) =>
               onWrong(t, a, [
-                { text: 'No, thank you!', lang: 'en' },
                 { text: `I want ${t.say}!`, lang: 'en' },
               ])
             }

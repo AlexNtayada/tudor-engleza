@@ -26,10 +26,7 @@ export function MascotPicker({
     const m = mascotById(id)
     sfx.tap()
     setChosen(id)
-    void speak([
-      { text: m.hello, lang: 'en' },
-      ...instruction(mode, `Eu sunt ${m.title}!`, `I'm ${m.name}!`),
-    ], { friend: id })
+    void speak(instruction(mode, `Eu sunt ${m.title}!`, `I'm ${m.name}!`), { friend: id })
   }
 
   return (
