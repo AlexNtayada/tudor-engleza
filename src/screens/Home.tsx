@@ -35,8 +35,9 @@ export function Home({
   }
 
   return (
-    <div className="home">
+    <>
       <HomeHero progress={progress} current={current} mood={mood} onTab={onTab} />
+      <div className="home">
       <UnitTiles progress={progress} current={current} />
       <DailyChallenges progress={progress} current={current} onStart={onStart} onFreePlay={onFreePlay} onTab={onTab} />
       <h2 className="home-section-title">Harta lui Ninja</h2>
@@ -83,7 +84,8 @@ export function Home({
           <p>Urmează: și mai multe teme, în curând…</p>
         </div>
       </div>
-    </div>
+      </div>
+    </>
   )
 }
 
@@ -94,7 +96,8 @@ function HomeHero({ progress, current, mood, onTab }: { progress: Progress; curr
   const inLevel = progress.earned % STARS_PER_LEVEL
   const done = current >= ALL_LESSONS.length
   return (
-    <section className="hero">
+    <section className="hero-band">
+      <div className="hero">
       <div className="hero-sun" aria-hidden />
       <span className="hero-spark hero-spark-1" aria-hidden>
         ⭐
@@ -137,6 +140,7 @@ function HomeHero({ progress, current, mood, onTab }: { progress: Progress; curr
           <span className="lv-pill">Nv {level}</span>
         </span>
       </button>
+      </div>
     </section>
   )
 }
