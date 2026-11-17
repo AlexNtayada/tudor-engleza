@@ -1,0 +1,167 @@
+/* Characters shared by the app and the tudoo.ro homepage: the friends (mascots) and the Tudoo! logo. */
+
+/* ---------- dino ---------- */
+
+.dino {
+  flex-shrink: 0;
+}
+
+.dino svg {
+  overflow: visible;
+  display: block;
+}
+
+.dino-body {
+  transform-origin: 100px 190px;
+  animation: breathe 2.6s ease-in-out infinite;
+}
+
+.dino-happy .dino-body {
+  animation: hop 0.5s ease-in-out infinite;
+}
+
+.dino-dance .dino-body {
+  animation: dance 0.7s ease-in-out infinite;
+}
+
+.dino-oops .dino-body {
+  animation: tilt 0.6s ease-in-out;
+}
+
+.dino-sleep .dino-body {
+  animation: breathe 4s ease-in-out infinite;
+}
+
+.dino-talk .dino-mouth-talk {
+  transform-origin: 113px 98px;
+  animation: talk 0.25s ease-in-out infinite alternate;
+}
+
+.dino-eyes {
+  transform-origin: 113px 66px;
+  animation: blink 4.5s infinite;
+}
+
+.dino-dance .dino-arm-left,
+.dino-happy .dino-arm-left {
+  transform-origin: 72px 130px;
+  animation: wave 0.35s ease-in-out infinite alternate;
+}
+
+.dino-dance .dino-arm-right,
+.dino-happy .dino-arm-right {
+  transform-origin: 146px 124px;
+  animation: wave 0.35s ease-in-out infinite alternate-reverse;
+}
+
+.dino-zzz {
+  animation: zzz 2s ease-in-out infinite;
+}
+
+@keyframes breathe {
+  50% {
+    transform: scale(1.02, 0.98);
+  }
+}
+@keyframes hop {
+  50% {
+    transform: translateY(-14px);
+  }
+}
+@keyframes dance {
+  25% {
+    transform: rotate(-8deg) translateY(-8px);
+  }
+  75% {
+    transform: rotate(8deg) translateY(-8px);
+  }
+}
+@keyframes tilt {
+  30% {
+    transform: rotate(-7deg);
+  }
+  70% {
+    transform: rotate(5deg);
+  }
+}
+@keyframes talk {
+  from {
+    transform: scaleY(0.3);
+  }
+  to {
+    transform: scaleY(1.1);
+  }
+}
+@keyframes blink {
+  0%,
+  94%,
+  100% {
+    transform: scaleY(1);
+  }
+  97% {
+    transform: scaleY(0.1);
+  }
+}
+@keyframes wave {
+  from {
+    transform: rotate(-20deg);
+  }
+  to {
+    transform: rotate(25deg);
+  }
+}
+@keyframes zzz {
+  0% {
+    opacity: 0;
+    transform: translate(0, 10px);
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(12px, -14px);
+  }
+}
+
+.bip-light {
+  animation: bip-blink 1.6s ease-in-out infinite;
+}
+
+@keyframes bip-blink {
+  50% {
+    fill: #ffd45c;
+  }
+}
+
+/* ---------- Tudoo! logo: the two o's are googly eyes ---------- */
+
+.tudoo {
+  display: inline-flex;
+  align-items: baseline;
+  white-space: nowrap;
+  line-height: 1;
+}
+
+.tudoo-eyes {
+  width: 1.08em;
+  height: 0.56em;
+  margin: 0 0.02em 0 0.03em;
+  overflow: visible;
+  align-self: baseline;
+  transform: translateY(0.04em);
+}
+
+.tudoo b {
+  margin-left: 0.02em;
+}
+
+.tudoo-pupil {
+  animation: tudoo-look 6s ease-in-out infinite;
+}
+
+@keyframes tudoo-look {
+  0%, 40%, 100% { transform: translate(0, 0); }
+  50%, 70% { transform: translate(-9px, -2px); }
+  80% { transform: translate(0, 0); }
+}
