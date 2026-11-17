@@ -23,6 +23,21 @@ import {
   type Settings,
 } from '../progress'
 
+/** A star with rounded points (the lesson stars on the results screen). */
+function RoundStar() {
+  return (
+    <svg viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true">
+      <path
+        d="M12 2.8l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 16.8l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"
+        fill="currentColor"
+        stroke="currentColor"
+        strokeWidth="2.6"
+        strokeLinejoin="round"
+      />
+    </svg>
+  )
+}
+
 /** Intro: the app name, the whole crew of friends on a hill, and "pick your friend". */
 export function StartScreen({
   name,
@@ -232,7 +247,7 @@ export function FinishScreen({
           <div className="finish-stars">
             {[1, 2, 3].map((s) => (
               <span key={s} className={s <= stars ? 'on' : ''} style={{ animationDelay: `${0.3 + s * 0.25}s` }}>
-                ★
+                <RoundStar />
               </span>
             ))}
           </div>
@@ -271,15 +286,14 @@ export function FinishScreen({
               <small>serii la rând</small>
             </span>
           </div>
-          <div className="stat-tile stat-wide">
+          <div className="stat-tile">
             <span className="stat-icon stat-icon-sun">☀️</span>
             <span>
               <b className="stat-orange">
-                {streak} {streak === 1 ? 'zi' : 'zile'} cu soare
+                {streak} {streak === 1 ? 'zi' : 'zile'}
               </b>
-              <small>la rând</small>
+              <small>cu soare</small>
             </span>
-            {levelUp && <span className="stat-level">🥷 Nivelul {levelUp}!</span>}
           </div>
         </div>
 
