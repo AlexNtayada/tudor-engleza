@@ -100,7 +100,10 @@ export function StartScreen({
               onPlay()
             }}
           >
-            ▶ Joacă cu {friend.name}
+            <span className="intro-play-face" aria-hidden>
+              <Mascot kind={friend.id} size={78} />
+            </span>
+            Joacă cu {friend.name}
           </button>
         )}
       </div>
