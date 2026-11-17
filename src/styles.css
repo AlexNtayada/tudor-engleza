@@ -4007,3 +4007,17 @@ body {
   background: #fff;
   box-shadow: 0 3px 0 rgba(176, 124, 30, 0.18), 0 6px 14px rgba(176, 124, 30, 0.12);
 }
+
+/* tapping Ninja's portrait opens his page */
+button.avatar {
+  padding: 0;
+  transition: transform 0.15s;
+}
+
+button.avatar:hover {
+  transform: scale(1.06) rotate(-3deg);
+}
+
+button.avatar:active {
+  transform: scale(0.94);
+}
