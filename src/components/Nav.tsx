@@ -19,7 +19,6 @@ const TABS: { id: Tab; icon: string; label: string }[] = [
 function Logo() {
   return (
     <span className="logo">
-      <Mascot size={52} mood="idle" />
       <span className="logo-text">
         <TudooLogo />
       </span>
