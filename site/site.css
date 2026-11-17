@@ -298,7 +298,9 @@ body.meadow {
 
 .crew {
   position: relative;
-  height: 560px;
+  height: 540px;
+  /* Lean the scene towards the right edge on wide screens. */
+  margin-right: calc(-1 * min(90px, max(0px, (100vw - 1160px) / 2 - 16px)));
   z-index: 1;
 }
 
@@ -314,7 +316,7 @@ body.meadow {
 
 .crew-back {
   bottom: 190px;
-  gap: 70px;
+  gap: clamp(24px, 4vw, 70px);
 }
 
 .crew-front {
@@ -329,8 +331,8 @@ body.meadow {
 
 .crew-bubble {
   position: absolute;
-  top: 160px;
-  left: -4%;
+  top: 120px;
+  left: 2%;
   background: #fff;
   border-radius: 22px;
   padding: 8px 18px;
@@ -449,9 +451,9 @@ body.meadow {
 }
 
 .cloud-1 {
-  width: 140px;
-  top: 120px;
-  right: 22%;
+  width: 120px;
+  top: 150px;
+  left: 10%;
 }
 
 .cloud-2 {
