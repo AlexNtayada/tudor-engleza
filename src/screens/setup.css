@@ -800,3 +800,154 @@
   color: var(--ink);
   font-weight: 800;
 }
+
+/* ---------- Settings layout: a sidebar of sections (wide) or a list that opens each section (phone) ---------- */
+
+.setup-screen.set-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-content: start;
+  gap: 14px;
+}
+
+.set-pane {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  min-width: 0;
+}
+
+.set-pane .parents .panel:first-child {
+  margin-top: 0;
+}
+
+.set-pane-title {
+  display: none;
+  margin: 0;
+  font-size: 28px;
+}
+
+.set-side {
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+  border-radius: 22px;
+  box-shadow: 0 4px 0 var(--line);
+  overflow: hidden;
+}
+
+.set-side-link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 14px 16px;
+  border: 0;
+  border-top: 2px solid #f4ecdc;
+  background: none;
+  color: var(--ink);
+  text-align: left;
+  font: inherit;
+  cursor: pointer;
+}
+
+.set-side-link:first-child {
+  border-top: 0;
+}
+
+.set-side-icon {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 42px;
+  height: 42px;
+  border-radius: 14px;
+  background: #fff4d6;
+  font-size: 22px;
+}
+
+.set-side-text {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  min-width: 0;
+}
+
+.set-side-text b {
+  font-size: 18px;
+  line-height: 1.2;
+}
+
+.set-side-text small {
+  font-size: 14px;
+  color: #8a7a5e;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.set-side-chev {
+  font-size: 22px;
+  font-weight: 800;
+  color: #b9a888;
+}
+
+/* phone: the list first; a section opens on its own with ← back to the list */
+@media (max-width: 899px) {
+  .set-layout:not(.set-open) .set-pane,
+  .set-layout.set-open .set-side,
+  .set-layout.set-open .set-top-list {
+    display: none;
+  }
+  .set-layout:not(.set-open) .set-top-pane {
+    display: none;
+  }
+}
+
+/* wide screen: sidebar on the left, the chosen section on the right */
+@media (min-width: 900px) {
+  .setup-screen.set-layout {
+    max-width: 1100px;
+    grid-template-columns: 300px minmax(0, 1fr);
+    column-gap: 28px;
+    padding-left: 28px;
+    padding-right: 28px;
+  }
+  .set-top-list {
+    grid-column: 1 / -1;
+  }
+  .set-top-pane {
+    display: none;
+  }
+  .set-pane-title {
+    display: block;
+  }
+  .set-side {
+    position: sticky;
+    top: 16px;
+    align-self: start;
+    padding: 8px;
+    gap: 2px;
+  }
+  .set-side-link {
+    border-top: 0;
+    border-radius: 16px;
+    padding: 10px 12px;
+  }
+  .set-side-link:hover {
+    background: #fff8e6;
+  }
+  .set-side-link.on {
+    background: var(--sun);
+    box-shadow: 0 3px 0 var(--yellow-dark);
+  }
+  .set-side-link.on .set-side-icon {
+    background: #fff;
+  }
+  .set-side-chev {
+    display: none;
+  }
+  .set-pane {
+    max-width: 680px;
+  }
+}
