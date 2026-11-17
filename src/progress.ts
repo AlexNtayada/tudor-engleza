@@ -13,6 +13,12 @@ export interface Settings {
   micCheck: boolean
   /** Keep speech-therapy recordings on this device so a parent can listen later. */
   speechSave: boolean
+  /** Sound effects (taps, bravo, balloons). */
+  sfx: boolean
+  /** The friend suggests a break after about 15 minutes. */
+  breaks: boolean
+  /** Units skipped at the start of the map (chosen in onboarding: 0 = from zero). */
+  skipUnits: number
 }
 
 export interface Progress {
@@ -41,6 +47,8 @@ export interface Progress {
   sentences: Record<string, number>
   /** The friend picked in the intro; unset until the child picks one. */
   mascot?: MascotId
+  /** False only for a brand-new child who has not gone through the first-run steps yet. */
+  onboarded?: boolean
 }
 
 export interface BossRecord {
@@ -66,7 +74,7 @@ export const DEFAULT_PROGRESS: Progress = {
   boss: {},
   speechLog: {},
   sentences: {},
-  settings: { childName: 'Tudor', instructions: 'ro', slowVoice: false, mic: true, micCheck: true, speechSave: true },
+  settings: { childName: 'Tudor', instructions: 'ro', slowVoice: false, mic: true, micCheck: true, speechSave: true, sfx: true, breaks: true, skipUnits: 0 },
 }
 
 /** Fills in fields that older saves (or saves from another device) may lack. */
@@ -77,19 +85,43 @@ function normalize(parsed: Partial<Progress>): Progress {
     ...structuredClone(DEFAULT_PROGRESS),
     wallet: fromStars,
     earned: fromStars,
+    // Saves from before onboarding existed belong to children who already play.
+    onboarded: true,
     ...parsed,
     settings: { ...DEFAULT_PROGRESS.settings, ...parsed.settings },
   }
 }
 
-export function loadProgress(): Progress {
+/** A brand-new child: nothing played yet, first-run steps still to do. */
+export function freshProgress(childName = ''): Progress {
+  const p = structuredClone(DEFAULT_PROGRESS)
+  return { ...p, onboarded: false, settings: { ...p.settings, childName } }
+}
+
+/** Whether a save holds anything worth keeping (used when an account and a device both have progress). */
+export function hasPlayed(p: Progress): boolean {
+  return p.earned > 0 || Object.keys(p.stars).length > 0 || p.daysPlayed.length > 0
+}
+
+/** Storage key of a child's progress; the first child keeps the key used before profiles existed. */
+export function progressKey(profileId = 'p1'): string {
+  return profileId === 'p1' ? KEY : `${KEY}:${profileId}`
+}
+
+export function loadProgress(profileId?: string): Progress {
   try {
-    const raw = localStorage.getItem(KEY)
-    if (!raw) return structuredClone(DEFAULT_PROGRESS)
+    const raw = localStorage.getItem(progressKey(profileId))
+    if (!raw) return freshProgress()
     return normalize(JSON.parse(raw) as Partial<Progress>)
   } catch {
-    return structuredClone(DEFAULT_PROGRESS)
+    return freshProgress()
   }
+}
+
+/** Normalizes progress that came from elsewhere (an account). */
+export function parseProgress(p: unknown): Progress | undefined {
+  if (!p || typeof p !== 'object' || typeof (p as Progress).stars !== 'object') return undefined
+  return normalize(p as Partial<Progress>)
 }
 
 const EXPORT_KIND = 'tudoo-progress'
@@ -111,9 +143,9 @@ export function importProgress(text: string): Progress | undefined {
   }
 }
 
-export function saveProgress(p: Progress) {
+export function saveProgress(p: Progress, profileId?: string) {
   try {
-    localStorage.setItem(KEY, JSON.stringify(p))
+    localStorage.setItem(progressKey(profileId), JSON.stringify(p))
   } catch {
     /* storage unavailable (private mode) — progress lives for this visit only */
   }
@@ -126,7 +158,8 @@ export function today(): string {
 
 /** Index in ALL_LESSONS of the first lesson not finished yet (lessons unlock in order). */
 export function currentLessonIndex(p: Progress): number {
-  const i = ALL_LESSONS.findIndex(({ lesson }) => !p.stars[lesson.id])
+  const skip = startIndex(p.settings.skipUnits)
+  const i = ALL_LESSONS.findIndex(({ lesson }, g) => g >= skip && !p.stars[lesson.id])
   return i === -1 ? ALL_LESSONS.length : i
 }
 
@@ -145,3 +178,8 @@ export function totalStars(p: Progress): number {
 export const TOTAL_WORDS = UNITS.reduce((n, u) => n + u.words.length, 0)
 
 export const ALL_LESSONS_COUNT = ALL_LESSONS.length
+
+/** Index in ALL_LESSONS of the first lesson of the unit the map starts at. */
+export function startIndex(skipUnits: number): number {
+  return UNITS.slice(0, Math.max(0, skipUnits)).reduce((n, u) => n + u.lessons.length, 0)
+}

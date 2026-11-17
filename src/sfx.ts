@@ -1,6 +1,12 @@
 // Tiny synthesized sound effects (no audio files needed).
 
 let ctx: AudioContext | undefined
+let enabled = true
+
+/** Parents can turn the sound effects off in Settings (voices keep playing). */
+export function setSfxEnabled(on: boolean) {
+  enabled = on
+}
 
 function ac(): AudioContext | undefined {
   try {
@@ -13,6 +19,7 @@ function ac(): AudioContext | undefined {
 }
 
 function tone(freq: number, start: number, dur: number, type: OscillatorType = 'sine', vol = 0.18) {
+  if (!enabled) return
   const c = ac()
   if (!c) return
   const t = c.currentTime + start
@@ -39,6 +46,7 @@ export const sfx = {
     tone(262, 0.12, 0.25, 'sine', 0.14)
   },
   pop: () => {
+    if (!enabled) return
     const c = ac()
     if (!c) return
     const len = 0.12

@@ -7,8 +7,7 @@ import { Boss, bossFor } from '../components/Boss'
 import type { BossResult } from './Lesson'
 import { BOSS_HP, BOSS_QUESTIONS } from '../lessons'
 import { Mascot } from '../components/Mascot'
-import { instruction, speak, hasRomanianVoice, speechSupported } from '../speech'
-import { micSupported, recognitionSupported } from '../recorder'
+import { instruction, speak, hasRomanianVoice } from '../speech'
 import { sfx } from '../sfx'
 import { SpeechPanel } from '../logopedie/Recordings'
 import {
@@ -456,16 +455,15 @@ export function Parents({
   progress,
   onChange,
   onBack,
-  onPickFriend,
+  onSettings,
 }: {
   progress: Progress
   onChange: (p: Progress) => void
   onBack: () => void
-  onPickFriend: () => void
+  onSettings: () => void
 }) {
   const s = progress.settings
   const set = (patch: Partial<Settings>) => onChange({ ...progress, settings: { ...s, ...patch } })
-  const roVoice = hasRomanianVoice()
   const days = Array.from({ length: 7 }, (_, i) => {
     const d = new Date()
     d.setDate(d.getDate() - (6 - i))
@@ -483,6 +481,14 @@ export function Parents({
         </button>
         <h2>Zona părinților</h2>
       </header>
+      <button className="parents-settings" onClick={onSettings}>
+        <span className="parents-settings-icon" aria-hidden="true">⚙️</span>
+        <span className="parents-settings-text">
+          <b>Setări</b>
+          <span>Cont, copii, sunet, voce, microfon, de unde începe harta</span>
+        </span>
+        <span aria-hidden="true">›</span>
+      </button>
 
       <section className="panel">
         <h3>Progres</h3>
@@ -550,100 +556,6 @@ export function Parents({
             })}
           </tbody>
         </table>
-      </section>
-
-      <section className="panel">
-        <h3>Setări</h3>
-        <label className="field">
-          <span>Numele copilului</span>
-          <input value={s.childName} onChange={(e) => set({ childName: e.target.value })} maxLength={20} />
-        </label>
-        <div className="field">
-          <span>Prietenul din aplicație</span>
-          <button className="friend-pick" onClick={onPickFriend}>
-            <Mascot size={44} outfit={{}} />
-            <b>{mascot().title}</b>
-            <span>Schimbă ›</span>
-          </button>
-        </div>
-        <div className="field">
-          <span>Instrucțiunile lui {mascot().name}</span>
-          <div className="seg">
-            <button className={s.instructions === 'ro' ? 'on' : ''} onClick={() => set({ instructions: 'ro' })}>
-              Română
-            </button>
-            <button className={s.instructions === 'en' ? 'on' : ''} onClick={() => set({ instructions: 'en' })}>
-              Engleză
-            </button>
-          </div>
-        </div>
-        <div className="field">
-          <span>Vocea în engleză</span>
-          <div className="seg">
-            <button className={!s.slowVoice ? 'on' : ''} onClick={() => set({ slowVoice: false })}>
-              Normal
-            </button>
-            <button className={s.slowVoice ? 'on' : ''} onClick={() => set({ slowVoice: true })}>
-              Rar
-            </button>
-          </div>
-        </div>
-        <button className="link-btn" onClick={() => void speak(instruction(s.instructions, `Salut! Eu sunt ${mascot().title}.`, `Hi! I am ${mascot().name}.`))}>
-          🔊 Testează vocea
-        </button>
-        {!speechSupported() && <p className="note warn">Browserul acesta nu poate vorbi. Folosește Chrome sau Edge.</p>}
-        {speechSupported() && !roVoice && s.instructions === 'ro' && (
-          <p className="note warn">
-            Pe acest dispozitiv nu am găsit o voce în română, așa că {mascot().name} spune instrucțiunile în engleză (textul în
-            română apare în bulă). Cea mai simplă soluție pe PC: deschide aplicația în <b>Microsoft Edge</b>, care are
-            voci românești incluse. Pe Windows mai poți adăuga vocea din Setări → Oră și limbă → Vorbire → Adaugă voci →
-            Română.
-          </p>
-        )}
-      </section>
-
-      <section className="panel">
-        <h3>Microfon</h3>
-        <div className="field">
-          <span>Exerciții „Spune tu!” 🎤</span>
-          <div className="seg">
-            <button className={s.mic ? 'on' : ''} onClick={() => set({ mic: true })}>
-              Pornit
-            </button>
-            <button className={!s.mic ? 'on' : ''} onClick={() => set({ mic: false })}>
-              Oprit
-            </button>
-          </div>
-        </div>
-        <div className="field">
-          <span>Verifică dacă a spus cuvântul</span>
-          <div className="seg">
-            <button className={s.micCheck ? 'on' : ''} onClick={() => set({ micCheck: true })}>
-              Da
-            </button>
-            <button className={!s.micCheck ? 'on' : ''} onClick={() => set({ micCheck: false })}>
-              Nu
-            </button>
-          </div>
-        </div>
-        <p className="note">
-          Tudor apasă 🎤, spune cuvântul și își aude imediat vocea. Înregistrarea din lecțiile de engleză rămâne doar pe
-          acest dispozitiv și nu se salvează. {mascot().name} nu spune niciodată „greșit”: dacă nu e sigur, îl roagă să mai spună o dată.
-        </p>
-        {s.micCheck && recognitionSupported() && (
-          <p className="note">
-            Verificarea folosește recunoașterea vocală a browserului; în Chrome și Edge sunetul e trimis serviciului de
-            recunoaștere vocală al browserului (Google, respectiv Microsoft). Dacă nu vrei asta, alege „Nu”: înregistrarea
-            și redarea merg în continuare.
-          </p>
-        )}
-        {s.micCheck && !recognitionSupported() && (
-          <p className="note warn">
-            Browserul acesta nu poate verifica ce a spus; {mascot().name} îl laudă oricum după ce se aude. Verificarea merge în Chrome și
-            Edge.
-          </p>
-        )}
-        {!micSupported() && <p className="note warn">Browserul acesta nu are acces la microfon.</p>}
       </section>
 
       <SpeechPanel save={s.speechSave} onSave={(v) => set({ speechSave: v })} speechLog={progress.speechLog} />
