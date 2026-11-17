@@ -41,7 +41,19 @@ americană, iar fiecare prieten are vocea lui în română). Ce nu are clip e ci
   `numara` arată câte caractere/credite ar costa, `mostre` face câteva clipuri de probă, `tot` face restul.
   Se înregistrează doar replicile noi, deci rularea din nou e ieftină.
 
+## Homepage (tudoo.ro)
+
+Pagina de prezentare e în `site/` (HTML simplu + `site/main.tsx`, care desenează prietenii și logo-ul din aplicație).
+Aplicația se publică la `/app/`, iar homepage-ul la rădăcină.
+
+```bash
+npm run dev:site   # homepage, http://localhost:5174
+```
+
 ## Publicare
 
-La fiecare push pe `main`, GitHub Actions construiește aplicația și o publică pe GitHub Pages
-(Settings → Pages → Source: GitHub Actions).
+La fiecare push pe `main`, GitHub Actions construiește aplicația (`dist/app/`) și homepage-ul (`dist/`) și le publică
+pe GitHub Pages (Settings → Pages → Source: GitHub Actions). Domeniul `tudoo.ro` se setează în Settings → Pages → Custom domain.
+
+Notă: termenii GitHub Pages nu permit folosirea pentru o afacere comercială, așa că înainte de a cere bani
+mutăm găzduirea (de ex. Cloudflare Pages sau Netlify); build-ul rămâne același, doar `dist/` se publică în altă parte.
