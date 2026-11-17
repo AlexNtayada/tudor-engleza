@@ -54,7 +54,7 @@ type Screen =
     }
   | { name: 'sentence'; pack: string; steps: SentenceStep[]; id: number }
   /** The parents' number gate; `next` is where it leads (the Parents area by default). */
-  | { name: 'gate'; next?: 'settings' }
+  | { name: 'gate'; next?: 'settings' | 'parents' }
   /** Pick the friend: from the intro (then go home) or from the friend's page / Parents (then go back). */
   | { name: 'pick'; back: 'start' | 'dino' | 'settings' | 'onboard' }
   | { name: 'break' }
@@ -351,7 +351,7 @@ export default function App() {
       case 'play':
         return <Playground progress={progress} onPlay={startFreePlay} />
       case 'speech':
-        return <Logopedie progress={progress} onEarn={earnSpeech} onParents={() => setScreen({ name: 'gate' })} />
+        return <Logopedie progress={progress} onEarn={earnSpeech} onParents={() => setScreen({ name: 'gate', next: 'parents' })} />
       case 'sentences':
         return <Propozitii progress={progress} onStart={startSentences} />
       case 'sentence': {
@@ -448,7 +448,7 @@ export default function App() {
       case 'gate':
         return (
           <ParentGate
-            onPass={() => setScreen(screen.next === 'settings' ? { name: 'settings' } : { name: 'parents' })}
+            onPass={() => setScreen(screen.next === 'parents' ? { name: 'parents' } : { name: 'settings' })}
             onBack={() => setScreen({ name: 'home' })}
           />
         )
@@ -457,8 +457,7 @@ export default function App() {
           <Parents
             progress={progress}
             onChange={setProgress}
-            onBack={() => setScreen({ name: 'home' })}
-            onSettings={() => setScreen({ name: 'settings' })}
+            onBack={() => setScreen({ name: 'settings' })}
           />
         )
       case 'settings':
@@ -469,7 +468,8 @@ export default function App() {
             email={email}
             syncState={syncState}
             onChange={setProgress}
-            onBack={() => setScreen({ name: 'parents' })}
+            onBack={() => setScreen({ name: 'home' })}
+            onProgress={() => setScreen({ name: 'parents' })}
             onPickFriend={() => setScreen({ name: 'pick', back: 'settings' })}
             onAccount={() => setScreen({ name: 'account', back: 'settings' })}
             onSignOut={() => {
