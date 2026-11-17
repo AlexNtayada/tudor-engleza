@@ -74,7 +74,7 @@ function englishInstructionLines(): string[] {
 /** Short English cheers said by the friend, in the friend's own voice. */
 function friendEnglish(m: MascotInfo): string[] {
   return [
-    m.hello, `Hello, ${CHILD}!`, `Good try, ${CHILD}!`, `Great job, ${CHILD}!`,
+    m.hello, 'Hello.', `Good try, ${CHILD}!`, `Great job, ${CHILD}!`,
     'Great job!', 'Yes!', 'Awesome!', 'Super!', 'Well done!', 'Perfect!', 'Super combo!', 'Thank you!', 'Yummy!',
     'Not that one!', 'No, thank you!', 'Wow! Thank you!', 'Hooray! You beat the boss!', 'Yes! That is right!', "No! It's not.",
   ]
@@ -84,7 +84,7 @@ function friendEnglish(m: MascotInfo): string[] {
 function friendRomanian(m: MascotInfo): string[] {
   const g = (masc: string, fem: string) => (m.fem ? fem : masc)
   const out = [
-    'Alege-ți un prieten!', 'Hai să învățăm engleză!',
+    'Alege-ți un prieten!', 'Hai să învățăm engleză.',
     `Eu sunt ${m.title}. ${m.blurb}!`, `Salut! Eu sunt ${m.title}.`,
     'Încă nu! Mai întâi lecția de lângă mine.',
     'Spune și tu!', 'Acum spune tu:', 'Unde este', 'Cine e la fereastră? Unde este', 'Sparge balonul cu', 'Mai încearcă!',

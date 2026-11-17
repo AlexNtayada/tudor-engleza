@@ -13,9 +13,10 @@
       "name": "Ninja (Voice Design)",
       "voiceId": "OL5owvZxa43bHTJ7Y6wp",
       "settings": {
-        "stability": 0.75,
+        "stability": 0.9,
+        "similarity_boost": 0.8,
         "style": 0,
-        "speed": 1.0
+        "speed": 0.95
       }
     },
     "pip": {

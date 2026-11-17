@@ -328,15 +328,15 @@ export default function App() {
             onPick={() => {
               if (progress.onboarded === false) return setScreen({ name: 'onboard', step: 'name' })
               void speak([
-                { text: `Hello, ${name}!`, lang: 'en' },
+                { text: 'Hello.', lang: 'en' },
                 ...instruction(progress.settings.instructions, 'Alege-ți un prieten!', 'Pick a friend!'),
               ])
               setScreen({ name: 'pick', back: 'start' })
             }}
             onPlay={() => {
               void speak([
-                { text: `Hello, ${name}!`, lang: 'en' },
-                ...instruction(progress.settings.instructions, 'Hai să învățăm engleză!', "Let's learn English!"),
+                { text: 'Hello.', lang: 'en' },
+                ...instruction(progress.settings.instructions, 'Hai să învățăm engleză.', "Let's learn English!"),
               ])
               setScreen({ name: 'home' })
             }}
@@ -390,8 +390,8 @@ export default function App() {
                 setScreen({ name: 'onboard', step: 'level' })
               } else if (screen.back === 'start') {
                 void speak([
-                  { text: `Hello, ${name}!`, lang: 'en' },
-                  ...instruction(progress.settings.instructions, 'Hai să învățăm engleză!', "Let's learn English!"),
+                  { text: 'Hello.', lang: 'en' },
+                  ...instruction(progress.settings.instructions, 'Hai să învățăm engleză.', "Let's learn English!"),
                 ])
                 setScreen({ name: 'home' })
               } else {
