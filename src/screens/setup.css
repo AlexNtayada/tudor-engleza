@@ -703,3 +703,90 @@
 .seg-wrap button {
   flex: 1 1 auto;
 }
+
+/* Top bar: the profile menu under the avatar. */
+.profile {
+  position: relative;
+}
+
+.profile-menu {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  z-index: 60;
+  width: 270px;
+  background: #fff;
+  border-radius: 22px;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  box-shadow: 0 14px 36px rgba(90, 60, 10, 0.18), 0 0 0 2px var(--line);
+}
+
+.profile-menu-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 6px 8px 12px;
+  border-bottom: 2px solid #f6eedd;
+  margin-bottom: 4px;
+}
+
+.profile-menu-face {
+  position: relative;
+  width: 58px;
+  height: 58px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  overflow: hidden;
+  background: radial-gradient(circle at 50% 35%, #fff3c4, #ffd45c);
+}
+
+.profile-menu-face .dino {
+  position: absolute;
+  left: -26px;
+  top: -8px;
+}
+
+.profile-menu-who {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
+}
+
+.profile-menu-who b {
+  font-size: 20px;
+}
+
+.profile-menu-who span {
+  font-size: 14px;
+  color: var(--muted);
+}
+
+.profile-menu button {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 46px;
+  padding: 0 10px;
+  border-radius: 14px;
+  background: none;
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--ink);
+  text-align: left;
+  cursor: pointer;
+}
+
+.profile-menu button:hover,
+.profile-menu button:focus-visible {
+  background: var(--cream);
+}
+
+.profile-menu button small {
+  margin-left: auto;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--muted);
+}
