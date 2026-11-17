@@ -29,7 +29,7 @@ export function MascotPicker({
     void speak([
       { text: m.hello, lang: 'en' },
       ...instruction(mode, `Eu sunt ${m.title}. ${m.blurb}!`, `Do you want to play with me?`),
-    ])
+    ], { friend: id })
   }
 
   return (

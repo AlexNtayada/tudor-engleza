@@ -9,6 +9,7 @@ import {
   buildListenRounds,
   POSITIONS,
   RO_NUMBERS,
+  SOUND_SAY,
   sillyForm,
   type ActivityId,
   type Position,
@@ -259,17 +260,6 @@ export function WarmUp({ s, hasRo, onFinish, onBack }: ActivityProps) {
 }
 
 /* ---------------- 2. The long sound ---------------- */
-
-const SOUND_SAY: Record<string, { ask: string; goal: string }> = {
-  r: {
-    ask: 'Pornește motorașul! Spune rrrrr cât poți de lung, cu limba sus, după dinți.',
-    goal: 'Ura! Motorașul a ajuns la steag!',
-  },
-  l: {
-    ask: 'Cântă ca păsărica: llllll, cu vârful limbii sus, după dinți.',
-    goal: 'Ura! Păsărica a ajuns în copac!',
-  },
-}
 
 export function SoundRace({ s, save, micOk, onFinish, onBack }: ActivityProps) {
   const say = SOUND_SAY[s.id]

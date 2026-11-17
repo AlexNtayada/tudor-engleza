@@ -1,0 +1,71 @@
+name: Voci ElevenLabs
+
+# Records the app's spoken lines with ElevenLabs (scripts/voices/generate.ts) and commits the clips.
+# Needs the repository secret ELEVENLABS_API_KEY. Only lines without a clip are recorded.
+
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: 'Ce facem: numara (nu consuma credite), mostre (cateva clipuri) sau tot'
+        type: choice
+        options: [numara, mostre, tot, lista-voci]
+        default: numara
+      voices:
+        description: 'Doar aceste voci, separate prin virgula (ex: ninja,en). Gol = toate'
+        required: false
+        default: ''
+      english_instructions:
+        description: 'Inregistreaza si instructiunile in engleza (folosite doar daca parintele alege engleza)'
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+  actions: write
+
+concurrency:
+  group: voices
+  cancel-in-progress: false
+
+jobs:
+  record:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Record clips
+        env:
+          ELEVENLABS_API_KEY: ${{ secrets.ELEVENLABS_API_KEY }}
+          MODE: ${{ inputs.mode }}
+          VOICES: ${{ inputs.voices }}
+          EN_INSTR: ${{ inputs.english_instructions }}
+        run: |
+          set -o pipefail
+          ARGS=()
+          case "$MODE" in
+            numara) ARGS+=(--dry-run) ;;
+            mostre) ARGS+=(--sample) ;;
+            lista-voci) ARGS+=(--list-voices) ;;
+          esac
+          if [ -n "$VOICES" ]; then ARGS+=(--voices "$VOICES"); fi
+          if [ "$EN_INSTR" = "true" ]; then ARGS+=(--english-instructions); fi
+          npx vite-node scripts/voices/generate.ts -- "${ARGS[@]}" | tee -a "$GITHUB_STEP_SUMMARY"
+      - name: Commit clips
+        if: ${{ always() && (inputs.mode == 'mostre' || inputs.mode == 'tot') }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git add public/audio
+          if git diff --cached --quiet; then echo "Nothing new"; exit 0; fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898315+github-actions[bot]@users.noreply.github.com"
+          git commit -m "Voice clips from ElevenLabs ($(git diff --cached --name-only | grep -c mp3) new)"
+          for i in 1 2 3; do git pull --rebase && git push && break; sleep 5; done
+          # Pushes made by this workflow don't start other workflows, so publish the app explicitly.
+          if [ "${GITHUB_REF_NAME}" = "main" ]; then gh workflow run deploy.yml --ref main; fi

@@ -1,0 +1,17 @@
+{
+  "_help": "Which ElevenLabs voice speaks for whom. Change a voiceId, delete that folder in public/audio and run the generator again. Romanian uses a model that can be told the language (language_code), so short words aren't read with an English accent.",
+  "models": {
+    "en": "eleven_multilingual_v2",
+    "ro": "eleven_turbo_v2_5"
+  },
+  "voices": {
+    "en":    { "name": "Jessica (American words)", "voiceId": "cgSgspJ2msm6clMCkdW9" },
+    "ninja": { "name": "Liam",    "voiceId": "TX3LPaxmHKxFdv7VOQHJ" },
+    "pip":   { "name": "Laura",   "voiceId": "FGY2WhTYpPnrIDTdsKH5" },
+    "bobo":  { "name": "Chris",   "voiceId": "iP95p4xoKVk53GoZ742B" },
+    "rici":  { "name": "Charlie", "voiceId": "IKne3meq5aSn9XLyUdCD" },
+    "bip":   { "name": "Callum",  "voiceId": "N2lVS1w4EtoT3dr4eOWO" },
+    "zuzu":  { "name": "Matilda", "voiceId": "XrExE9yKIg1WjnnlVkGX" }
+  },
+  "settings": { "stability": 0.5, "similarity_boost": 0.75, "style": 0.3, "use_speaker_boost": true, "speed": 0.95 }
+}
