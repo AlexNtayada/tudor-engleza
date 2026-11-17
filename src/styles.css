@@ -4001,3 +4001,9 @@ body {
     top: -8px;
   }
 }
+
+/* lesson progress bar: white track so it stands out on the coloured worlds */
+.progress {
+  background: #fff;
+  box-shadow: 0 3px 0 rgba(176, 124, 30, 0.18), 0 6px 14px rgba(176, 124, 30, 0.12);
+}
