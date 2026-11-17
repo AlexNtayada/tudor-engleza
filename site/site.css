@@ -104,12 +104,7 @@ p {
 }
 
 .tudoo {
-  color: var(--logo);
   font-weight: 800;
-}
-
-.tudoo b {
-  color: var(--logo-bang);
 }
 
 /* ---------- buttons ---------- */

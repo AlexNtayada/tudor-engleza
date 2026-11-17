@@ -141,19 +141,45 @@
   align-items: baseline;
   white-space: nowrap;
   line-height: 1;
+  font-weight: 800;
+  letter-spacing: 0;
+}
+
+/* Candy letters: dark outline, a dark "3D" edge below, each one tilted a little. */
+.tudoo-letter {
+  display: inline-block;
+  -webkit-text-stroke: 0.075em #3a2a14;
+  paint-order: stroke fill;
+  text-shadow: 0 0.06em 0 #3a2a14;
+}
+
+.tudoo-letter:nth-child(1) {
+  transform: rotate(-7deg) translateY(0.03em);
+}
+
+.tudoo-letter:nth-child(2) {
+  transform: rotate(6deg) translateY(-0.05em);
+  margin-left: 0.01em;
+}
+
+.tudoo-letter:nth-child(3) {
+  transform: rotate(-5deg) translateY(0.01em);
+  margin-left: 0.01em;
 }
 
 .tudoo-eyes {
-  width: 1.08em;
-  height: 0.56em;
-  margin: 0 0.02em 0 0.03em;
+  width: 1.12em;
+  height: 0.6em;
+  margin: 0 0.02em 0 0.04em;
   overflow: visible;
   align-self: baseline;
-  transform: translateY(0.04em);
+  transform: translateY(0.05em) rotate(4deg);
+  filter: drop-shadow(0 0.05em 0 #3a2a14);
 }
 
-.tudoo b {
-  margin-left: 0.02em;
+.tudoo-bang {
+  margin-left: 0.03em;
+  transform: rotate(8deg) translateY(-0.04em);
 }
 
 .tudoo-pupil {
