@@ -4709,15 +4709,6 @@ button.avatar:active {
 
 
 
-.logo-text .tudoo,
-.appbar-hero .logo-text .tudoo {
-  color: #1f6b4f;
-}
-
-.logo-text .tudoo b,
-.appbar-hero .logo-text .tudoo b {
-  color: #e2551f;
-}
 
 /* ---------- intro ---------- */
 
@@ -4827,9 +4818,6 @@ button.avatar:active {
   text-shadow: 0 6px 0 #fff;
 }
 
-.intro-title .tudoo b {
-  color: #ff6f3d;
-}
 
 .intro-sub {
   margin: 8px 0 0;
