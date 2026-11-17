@@ -2,11 +2,12 @@ import { Ninja } from './Ninja'
 import { levelFor } from '../gamify'
 import type { Progress } from '../progress'
 
-export type Tab = 'home' | 'play' | 'album' | 'dino' | 'parents'
+export type Tab = 'home' | 'play' | 'speech' | 'album' | 'dino' | 'parents'
 
 const TABS: { id: Tab; icon: string; label: string }[] = [
   { id: 'home', icon: '🗺️', label: 'Hartă' },
   { id: 'play', icon: '🎈', label: 'Joacă' },
+  { id: 'speech', icon: '👅', label: 'Sunete' },
   { id: 'album', icon: '📒', label: 'Album' },
   { id: 'dino', icon: '🥷', label: 'Ninja' },
   { id: 'parents', icon: '🔒', label: 'Părinți' },

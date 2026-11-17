@@ -8,6 +8,7 @@ import { Ninja } from '../components/Ninja'
 import { instruction, speak, hasRomanianVoice, speechSupported } from '../speech'
 import { micSupported, recognitionSupported } from '../recorder'
 import { sfx } from '../sfx'
+import { SpeechPanel } from '../logopedie/Recordings'
 import {
   ALL_LESSONS_COUNT,
   DEFAULT_PROGRESS,
@@ -478,8 +479,8 @@ export function Parents({
           </div>
         </div>
         <p className="note">
-          Tudor apasă 🎤, spune cuvântul și își aude imediat vocea. Înregistrarea rămâne doar pe acest dispozitiv și nu
-          se salvează. Ninja nu spune niciodată „greșit”: dacă nu e sigur, îl roagă să mai spună o dată.
+          Tudor apasă 🎤, spune cuvântul și își aude imediat vocea. Înregistrarea din lecțiile de engleză rămâne doar pe
+          acest dispozitiv și nu se salvează. Ninja nu spune niciodată „greșit”: dacă nu e sigur, îl roagă să mai spună o dată.
         </p>
         {s.micCheck && recognitionSupported() && (
           <p className="note">
@@ -496,6 +497,8 @@ export function Parents({
         )}
         {!micSupported() && <p className="note warn">Browserul acesta nu are acces la microfon.</p>}
       </section>
+
+      <SpeechPanel save={s.speechSave} onSave={(v) => set({ speechSave: v })} speechLog={progress.speechLog} />
 
       <section className="panel">
         <h3>Despre timp</h3>

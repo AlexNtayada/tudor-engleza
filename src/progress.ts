@@ -10,6 +10,8 @@ export interface Settings {
   mic: boolean
   /** Use the browser's speech recognition to check the word (audio goes to the browser's speech service). */
   micCheck: boolean
+  /** Keep speech-therapy recordings on this device so a parent can listen later. */
+  speechSave: boolean
 }
 
 export interface Progress {
@@ -32,6 +34,8 @@ export interface Progress {
   outfit: Partial<Record<Slot, string>>
   /** Boss tests per unit id: best score (0..1), tries, and whether the boss was beaten. */
   boss: Record<string, BossRecord>
+  /** Speech-therapy practice: per day, the activities finished (e.g. "r:words"). */
+  speechLog: Record<string, string[]>
 }
 
 export interface BossRecord {
@@ -55,7 +59,8 @@ export const DEFAULT_PROGRESS: Progress = {
   owned: [],
   outfit: {},
   boss: {},
-  settings: { childName: 'Tudor', instructions: 'ro', slowVoice: false, mic: true, micCheck: true },
+  speechLog: {},
+  settings: { childName: 'Tudor', instructions: 'ro', slowVoice: false, mic: true, micCheck: true, speechSave: true },
 }
 
 export function loadProgress(): Progress {
