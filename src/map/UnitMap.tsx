@@ -61,14 +61,15 @@ function Stars({ count }: { count: number }) {
 
 /** A flat stepping stone with the lesson number, like a marker on a board game. */
 function Stone({ label, state, big }: { label: string; state: NodeState; big?: boolean }) {
-  const top = state === 'locked' ? '#d8d0c3' : '#f6f2ea'
-  const side = state === 'locked' ? '#aea392' : '#c9bfae'
+  // White stones, with a soft warm side so they still look like stones; locked ones are a touch softer.
+  const top = state === 'locked' ? '#fbfaf7' : '#ffffff'
+  const side = state === 'locked' ? '#cfc6b8' : '#d8cfc1'
   return (
     <svg className="bm-stone-svg" viewBox="-50 -36 100 70" aria-hidden>
       <ellipse cx="0" cy="22" rx="44" ry="10" fill="rgba(30,30,10,0.22)" />
       <path d="M-42 4 Q -44 -16 -18 -22 Q 4 -28 26 -20 Q 44 -14 42 4 L 42 12 Q 38 24 12 25 Q -12 28 -30 21 Q -42 17 -42 10 Z" fill={side} />
       <path d="M-42 2 Q -44 -18 -18 -24 Q 4 -30 26 -22 Q 44 -16 42 2 Q 40 14 14 16 Q -10 19 -30 13 Q -42 9 -42 2 Z" fill={top} />
-      <path d="M-30 -10 Q -20 -18 -4 -19" stroke="#fff" strokeWidth="4" strokeLinecap="round" fill="none" opacity="0.8" />
+      <path d="M-30 -10 Q -20 -18 -4 -19" stroke="#f1ece4" strokeWidth="4" strokeLinecap="round" fill="none" opacity="0.8" />
       <path d="M-30 6 Q -24 2 -17 5" stroke={side} strokeWidth="2.2" fill="none" strokeLinecap="round" />
       {!big && (
         <text
