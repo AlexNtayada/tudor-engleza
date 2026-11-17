@@ -190,11 +190,7 @@ summary:focus-visible {
   align-items: center;
   gap: 6px;
   text-decoration: none;
-  font-size: 30px;
-}
-
-.brand .dino {
-  margin: -6px 0 -10px;
+  font-size: 34px;
 }
 
 .top-links {
@@ -302,7 +298,7 @@ body.meadow {
 
 .crew {
   position: relative;
-  height: 470px;
+  height: 560px;
   z-index: 1;
 }
 
@@ -333,8 +329,8 @@ body.meadow {
 
 .crew-bubble {
   position: absolute;
-  top: 20px;
-  left: 4%;
+  top: 160px;
+  left: -4%;
   background: #fff;
   border-radius: 22px;
   padding: 8px 18px;
@@ -343,22 +339,126 @@ body.meadow {
   box-shadow: 0 6px 18px rgba(60, 90, 120, 0.15);
 }
 
+.sky {
+  position: absolute;
+  inset: -20px -40px 0;
+  pointer-events: none;
+}
+
+.sky::before {
+  content: '';
+  position: absolute;
+  left: 4%;
+  right: 0;
+  top: 0;
+  bottom: 60px;
+  border-radius: 50% 50% 0 0 / 44% 44% 0 0;
+  background: linear-gradient(#cfeaf9, #eaf6fc 70%, rgba(234, 246, 252, 0));
+}
+
+.sun {
+  position: absolute;
+  top: 6px;
+  right: 8%;
+  width: 116px;
+}
+
+.sun-rays {
+  transform-origin: 60px 60px;
+  animation: spin-slow 24s linear infinite;
+}
+
+@keyframes spin-slow {
+  to { transform: rotate(360deg); }
+}
+
+.rainbow {
+  position: absolute;
+  left: 18%;
+  width: 72%;
+  bottom: 230px;
+  opacity: 0.85;
+}
+
 .cloud {
   position: absolute;
-  fill: #e3f1fa;
+  fill: #fff;
+  animation: drift 14s ease-in-out infinite;
+}
+
+.cloud-3 {
+  width: 120px;
+  top: 190px;
+  right: 2%;
+  animation-delay: -5s;
+}
+
+@keyframes drift {
+  0%, 100% { transform: translateX(0); }
+  50% { transform: translateX(18px); }
+}
+
+.balloon {
+  position: absolute;
+  display: grid;
+  place-items: center;
+  width: 54px;
+  height: 64px;
+  border-radius: 50% 50% 48% 48% / 56% 56% 44% 44%;
+  background: radial-gradient(circle at 34% 30%, rgba(255, 255, 255, 0.55) 0 10%, transparent 12%), var(--c);
+  color: #fff;
+  font-weight: 800;
+  font-size: 28px;
+  box-shadow: inset -6px -8px 0 rgba(0, 0, 0, 0.08);
+  animation: float-up 4.5s ease-in-out infinite;
+}
+
+.balloon::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  width: 2px;
+  height: 46px;
+  background: rgba(58, 42, 20, 0.35);
+}
+
+.balloon-a {
+  top: 70px;
+  left: 21%;
+}
+
+.balloon-b {
+  top: 24px;
+  left: 38%;
+  animation-delay: -1.5s;
+}
+
+.balloon-c {
+  top: 96px;
+  left: 56%;
+  width: 46px;
+  height: 56px;
+  font-size: 24px;
+  animation-delay: -3s;
+}
+
+@keyframes float-up {
+  0%, 100% { transform: translateY(0) rotate(-4deg); }
+  50% { transform: translateY(-14px) rotate(4deg); }
 }
 
 .cloud-1 {
-  width: 150px;
-  top: 30px;
-  right: 6%;
+  width: 140px;
+  top: 120px;
+  right: 22%;
 }
 
 .cloud-2 {
   width: 100px;
-  top: 120px;
-  left: 30%;
-  opacity: 0.9;
+  top: 170px;
+  left: 6%;
+  animation-delay: -8s;
 }
 
 .fly {
@@ -368,13 +468,13 @@ body.meadow {
 }
 
 .fly-1 {
-  top: 90px;
-  left: 0;
+  top: 220px;
+  left: 30%;
 }
 
 .fly-2 {
-  top: 150px;
-  right: 0;
+  top: 280px;
+  right: 4%;
   font-size: 24px;
   animation-delay: 1.4s;
 }
@@ -416,9 +516,31 @@ body.meadow {
   text-decoration: none;
 }
 
-.more span {
-  font-size: 28px;
-  line-height: 0.6;
+.more-arrow {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  margin-top: 6px;
+  border-radius: 50%;
+  background: #fff;
+  color: var(--grass-dark);
+  box-shadow: 0 3px 0 rgba(0, 0, 0, 0.12);
+  animation: nudge-down 1.6s ease-in-out infinite;
+}
+
+.more-arrow svg {
+  width: 22px;
+  height: 22px;
+}
+
+.more:hover .more-arrow {
+  animation-duration: 0.8s;
+}
+
+@keyframes nudge-down {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(6px); }
 }
 
 
@@ -907,10 +1029,49 @@ body.meadow {
     flex: 1 1 100%;
   }
   .crew {
-    height: 300px;
+    height: 400px;
+  }
+  .sky {
+    inset: -10px -16px 0;
+  }
+  .sun {
+    width: 76px;
+    right: 4%;
+  }
+  .rainbow {
+    bottom: 160px;
+    left: 12%;
+    width: 80%;
+  }
+  .balloon {
+    width: 40px;
+    height: 48px;
+    font-size: 21px;
+  }
+  .balloon::after {
+    height: 30px;
+  }
+  .balloon-a {
+    top: 40px;
+    left: 6%;
+  }
+  .balloon-b {
+    top: 10px;
+    left: 30%;
+  }
+  .balloon-c {
+    top: 60px;
+    left: 52%;
+  }
+  .cloud-2,
+  .cloud-3 {
+    display: none;
+  }
+  .fly-1 {
+    top: 150px;
   }
   .crew .dino,
-  .crew svg:not(.cloud) {
+  .crew .dino svg {
     width: calc(var(--s, 1) * 100px) !important;
     height: calc(var(--s, 1) * 100px) !important;
   }
@@ -929,10 +1090,12 @@ body.meadow {
   }
   .crew-bubble {
     font-size: 18px;
-    top: 0;
+    top: 118px;
+    left: auto;
+    right: 0;
   }
   .cloud-1 {
-    width: 100px;
+    display: none;
   }
   .row,
   .row-flip {
