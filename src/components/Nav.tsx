@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState } from 'react'
 import { Ninja } from './Ninja'
 import { levelFor } from '../gamify'
 import type { Progress } from '../progress'
@@ -37,9 +38,28 @@ export function Nav({ tab, progress, onTab }: { tab: Tab; progress: Progress; on
       <span className="nav-label">{t.label}</span>
     </button>
   ))
+  const bar = useRef<HTMLElement>(null)
+  const [scrolled, setScrolled] = useState(false)
+  const overHero = tab === 'home'
+  useEffect(() => {
+    // The home hero runs up behind the bar: it needs the bar's height, and the bar turns solid once you scroll.
+    const el = bar.current
+    if (!el) return
+    const setH = () => document.documentElement.style.setProperty('--appbar-h', `${el.offsetHeight}px`)
+    setH()
+    const ro = new ResizeObserver(setH)
+    ro.observe(el)
+    const onScroll = () => setScrolled(window.scrollY > 12)
+    onScroll()
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => {
+      ro.disconnect()
+      window.removeEventListener('scroll', onScroll)
+    }
+  }, [])
   return (
     <>
-      <header className="appbar">
+      <header ref={bar} className={`appbar ${overHero && !scrolled ? 'appbar-hero' : ''}`}>
         <button className="logo-btn" onClick={() => onTab('home')} aria-label="Acasă">
           <Logo />
         </button>

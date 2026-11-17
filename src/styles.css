@@ -4390,3 +4390,113 @@ button.avatar:active {
     border-radius: 13px;
   }
 }
+
+/* ======================================================
+   Full-width home hero with the top bar sitting on it
+   ====================================================== */
+
+.hero-band {
+  position: relative;
+  margin-top: calc(-1 * var(--appbar-h, 76px));
+  padding: calc(var(--appbar-h, 76px) + 6px) 16px 26px;
+  background: linear-gradient(170deg, #ffd45c 0%, #ffc23a 100%);
+  border-radius: 0 0 44px 44px;
+  box-shadow: 0 18px 36px rgba(200, 140, 20, 0.18);
+  overflow: hidden;
+}
+
+.hero-band .hero {
+  position: static;
+  max-width: 788px;
+  margin: 0 auto;
+  padding: 0;
+  background: none;
+  box-shadow: none;
+  border-radius: 0;
+  overflow: visible;
+}
+
+.hero-band .hero-sun {
+  inset: 0;
+}
+
+.hero-band .hero > *:not(.hero-sun):not(.hero-spark) {
+  position: relative;
+  z-index: 1;
+}
+
+.hero-band .level-card {
+  width: 100%;
+  margin: 0;
+  border-radius: 28px;
+  box-shadow: 0 10px 24px rgba(160, 100, 0, 0.16);
+}
+
+.home .tiles {
+  margin-top: 26px;
+}
+
+/* top bar: clearly visible buttons everywhere, and see-through while it sits on the hero */
+.appbar {
+  transition: background 0.2s, box-shadow 0.2s;
+}
+
+.appbar .nav-link {
+  color: #6b5a48;
+}
+
+.appbar .nav-link:hover {
+  color: #3d2f22;
+}
+
+.appbar.appbar-hero {
+  background: transparent;
+  backdrop-filter: none;
+  box-shadow: none;
+}
+
+.appbar-hero .nav-link {
+  color: #5a3d00;
+  background: rgba(255, 255, 255, 0.42);
+}
+
+.appbar-hero .nav-link:hover {
+  background: rgba(255, 255, 255, 0.75);
+}
+
+.appbar-hero .nav-link.on {
+  background: #fff;
+  color: var(--green-dark);
+  box-shadow: 0 4px 0 rgba(176, 110, 0, 0.35);
+}
+
+.appbar-hero .logo-text b {
+  color: #e2551f;
+}
+
+.appbar-hero .logo-text {
+  color: #1f6b4f;
+}
+
+@media (max-width: 640px) {
+  .hero-band {
+    padding: calc(var(--appbar-h, 64px) + 4px) 14px 20px;
+    border-radius: 0 0 34px 34px;
+  }
+}
+
+@media (max-width: 900px) {
+  .tabbar .nav-link {
+    color: #6b5a48;
+  }
+  .tabbar .nav-icon {
+    filter: none;
+    opacity: 1;
+  }
+}
+
+.appbar-hero .profile-stars {
+  background: rgba(255, 255, 255, 0.85);
+  padding: 4px 12px 4px 8px;
+  border-radius: 999px;
+}
