@@ -968,6 +968,18 @@ button:focus-visible {
   font-weight: 700;
 }
 
+.seg-file {
+  padding: 8px 18px;
+  border-radius: 999px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.seg button:hover,
+.seg-file:hover {
+  background: #fff;
+}
+
 .seg button.on {
   background: var(--green);
   color: #fff;

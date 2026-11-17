@@ -69,22 +69,45 @@ export const DEFAULT_PROGRESS: Progress = {
   settings: { childName: 'Tudor', instructions: 'ro', slowVoice: false, mic: true, micCheck: true, speechSave: true },
 }
 
+/** Fills in fields that older saves (or saves from another device) may lack. */
+function normalize(parsed: Partial<Progress>): Progress {
+  // Older saves had no wallet: start it from the stars already won.
+  const fromStars = Object.values(parsed.stars ?? {}).reduce((a, b) => a + b, 0)
+  return {
+    ...structuredClone(DEFAULT_PROGRESS),
+    wallet: fromStars,
+    earned: fromStars,
+    ...parsed,
+    settings: { ...DEFAULT_PROGRESS.settings, ...parsed.settings },
+  }
+}
+
 export function loadProgress(): Progress {
   try {
     const raw = localStorage.getItem(KEY)
     if (!raw) return structuredClone(DEFAULT_PROGRESS)
-    const parsed = JSON.parse(raw) as Partial<Progress>
-    // Older saves had no wallet: start it from the stars already won.
-    const fromStars = Object.values(parsed.stars ?? {}).reduce((a, b) => a + b, 0)
-    return {
-      ...structuredClone(DEFAULT_PROGRESS),
-      wallet: fromStars,
-      earned: fromStars,
-      ...parsed,
-      settings: { ...DEFAULT_PROGRESS.settings, ...parsed.settings },
-    }
+    return normalize(JSON.parse(raw) as Partial<Progress>)
   } catch {
     return structuredClone(DEFAULT_PROGRESS)
+  }
+}
+
+const EXPORT_KIND = 'tudoo-progress'
+
+/** The progress as a small file the parent can move to another device or address (Parents area). */
+export function exportProgress(p: Progress): string {
+  return JSON.stringify({ kind: EXPORT_KIND, version: 1, savedAt: new Date().toISOString(), progress: p })
+}
+
+/** Reads a file made by exportProgress; undefined when it is not a Tudoo! progress file. */
+export function importProgress(text: string): Progress | undefined {
+  try {
+    const data = JSON.parse(text) as { kind?: string; progress?: Partial<Progress> }
+    const p = data?.kind === EXPORT_KIND ? data.progress : undefined
+    if (!p || typeof p !== 'object' || typeof p.stars !== 'object' || p.stars === null) return undefined
+    return normalize(p)
+  } catch {
+    return undefined
   }
 }
 
