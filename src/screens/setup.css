@@ -40,7 +40,29 @@
 /* ---------- Onboarding ---------- */
 
 .ob {
+  position: relative;
   align-items: stretch;
+}
+
+.ob .ob-close,
+.ob-sky > .ob-close {
+  position: absolute;
+  top: 12px;
+  right: 14px;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: #fff;
+  color: var(--ink);
+  font-size: 30px;
+  line-height: 1;
+  box-shadow: 0 3px 0 var(--line);
+  cursor: pointer;
 }
 
 .ob-sky {
@@ -949,5 +971,56 @@
   }
   .set-pane {
     max-width: 680px;
+  }
+}
+
+/* Settings → Copii: the active child's badge and hover tips on the other children and the × */
+.set-kid-badge {
+  margin-top: -14px;
+  z-index: 1;
+  padding: 2px 9px;
+  border-radius: 999px;
+  background: var(--green);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 800;
+  line-height: 1.4;
+  box-shadow: 0 2px 0 var(--green-dark);
+}
+
+.set-kid-pick[data-tip],
+.set-kid-x[data-tip] {
+  position: relative;
+}
+
+.set-kid-x[data-tip] {
+  position: absolute;
+}
+
+[data-tip]::after {
+  content: attr(data-tip);
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + 8px);
+  z-index: 5;
+  padding: 6px 10px;
+  border-radius: 10px;
+  background: var(--ink);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.2;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  transform: translate(-50%, 4px);
+  transition: opacity 0.15s, transform 0.15s;
+}
+
+@media (hover: hover) {
+  [data-tip]:hover::after,
+  [data-tip]:focus-visible::after {
+    opacity: 1;
+    transform: translate(-50%, 0);
   }
 }
