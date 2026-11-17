@@ -1,4 +1,5 @@
 import { ALL_LESSONS, UNITS } from './content'
+import type { Slot } from './gamify'
 
 export interface Settings {
   childName: string
@@ -28,7 +29,17 @@ export interface Progress {
   lastChest: string
   /** Wardrobe items bought, and what Ninja wears per slot. */
   owned: string[]
-  outfit: Partial<Record<'head' | 'face' | 'neck', string>>
+  outfit: Partial<Record<Slot, string>>
+  /** Boss tests per unit id: best score (0..1), tries, and whether the boss was beaten. */
+  boss: Record<string, BossRecord>
+}
+
+export interface BossRecord {
+  best: number
+  tries: number
+  beaten: boolean
+  last: number
+  lastDay: string
 }
 
 const KEY = 'dino-english-progress-v1'
@@ -43,6 +54,7 @@ export const DEFAULT_PROGRESS: Progress = {
   lastChest: '',
   owned: [],
   outfit: {},
+  boss: {},
   settings: { childName: 'Tudor', instructions: 'ro', slowVoice: false, mic: true, micCheck: true },
 }
 

@@ -1,4 +1,5 @@
 import { Accessory, useOutfit } from './Outfit'
+import type { Slot } from '../gamify'
 
 export type Mood = 'idle' | 'talk' | 'happy' | 'dance' | 'oops' | 'sleep'
 
@@ -77,7 +78,7 @@ export function Ninja({
 }: {
   mood?: Mood
   size?: number
-  outfit?: Partial<Record<'head' | 'face' | 'neck', string>>
+  outfit?: Partial<Record<Slot, string>>
 }) {
   const saved = useOutfit()
   const wear = outfit ?? saved
@@ -90,6 +91,7 @@ export function Ninja({
           {/* headband tails flying behind */}
           <path d="M60 46 Q 36 36 22 50 Q 38 50 46 60 Z" fill={C.band} {...ink} strokeWidth={4} />
           <path d="M60 52 Q 40 64 30 80 Q 46 72 58 66 Z" fill={C.band} {...ink} strokeWidth={4} />
+          {wear.back && <Accessory id={wear.back} />}
           {/* feet */}
           <path d="M74 190 Q 72 172 90 172 Q 104 172 104 190 Z" fill={C.shoe} {...ink} />
           <path d="M112 190 Q 112 172 128 172 Q 146 172 144 190 Z" fill={C.shoe} {...ink} />
@@ -191,6 +193,12 @@ export function Ninja({
             </g>
           )}
           {wear.head && <Accessory id={wear.head} />}
+          {wear.hand && (
+            <g className="ninja-hand-item">
+              <Accessory id={wear.hand} />
+              <circle cx="160" cy="145" r="7" fill={C.skin} {...ink} strokeWidth={3.5} />
+            </g>
+          )}
         </g>
         {mood === 'sleep' && (
           <text className="dino-zzz" x="160" y="30" fontSize="26" fontWeight="800" fill={C.suitDark}>

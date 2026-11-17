@@ -4,7 +4,11 @@ export type ChoiceStep = { type: Game; target: Word; choices: Word[] }
 
 export type Step = { type: 'intro'; word: Word } | ChoiceStep | { type: 'speak'; target: Word }
 
-export const CHOICE_COUNT: Record<Game, number> = { listen: 3, balloons: 4, house: 4, feed: 3 }
+export const CHOICE_COUNT: Record<Game, number> = { listen: 3, balloons: 4, house: 4, feed: 3, dress: 3 }
+
+/** Boss stage: questions asked, and how many first-try answers knock the boss out. */
+export const BOSS_QUESTIONS = 10
+export const BOSS_HP = 7
 
 type Rng = () => number
 
@@ -59,6 +63,7 @@ function exercises(
 export function buildLesson(unit: Unit, lessonIndex: number, rng: Rng = Math.random): Step[] {
   const lesson = unit.lessons[lessonIndex]
   const known = wordsUpTo(unit, lessonIndex)
+  if (lesson.boss) return buildBoss(unit, known, rng)
   const newWords = unit.words.filter((w) => lesson.newWords.includes(w.id))
   const older = known.filter((w) => !lesson.newWords.includes(w.id))
 
@@ -79,6 +84,14 @@ export function buildLesson(unit: Unit, lessonIndex: number, rng: Rng = Math.ran
   steps.push(...quiz)
   if (lesson.bonusSpeak) steps.push({ type: 'speak', target: lesson.bonusSpeak })
   return steps
+}
+
+/** Boss test: every unit word at least once, mixed games, no hints from intros or speaking. */
+function buildBoss(unit: Unit, known: Word[], rng: Rng): Step[] {
+  const words = known.length ? known : unit.words
+  const targets: Word[] = shuffle(words, rng).slice(0, BOSS_QUESTIONS)
+  while (targets.length < BOSS_QUESTIONS) targets.push(shuffle(words, rng)[0])
+  return exercises(targets, () => ({ pool: words, fallback: unit.words, games: unit.games }), rng)
 }
 
 /** Free play: endless-feeling mixed practice over every word already learned. */

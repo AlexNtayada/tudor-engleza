@@ -8,8 +8,7 @@ import {
   levelProgress,
   STARS_PER_LEVEL,
   toggleWear,
-  type Item,
-} from "../gamify";
+  type Item, SLOTS, type Slot } from "../gamify";
 import { learnedWordIds, type Progress } from "../progress";
 import { instruction, speak } from "../speech";
 import { sfx } from "../sfx";
@@ -64,12 +63,22 @@ export function Playground({
   );
 }
 
-function lastDays(n: number): { key: string; label: string }[] {
-  return Array.from({ length: n }, (_, i) => {
-    const d = new Date();
-    d.setDate(d.getDate() - (n - 1 - i));
-    const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
-    return { key, label: d.toLocaleDateString("ro-RO", { weekday: "narrow" }) };
+const WEEKDAYS = ["L", "Ma", "Mi", "J", "V", "S", "D"];
+
+const dayKey = (d: Date) =>
+  `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+
+/** Last week and this week, each starting on Monday. */
+function twoWeeks(): { key: string; future: boolean; today: boolean }[] {
+  const now = new Date();
+  const todayKey = dayKey(now);
+  const start = new Date(now);
+  start.setDate(now.getDate() - ((now.getDay() + 6) % 7) - 7);
+  return Array.from({ length: 14 }, (_, i) => {
+    const d = new Date(start);
+    d.setDate(start.getDate() + i);
+    const key = dayKey(d);
+    return { key, future: key > todayKey, today: key === todayKey };
   });
 }
 
@@ -82,6 +91,7 @@ export function NinjaRoom({
   onChange: (p: Progress) => void;
 }) {
   const [mood, setMood] = useState<Mood>("idle");
+  const [slot, setSlot] = useState<Slot | "all">("all");
   const level = levelFor(progress.earned);
   const toNext = STARS_PER_LEVEL - (progress.earned % STARS_PER_LEVEL);
   const mode = progress.settings.instructions;
@@ -96,6 +106,20 @@ export function NinjaRoom({
       sfx.tap();
       onChange(toggleWear(progress, item));
       celebrate();
+      return;
+    }
+    if (item.setOf) {
+      const unit = UNITS.find((u) => u.id === item.setOf);
+      sfx.wrong();
+      setMood("oops");
+      setTimeout(() => setMood("idle"), 1200);
+      void speak(
+        instruction(
+          mode,
+          `Acesta e un cadou! Strânge toate abțibildurile de la ${unit?.title ?? ""}.`,
+          "This one is a present! Collect all the stickers.",
+        ),
+      );
       return;
     }
     if (progress.wallet >= item.price) {
@@ -137,21 +161,45 @@ export function NinjaRoom({
 
       <section className="panel panel-kid">
         <h3>Garderoba lui Ninja</h3>
+        <div className="ward-tabs" role="tablist">
+          {[{ id: "all" as const, label: "Toate" }, ...SLOTS].map((t) => (
+            <button
+              key={t.id}
+              role="tab"
+              aria-selected={slot === t.id}
+              className={`ward-tab ${slot === t.id ? "on" : ""}`}
+              onClick={() => {
+                sfx.tap();
+                setSlot(t.id);
+              }}
+            >
+              {t.label}
+            </button>
+          ))}
+        </div>
         <div className="wardrobe">
-          {ITEMS.map((item) => {
+          {ITEMS.filter((item) => slot === "all" || item.slot === slot).map((item) => {
             const owned = progress.owned.includes(item.id);
             const wearing = progress.outfit[item.slot] === item.id;
-            const affordable = progress.wallet >= item.price;
+            const affordable = !item.setOf && progress.wallet >= item.price;
+            const unit = item.setOf ? UNITS.find((u) => u.id === item.setOf) : undefined;
             return (
               <button
                 key={item.id}
-                className={`ward-item ${owned ? "owned" : ""} ${wearing ? "wearing" : ""} ${!owned && !affordable ? "locked" : ""}`}
+                className={`ward-item ${owned ? "owned" : ""} ${wearing ? "wearing" : ""} ${!owned && !affordable ? "locked" : ""} ${item.setOf ? "ward-gift" : ""}`}
                 onClick={() => tapItem(item)}
                 aria-label={item.name}
+                title={item.name}
               >
                 <Ninja size={92} outfit={{ [item.slot]: item.id }} />
                 <span className="ward-tag">
-                  {owned ? (wearing ? "✓" : "👕") : `⭐ ${item.price}`}
+                  {owned
+                    ? wearing
+                      ? "✓"
+                      : "👕"
+                    : unit
+                      ? `🎁 ${unit.world.icon}`
+                      : `⭐ ${item.price}`}
                 </span>
               </button>
             );
@@ -162,18 +210,23 @@ export function NinjaRoom({
       <section className="panel panel-kid">
         <h3>Zilele mele cu soare</h3>
         <div className="suns">
-          {lastDays(14).map((d) => (
-            <div key={d.key} className="sun-day">
-              <span
-                className={
-                  progress.daysPlayed.includes(d.key) ? "sun on" : "sun"
-                }
-              >
-                {progress.daysPlayed.includes(d.key) ? "☀️" : "☁️"}
-              </span>
-              <span className="sun-label">{d.label}</span>
-            </div>
+          {WEEKDAYS.map((w) => (
+            <span key={w} className="sun-head">
+              {w}
+            </span>
           ))}
+          {twoWeeks().map((d) => {
+            const played = progress.daysPlayed.includes(d.key);
+            return (
+              <div
+                key={d.key}
+                className={`sun-day ${d.future ? "future" : ""} ${d.today ? "today" : ""}`}
+                title={d.key}
+              >
+                <span className={played ? "sun on" : "sun"}>{played ? "☀️" : d.future ? "·" : "☁️"}</span>
+              </div>
+            );
+          })}
         </div>
       </section>
     </div>
