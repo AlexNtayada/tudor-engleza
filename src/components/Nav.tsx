@@ -44,12 +44,16 @@ export function Nav({ tab, progress, onTab }: { tab: Tab; progress: Progress; on
           <Logo />
         </button>
         <nav className="appbar-links">{links}</nav>
-        <div className="appbar-stats">
-          <span className="pill" aria-label="Stele">
-            ⭐ {progress.wallet}
+        <div className="profile" aria-label={`Ninja, nivelul ${levelFor(progress.earned)}, ${progress.wallet} stele`}>
+          <span className="profile-stars">
+            <span className="profile-star">⭐</span>
+            <b>{progress.wallet}</b>
           </span>
-          <span className="pill pill-level" aria-label="Nivel">
-            🥷 {levelFor(progress.earned)}
+          <span className="avatar">
+            <span className="avatar-face">
+              <Ninja size={92} mood="idle" />
+            </span>
+            <span className="avatar-level">{levelFor(progress.earned)}</span>
           </span>
         </div>
       </header>
