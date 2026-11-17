@@ -7,12 +7,20 @@ on:
   workflow_dispatch:
     inputs:
       mode:
-        description: 'Ce facem: numara (nu consuma credite), mostre (cateva clipuri) sau tot'
+        description: 'Ce facem: numara (nu consuma credite), mostre (cateva clipuri), tot, sau voce-noua / salveaza-voce'
         type: choice
-        options: [numara, mostre, tot, lista-voci]
+        options: [numara, mostre, tot, lista-voci, voce-noua, salveaza-voce]
         default: numara
       voices:
         description: 'Doar aceste voci, separate prin virgula (ex: ninja,en). Gol = toate'
+        required: false
+        default: ''
+      friend:
+        description: 'voce-noua / salveaza-voce: pentru ce prieten (ninja, pip, bobo, rici, bip, zuzu)'
+        required: false
+        default: ''
+      design:
+        description: 'voce-noua: descrierea vocii (mai multe descrieri separate prin ||). salveaza-voce: id-ul mostrei alese'
         required: false
         default: ''
       english_instructions:
@@ -39,7 +47,32 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
+      - name: Design a voice
+        if: ${{ inputs.mode == 'voce-noua' || inputs.mode == 'salveaza-voce' }}
+        env:
+          ELEVENLABS_API_KEY: ${{ secrets.ELEVENLABS_API_KEY }}
+          GH_TOKEN: ${{ github.token }}
+          MODE: ${{ inputs.mode }}
+          FRIEND: ${{ inputs.friend }}
+          DESIGN: ${{ inputs.design }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898315+github-actions[bot]@users.noreply.github.com"
+          if [ "$MODE" = "voce-noua" ]; then
+            npx vite-node scripts/voices/design.ts -- design "$FRIEND" "$DESIGN" | tee -a "$GITHUB_STEP_SUMMARY"
+            # Previews go to their own branch so they never ship with the app.
+            git checkout -B voci-probe
+            git add -f auditions
+            git commit -m "Voice previews for $FRIEND"
+            git push -f origin voci-probe
+          else
+            npx vite-node scripts/voices/design.ts -- save "$FRIEND" "$DESIGN" | tee -a "$GITHUB_STEP_SUMMARY"
+            git add -A scripts/voices/voices.json public/audio
+            git commit -m "Use a designed voice for $FRIEND"
+            for i in 1 2 3; do git pull --rebase && git push && break; sleep 5; done
+          fi
       - name: Record clips
+        if: ${{ inputs.mode != 'voce-noua' && inputs.mode != 'salveaza-voce' }}
         env:
           ELEVENLABS_API_KEY: ${{ secrets.ELEVENLABS_API_KEY }}
           MODE: ${{ inputs.mode }}
