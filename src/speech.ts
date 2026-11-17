@@ -2,7 +2,7 @@
 // Romanian lines in the chosen friend's voice, English words in a clear American voice.
 // Anything without a clip falls back to the browser's speech engine, as before.
 
-import { clipPath, hasClip, hasVoiceClips, noteMissing, type VoiceId } from './clips'
+import { clipUrl, hasClip, hasVoiceClips, noteMissing, type VoiceId } from './clips'
 import { mascot } from './mascots'
 
 export interface Part {
@@ -146,7 +146,7 @@ export async function speak(
     if (voice) {
       // Clips are recorded at a natural pace; slow mode just plays them slower.
       const rate = part.lang === 'en' ? (s ? 0.7 : 1) : opts.roRate !== undefined && opts.roRate < 0.8 ? 0.75 : 1
-      const ok = await playClip(`${import.meta.env.BASE_URL}${clipPath(voice, part.text)}`, rate, opts.volume)
+      const ok = await playClip(`${import.meta.env.BASE_URL}${clipUrl(voice, part.text)}`, rate, opts.volume)
       if (ok) continue
       if (my !== token) return
     }

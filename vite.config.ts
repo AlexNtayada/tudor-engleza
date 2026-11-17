@@ -33,9 +33,9 @@ export default defineConfig({
         runtimeCaching: [
           {
             // Voice clips: thousands of small files, cached the first time each one plays.
-            urlPattern: /\/audio\/.+\.mp3$/i,
+            urlPattern: /\/audio\/.+\.mp3(\?v=\d+)?$/i,
             handler: 'CacheFirst',
-            options: { cacheName: 'voices', expiration: { maxEntries: 6000, maxAgeSeconds: 31536000 } },
+            options: { cacheName: 'voices-2', expiration: { maxEntries: 6000, maxAgeSeconds: 31536000 } },
           },
           {
             urlPattern: /^https:\/\/fonts\.(googleapis|gstatic)\.com\/.*/i,
