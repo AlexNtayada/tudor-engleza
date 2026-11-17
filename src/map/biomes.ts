@@ -23,8 +23,8 @@ export type Biome = {
   shore: PropId[]
   /** Less (or more) scenery than usual, 1 = normal. */
   density?: number
-  /** A wider trail with a dark outline, paw prints and a clear strip of grass beside it. */
-  bold?: boolean
+  /** Prints walked along the trail: animal paws or little shoe steps (roads and the moon keep their own marks). */
+  prints?: 'paws' | 'steps'
 }
 
 const meadow = {
@@ -68,7 +68,7 @@ export const BIOMES: Record<string, Biome> = {
   animals: {
     ...meadow,
     name: 'Ferma',
-    bold: true,
+    prints: 'paws',
     path: '#ffeac2',
     pathEdge: '#e0b46e',
     big: [
@@ -304,6 +304,7 @@ export const BIOMES: Record<string, Biome> = {
   nature: {
     ...meadow,
     name: 'Pădurea',
+    prints: 'paws',
     ground: '#7ccf5a',
     plateau: '#4fae45',
     patch: '#6cc04c',
@@ -351,6 +352,7 @@ export const BIOMES: Record<string, Biome> = {
   jungle: {
     ...meadow,
     name: 'Pădurea tropicală',
+    prints: 'paws',
     ground: '#5fb84a',
     plateau: '#79c95a',
     patch: '#4ea83c',
@@ -377,6 +379,7 @@ export const BIOMES: Record<string, Biome> = {
   bugs: {
     ...meadow,
     name: 'Iarba înaltă',
+    prints: 'paws',
     ground: '#9fdc6c',
     plateau: '#b8e88a',
     big: [

@@ -5,7 +5,7 @@ import { crossing, distToPath, edgePath, hash, seeded, wave, type MapLayout } fr
 
 const PATH_W = 44
 /** Width of the trail and the strip of grass kept clear beside it. */
-const trailOf = (b: Biome) => (b.bold ? { w: 60, clear: 26 } : { w: PATH_W, clear: 0 })
+const trailOf = (_b: Biome) => ({ w: 60, clear: 26 })
 
 /** Paw prints walking down the trail, alternating left and right, skipping the lesson stones. */
 function pawPrints(samples: { x: number; y: number }[], nodes: { x: number; y: number }[], skip: { x: number; y: number }[]) {
@@ -160,8 +160,8 @@ function Scene({ unitId, layout }: { unitId: string; layout: MapLayout }) {
   const stairsAt = { x: scene.stairs.x, y: scene.ledge(scene.stairs.x) + 14 }
   const trail = trailOf(biome)
   const bw = trail.w / PATH_W
-  const paws = biome.bold ? pawPrints(samples, layout.nodes, [bridgeAt, stairsAt]) : []
-  const stoneMarks = biome.pathDetail === 'stones' || biome.pathDetail === 'glow' ? samples.filter((_, i) => i % 3 === 0) : []
+  const marks = biome.pathDetail === 'road' || biome.pathDetail === 'glow' ? [] : pawPrints(samples, layout.nodes, [bridgeAt, stairsAt])
+  const stoneMarks = biome.pathDetail === 'glow' ? samples.filter((_, i) => i % 3 === 0) : []
 
   return (
     <svg className="bm-scene" width={W} height={H} viewBox={`0 0 ${W} ${H}`} aria-hidden>
@@ -204,37 +204,32 @@ function Scene({ unitId, layout }: { unitId: string; layout: MapLayout }) {
       ))}
 
       {/* the path */}
-      {biome.bold ? (
-        <>
-          <path d={d} stroke={shade(biome.ground, 0.22)} strokeWidth={trail.w + 22 + trail.clear * 1.2} fill="none" strokeLinecap="round" opacity="0.8" />
-          <path d={d} stroke="rgba(0,0,0,0.14)" strokeWidth={trail.w + 14} fill="none" strokeLinecap="round" transform="translate(0 6)" />
-          <path d={d} stroke={shade(biome.pathEdge, -0.45)} strokeWidth={trail.w + 12} fill="none" strokeLinecap="round" />
-          <path d={d} stroke={biome.pathEdge} strokeWidth={trail.w + 4} fill="none" strokeLinecap="round" />
-          <path d={d} stroke={biome.path} strokeWidth={trail.w - 6} fill="none" strokeLinecap="round" />
-          <path d={d} stroke="#fff" strokeWidth={trail.w * 0.22} fill="none" strokeLinecap="round" opacity="0.35" transform="translate(-6 -3)" />
-          {paws.map((p, i) => (
-            <g key={i} transform={`translate(${p.x.toFixed(1)} ${p.y.toFixed(1)}) rotate(${p.a.toFixed(0)})`} fill={shade(biome.pathEdge, -0.3)} opacity="0.7">
+      <path d={d} stroke={shade(biome.ground, 0.22)} strokeWidth={trail.w + 22 + trail.clear * 1.2} fill="none" strokeLinecap="round" opacity="0.8" />
+      <path d={d} stroke="rgba(0,0,0,0.14)" strokeWidth={trail.w + 14} fill="none" strokeLinecap="round" transform="translate(0 6)" />
+      <path d={d} stroke={shade(biome.pathEdge, -0.45)} strokeWidth={trail.w + 12} fill="none" strokeLinecap="round" />
+      <path d={d} stroke={biome.pathEdge} strokeWidth={trail.w + 4} fill="none" strokeLinecap="round" />
+      <path d={d} stroke={biome.path} strokeWidth={trail.w - 6} fill="none" strokeLinecap="round" />
+      <path d={d} stroke="#fff" strokeWidth={trail.w * 0.22} fill="none" strokeLinecap="round" opacity="0.3" transform="translate(-6 -3)" />
+      {biome.pathDetail === 'road' && <path d={d} stroke="#fff" strokeWidth="4" strokeDasharray="16 14" fill="none" />}
+      {biome.pathDetail === 'glow' && stoneMarks.map((p, i) => <circle key={i} cx={p.x} cy={p.y} r="3.5" fill="#fff" opacity="0.9" />)}
+      {marks.map((p, i) => (
+        <g key={i} transform={`translate(${p.x.toFixed(1)} ${p.y.toFixed(1)}) rotate(${p.a.toFixed(0)})`} fill={shade(biome.pathEdge, -0.3)} opacity="0.7">
+          {biome.prints === 'paws' ? (
+            <>
               <ellipse cx="0" cy="2" rx="4.6" ry="3.8" />
               <circle cx="-4.6" cy="-3.2" r="1.8" />
               <circle cx="-1.6" cy="-5.6" r="1.8" />
               <circle cx="1.6" cy="-5.6" r="1.8" />
               <circle cx="4.6" cy="-3.2" r="1.8" />
-            </g>
-          ))}
-        </>
-      ) : (
-        <>
-          <path d={d} stroke="rgba(0,0,0,0.10)" strokeWidth={PATH_W + 12} fill="none" strokeLinecap="round" transform="translate(0 5)" />
-          <path d={d} stroke={biome.pathEdge} strokeWidth={PATH_W + 8} fill="none" strokeLinecap="round" />
-          <path d={d} stroke={biome.path} strokeWidth={PATH_W} fill="none" strokeLinecap="round" />
-          {biome.pathDetail === 'road' && <path d={d} stroke="#fff" strokeWidth="3.5" strokeDasharray="14 14" fill="none" />}
-          {biome.pathDetail === 'stones' &&
-            stoneMarks.map((p, i) => (
-              <ellipse key={i} cx={p.x + (i % 2 ? 9 : -9)} cy={p.y} rx="7" ry="4.5" fill={biome.pathEdge} opacity="0.55" />
-            ))}
-          {biome.pathDetail === 'glow' && stoneMarks.map((p, i) => <circle key={i} cx={p.x} cy={p.y} r="3" fill="#fff" opacity="0.85" />)}
-        </>
-      )}
+            </>
+          ) : (
+            <>
+              <ellipse cx="0" cy="-2" rx="3.6" ry="5.2" />
+              <ellipse cx="0" cy="6" rx="3" ry="2.6" />
+            </>
+          )}
+        </g>
+      ))}
 
       {/* bridge over the river */}
       <g transform={`translate(${bridgeAt.x} ${bridgeAt.y}) rotate(${deg(scene.bridge.angle)}) scale(${bw} 1)`}>
