@@ -1952,10 +1952,26 @@ button:focus-visible {
   animation: popIn 0.4s backwards;
 }
 
-.sun-label {
-  font-size: 14px;
+.sun-head {
+  text-align: center;
+  font-size: 15px;
+  font-weight: 800;
   color: var(--muted);
-  text-transform: uppercase;
+}
+
+.sun-day {
+  min-height: 46px;
+  justify-content: center;
+  border-radius: 14px;
+}
+
+.sun-day.today {
+  background: #fff6d6;
+  box-shadow: inset 0 0 0 3px var(--outline);
+}
+
+.sun-day.future .sun {
+  opacity: 0.25;
 }
 
 @media (max-width: 640px) {
@@ -2268,5 +2284,399 @@ button:focus-visible {
 @media (hover: hover) and (pointer: fine) {
   .mic-key {
     display: block;
+  }
+}
+
+/* ======================================================
+   Boss stage (Mormăilă)
+   ====================================================== */
+
+.boss svg {
+  overflow: visible;
+  display: block;
+}
+
+.boss-body {
+  transform-origin: 100px 190px;
+  animation: bossFloat 2.4s ease-in-out infinite;
+}
+
+.boss-hit .boss-body {
+  animation: bossHit 0.5s ease-in-out;
+  filter: brightness(1.35);
+}
+
+.boss-laugh .boss-body {
+  animation: bossLaugh 0.35s ease-in-out 3;
+}
+
+.boss-down .boss-body {
+  animation: bossDown 1.2s ease-in forwards;
+}
+
+.boss-stars {
+  animation: spin 1.2s linear infinite;
+  transform-origin: 100px 30px;
+}
+
+@keyframes bossFloat {
+  0%,
+  100% {
+    transform: translateY(0) scale(1, 1);
+  }
+  50% {
+    transform: translateY(-6px) scale(1.02, 0.98);
+  }
+}
+
+@keyframes bossHit {
+  0%,
+  100% {
+    transform: translateX(0) rotate(0);
+  }
+  20% {
+    transform: translateX(14px) rotate(6deg);
+  }
+  45% {
+    transform: translateX(-10px) rotate(-5deg);
+  }
+  70% {
+    transform: translateX(6px) rotate(3deg);
+  }
+}
+
+@keyframes bossLaugh {
+  50% {
+    transform: translateY(-10px) scale(1.04, 0.96);
+  }
+}
+
+@keyframes bossDown {
+  30% {
+    transform: rotate(-10deg) scale(1.05);
+  }
+  100% {
+    transform: rotate(80deg) translate(30px, 30px) scale(0.85);
+    opacity: 0.85;
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.boss-bar {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 16px;
+  margin: 10px 0 -8px;
+  padding: 8px 16px;
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.85);
+  border: 3px solid var(--outline);
+  box-shadow: 0 5px 0 var(--outline);
+}
+
+.boss-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.boss-info b {
+  font-size: 24px;
+}
+
+.boss-hp {
+  display: flex;
+  gap: 4px;
+  font-size: 30px;
+  line-height: 1;
+  color: #e4ddd0;
+}
+
+.boss-hp .on {
+  color: #ff3b5c;
+  text-shadow: 0 2px 0 var(--outline);
+}
+
+.boss-stage {
+  position: relative;
+}
+
+.throw-star {
+  position: absolute;
+  left: -260px;
+  top: 50%;
+  font-size: 44px;
+  z-index: 3;
+  animation: throwStar 0.45s ease-in forwards;
+  font-family: 'Apple Color Emoji', 'Segoe UI Emoji', 'Noto Color Emoji', sans-serif;
+}
+
+@keyframes throwStar {
+  from {
+    transform: translate(0, 0) rotate(0) scale(0.6);
+    opacity: 1;
+  }
+  90% {
+    opacity: 1;
+  }
+  to {
+    transform: translate(300px, -30px) rotate(540deg) scale(1.1);
+    opacity: 0;
+  }
+}
+
+/* map node */
+.node-boss {
+  width: 132px;
+  height: 124px;
+  border-radius: 40px;
+  display: grid;
+  place-items: center;
+  padding: 0;
+}
+
+.node-boss.node-locked {
+  border: 3px dashed #c9bfae;
+}
+
+.node-boss .boss {
+  margin-top: -18px;
+}
+
+.node-boss-label {
+  margin-top: 10px;
+  padding: 2px 14px;
+  border-radius: 12px;
+  background: #fff;
+  border: 3px solid var(--outline);
+  font-size: 18px;
+  font-weight: 800;
+}
+
+/* finish screens */
+.finish-title {
+  margin: 0;
+  font-size: clamp(24px, 4vw, 34px);
+  text-align: center;
+}
+
+.finish-sub {
+  margin: 0;
+  font-size: 22px;
+  color: var(--muted);
+  text-align: center;
+}
+
+.boss-duel {
+  display: flex;
+  align-items: flex-end;
+  gap: 24px;
+}
+
+.gift-won {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 8px 20px 8px 10px;
+  border-radius: 24px;
+  background: var(--teal-soft);
+  border: 3px solid var(--outline);
+  box-shadow: 0 5px 0 var(--outline);
+  font-size: 22px;
+  font-weight: 700;
+  animation: popIn 0.5s 0.6s backwards;
+}
+
+/* album: sets and rewards */
+.album-hint {
+  font-size: 20px;
+  margin: 0 0 8px;
+  padding: 12px 16px;
+  border-radius: 18px;
+  background: #fff6d6;
+  border: 3px solid var(--outline);
+}
+
+.album-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+}
+
+.album-count {
+  font-size: 22px;
+  font-weight: 800;
+}
+
+.album-row {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+
+.album-row .album-grid {
+  flex: 1;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 10px;
+}
+
+.album-slot:not(.owned) {
+  border-style: dashed !important;
+  border-color: #c9bfae !important;
+}
+
+.album-slot.album-boss:not(.owned) {
+  font-size: 34px;
+  color: inherit;
+}
+
+.album-pop {
+  animation: stickerPop 0.6s ease-out !important;
+}
+
+@keyframes stickerPop {
+  30% {
+    transform: scale(1.25) rotate(-8deg);
+  }
+  60% {
+    transform: scale(0.95) rotate(5deg);
+  }
+}
+
+.album-reward {
+  width: 120px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 8px 6px;
+  border-radius: 20px;
+  border: 3px dashed #c9bfae;
+  text-align: center;
+  font-size: 14px;
+  font-weight: 800;
+  filter: grayscale(0.7);
+  opacity: 0.75;
+}
+
+.album-reward.on {
+  border: 3px solid var(--outline);
+  background: var(--teal-soft);
+  filter: none;
+  opacity: 1;
+}
+
+.album-complete .album-head h3::after {
+  content: ' ✓';
+}
+
+/* wardrobe tabs */
+.ward-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.ward-tab {
+  padding: 6px 16px;
+  border-radius: 999px;
+  border: 3px solid var(--outline);
+  background: #fff;
+  font-size: 18px;
+  font-weight: 800;
+}
+
+.ward-tab.on {
+  background: var(--yellow);
+  box-shadow: 0 3px 0 var(--outline);
+}
+
+.ward-gift {
+  background: #fff6d6;
+}
+
+/* parents: boss table */
+.boss-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 18px;
+}
+
+.boss-table th,
+.boss-table td {
+  text-align: left;
+  padding: 8px 6px;
+  border-bottom: 2px solid var(--line);
+}
+
+@media (max-width: 600px) {
+  .boss-bar {
+    padding: 2px 10px;
+    margin: 4px 0 -4px;
+    gap: 8px;
+    border-radius: 18px;
+  }
+  .boss-bar .boss,
+  .boss-bar .boss svg {
+    width: 62px !important;
+    height: 62px !important;
+  }
+  .boss-info {
+    gap: 2px;
+  }
+  .boss-info b {
+    font-size: 15px;
+  }
+  .boss-hp {
+    font-size: 18px;
+    gap: 2px;
+  }
+  .throw-star {
+    font-size: 30px;
+  }
+  .boss-bar + .lesson-guide {
+    margin: 8px 0 4px;
+  }
+  .boss-bar + .lesson-guide .dino,
+  .boss-bar + .lesson-guide .dino svg {
+    width: 64px !important;
+    height: 64px !important;
+  }
+  .album-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .album-row .album-grid {
+    grid-template-columns: repeat(5, 1fr);
+  }
+  .album-slot.owned {
+    font-size: 40px;
+  }
+  .album-reward {
+    width: auto;
+    flex-direction: row;
+    justify-content: center;
+    gap: 10px;
+    font-size: 16px;
+  }
+  .boss-duel .dino,
+  .boss-duel .dino svg,
+  .boss-duel .boss,
+  .boss-duel .boss svg {
+    width: 120px !important;
+    height: 120px !important;
+  }
+  .boss-table {
+    font-size: 15px;
   }
 }

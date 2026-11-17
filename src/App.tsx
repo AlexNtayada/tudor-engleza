@@ -2,9 +2,9 @@ import { useEffect, useRef, useState } from 'react'
 import { ALL_LESSONS, PLAYGROUND, UNITS, type World } from './content'
 import { buildFreePlay, buildLesson, starsFor, type Step } from './lessons'
 import { learnedWordIds, loadProgress, saveProgress, today, type Progress } from './progress'
-import { chestAvailable, CHEST_STARS, levelFor } from './gamify'
+import { BOSS_BONUS, chestAvailable, CHEST_STARS, claimSetRewards, levelFor, type Item } from './gamify'
 import { Home } from './screens/Home'
-import { LessonScreen } from './screens/Lesson'
+import { LessonScreen, type BossResult } from './screens/Lesson'
 import { Album, BreakScreen, FinishScreen, ParentGate, Parents, StartScreen } from './screens/Other'
 import { NinjaRoom, Playground } from './screens/Rewards'
 import { Nav, type Tab } from './components/Nav'
@@ -16,7 +16,14 @@ import { Logopedie } from './logopedie/Logopedie'
 type Screen =
   | { name: 'start' }
   | { name: Tab }
-  | { name: 'lesson'; steps: Step[]; lessonIndex: number | null; world: World; id: number }
+  | {
+      name: 'lesson'
+      steps: Step[]
+      lessonIndex: number | null
+      world: World
+      id: number
+      boss?: { color: string; dark: string }
+    }
   | {
       name: 'finish'
       stars: number
@@ -25,6 +32,9 @@ type Screen =
       combos: number
       levelUp?: number
       chest: boolean
+      boss?: BossResult
+      lessonIndex: number | null
+      gifts: Item[]
     }
   | { name: 'gate' }
   | { name: 'break' }
@@ -33,7 +43,7 @@ const BREAK_AFTER_SECONDS = 15 * 60
 const TABS: string[] = ['home', 'play', 'speech', 'album', 'dino', 'parents']
 
 export default function App() {
-  const [progress, setProgress] = useState<Progress>(loadProgress)
+  const [progress, setProgress] = useState<Progress>(() => claimSetRewards(loadProgress()).progress)
   const [screen, setScreen] = useState<Screen>({ name: 'start' })
   const sinceBreak = useRef(0)
 
@@ -67,7 +77,14 @@ export default function App() {
   const startLesson = (globalIndex: number) => {
     const { unit, lesson } = ALL_LESSONS[globalIndex]
     const steps = withMic(buildLesson(unit, unit.lessons.indexOf(lesson)))
-    setScreen({ name: 'lesson', steps, lessonIndex: globalIndex, world: unit.world, id: Date.now() })
+    setScreen({
+      name: 'lesson',
+      steps,
+      lessonIndex: globalIndex,
+      world: unit.world,
+      id: Date.now(),
+      boss: lesson.boss ? { color: unit.color, dark: unit.colorDark } : undefined,
+    })
   }
 
   const startFreePlay = (unitId?: string) => {
@@ -76,23 +93,45 @@ export default function App() {
     setScreen({ name: 'lesson', steps, lessonIndex: null, world, id: Date.now() })
   }
 
-  const finishLesson = (lessonIndex: number | null, mistakes: number, combos: number) => {
-    const stars = starsFor(mistakes)
-    const gained = stars + combos
+  const finishLesson = (lessonIndex: number | null, mistakes: number, combos: number, boss?: BossResult) => {
     const day = today()
-    let sticker: string | undefined
-    const lesson = lessonIndex !== null ? ALL_LESSONS[lessonIndex].lesson : undefined
-    if (lesson && !progress.stickers.includes(lesson.sticker)) sticker = lesson.sticker
+    const found = lessonIndex !== null ? ALL_LESSONS[lessonIndex] : undefined
+    const lost = !!boss && !boss.defeated
+    // A boss that got away gives no lesson stars (the next unit stays locked), only a star for trying.
+    const stars = lost ? 0 : starsFor(mistakes)
+    const gained = lost ? 1 : stars + combos + (boss ? BOSS_BONUS : 0)
+    const lesson = lost ? undefined : found?.lesson
+    const sticker = lesson && !progress.stickers.includes(lesson.sticker) ? lesson.sticker : undefined
     const before = levelFor(progress.earned)
     const after = levelFor(progress.earned + gained)
-    setProgress((p) => ({
-      ...p,
-      stars: lesson ? { ...p.stars, [lesson.id]: Math.max(p.stars[lesson.id] ?? 0, stars) } : p.stars,
-      stickers: sticker ? [...p.stickers, sticker] : p.stickers,
-      wallet: p.wallet + gained,
-      earned: p.earned + gained,
-      daysPlayed: p.daysPlayed.includes(day) ? p.daysPlayed : [...p.daysPlayed, day],
-    }))
+
+    let next: Progress = {
+      ...progress,
+      stars: lesson ? { ...progress.stars, [lesson.id]: Math.max(progress.stars[lesson.id] ?? 0, stars) } : progress.stars,
+      stickers: sticker ? [...progress.stickers, sticker] : progress.stickers,
+      wallet: progress.wallet + gained,
+      earned: progress.earned + gained,
+      daysPlayed: progress.daysPlayed.includes(day) ? progress.daysPlayed : [...progress.daysPlayed, day],
+    }
+    if (boss && found) {
+      const score = boss.total ? boss.correct / boss.total : 0
+      const prev = next.boss[found.unit.id]
+      next = {
+        ...next,
+        boss: {
+          ...next.boss,
+          [found.unit.id]: {
+            best: Math.max(prev?.best ?? 0, score),
+            tries: (prev?.tries ?? 0) + 1,
+            beaten: (prev?.beaten ?? false) || boss.defeated,
+            last: score,
+            lastDay: day,
+          },
+        },
+      }
+    }
+    const claimed = claimSetRewards(next)
+    setProgress(claimed.progress)
     setScreen({
       name: 'finish',
       stars,
@@ -101,6 +140,9 @@ export default function App() {
       combos,
       levelUp: after > before ? after : undefined,
       chest: chestAvailable(progress, day),
+      boss,
+      lessonIndex,
+      gifts: claimed.given,
     })
   }
 
@@ -159,7 +201,8 @@ export default function App() {
             settings={progress.settings}
             world={screen.world}
             onExit={() => setScreen({ name: screen.lessonIndex === null ? 'play' : 'home' })}
-            onFinish={(m, c) => finishLesson(screen.lessonIndex, m, c)}
+            boss={screen.boss}
+            onFinish={(m, c, b) => finishLesson(screen.lessonIndex, m, c, b)}
           />
         )
       case 'finish':
@@ -171,6 +214,7 @@ export default function App() {
             suggestBreak={sinceBreak.current >= BREAK_AFTER_SECONDS}
             onOpenChest={openChest}
             onContinue={() => setScreen({ name: 'home' })}
+            onRetry={screen.lessonIndex !== null ? () => startLesson(screen.lessonIndex!) : undefined}
             onBreak={() => {
               sinceBreak.current = 0
               setScreen({ name: 'break' })

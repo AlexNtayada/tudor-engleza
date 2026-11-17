@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { UNITS } from './content'
-import { buildFreePlay, buildLesson, CHOICE_COUNT, starsFor, wordsUpTo } from './lessons'
+import { BOSS_HP, BOSS_QUESTIONS, buildFreePlay, buildLesson, CHOICE_COUNT, starsFor, wordsUpTo } from './lessons'
 
 describe('buildLesson', () => {
   it('introduces every new word, then quizzes each new word at least twice', () => {
@@ -33,7 +33,8 @@ describe('buildLesson', () => {
 
   it('has exactly one speak step, for a word already introduced', () => {
     for (const unit of UNITS) {
-      unit.lessons.forEach((_, i) => {
+      unit.lessons.forEach((lesson, i) => {
+        if (lesson.boss) return
         const speakSteps = buildLesson(unit, i).filter((s) => s.type === 'speak')
         expect(speakSteps).toHaveLength(unit.lessons[i].bonusSpeak ? 2 : 1)
         const known = new Set(wordsUpTo(unit, i).map((w) => w.id))
@@ -51,10 +52,10 @@ describe('buildLesson', () => {
     expect(UNITS.find((u) => u.id === 'food')!.games).toContain('feed')
   })
 
-  it('ends family and food review lessons with a phrase to say', () => {
+  it('ends the last family and food lessons before the boss with a phrase to say', () => {
     for (const id of ['family', 'food']) {
       const unit = UNITS.find((u) => u.id === id)!
-      const steps = buildLesson(unit, unit.lessons.length - 1)
+      const steps = buildLesson(unit, unit.lessons.length - 2)
       const last = steps[steps.length - 1]
       expect(last.type).toBe('speak')
     }
@@ -68,6 +69,27 @@ describe('buildLesson', () => {
           if (s.type !== 'intro' && s.target !== unit.lessons[i].bonusSpeak) expect(known.has(s.target.id)).toBe(true)
       })
     }
+  })
+})
+
+describe('boss stage', () => {
+  it('closes every unit with a boss test over all its words', () => {
+    for (const unit of UNITS) {
+      const last = unit.lessons[unit.lessons.length - 1]
+      expect(last.boss).toBe(true)
+      const steps = buildLesson(unit, unit.lessons.length - 1)
+      expect(steps).toHaveLength(BOSS_QUESTIONS)
+      expect(steps.every((s) => s.type !== 'intro' && s.type !== 'speak')).toBe(true)
+      const asked = new Set(steps.map((s) => ('target' in s ? s.target.id : '')))
+      expect(asked.size).toBe(Math.min(unit.words.length, BOSS_QUESTIONS))
+    }
+    expect(BOSS_HP).toBeLessThanOrEqual(BOSS_QUESTIONS)
+  })
+
+  it('gives every unit a set reward and unique stickers', () => {
+    const stickers = UNITS.flatMap((u) => u.lessons.map((l) => l.sticker))
+    expect(new Set(stickers).size).toBe(stickers.length)
+    for (const u of UNITS) expect(u.setReward).toBeTruthy()
   })
 })
 

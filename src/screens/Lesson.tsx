@@ -9,6 +9,8 @@ import type { Settings } from '../progress'
 import { MicButton, micFeedback, type MicResult } from '../components/MicButton'
 import { micSupported } from '../recorder'
 import { COMBO_EVERY } from '../gamify'
+import { BOSS_HP } from '../lessons'
+import { Boss, BOSS_NAME, type BossMood } from '../components/Boss'
 import { WorldBackdrop } from '../components/WorldBackdrop'
 
 const PRAISE = ['Great job!', 'Yes!', 'Awesome!', 'Super!', 'Well done!']
@@ -34,6 +36,11 @@ function promptParts(mode: Settings['instructions'], step: Step): Part[] {
       return instruction(mode, 'Cine e la fereastră? Unde este', `Who is it? Where is ${w.say}?`, w.say)
     case 'feed':
       return [...instruction(mode, 'Ninja e flămând! Dă-i ce cere.', 'Ninja is hungry!'), { text: `I want ${w.say}!`, lang: 'en' }]
+    case 'dress':
+      return [
+        ...instruction(mode, 'Ninja vrea să se îmbrace! Dă-i ce cere.', 'Ninja wants to get dressed!'),
+        { text: `I need my ${w.say}!`, lang: 'en' },
+      ]
     default:
       return instruction(mode, 'Sparge balonul cu', `Pop the balloon with ${w.say}!`, w.say)
   }
@@ -44,23 +51,40 @@ function bubbleText(step: Step): string {
   if (step.type === 'listen') return `Unde este ${step.target.en}?`
   if (step.type === 'speak') return `Spune tu: ${step.target.en}`
   if (step.type === 'house') return `Cine e? Unde este ${step.target.en}?`
-  if (step.type === 'feed') return `Ninja vrea: ${step.target.en}!`
+  if (step.type === 'feed' || step.type === 'dress') return `Ninja vrea: ${step.target.en}!`
   return `Sparge balonul: ${step.target.en}!`
+}
+
+export interface BossResult {
+  defeated: boolean
+  /** Questions answered right on the first try. */
+  correct: number
+  /** Questions answered. */
+  total: number
 }
 
 export function LessonScreen({
   steps,
   settings,
   world = PLAYGROUND,
+  boss,
   onFinish,
   onExit,
 }: {
   steps: Step[]
   settings: Settings
   world?: World
-  onFinish: (mistakes: number, combos: number) => void
+  /** Boss stage colors; when set, first-try answers knock the boss out. */
+  boss?: { color: string; dark: string }
+  onFinish: (mistakes: number, combos: number, boss?: BossResult) => void
   onExit: () => void
 }) {
+  const [bossHp, setBossHp] = useState(BOSS_HP)
+  const [bossMood, setBossMood] = useState<BossMood>('idle')
+  const [throwKey, setThrowKey] = useState(0)
+  const bossCorrect = useRef(0)
+  const bossAnswered = useRef(0)
+  const bossOver = useRef(false)
   const [index, setIndex] = useState(0)
   const [mood, setMood] = useState<Mood>('talk')
   const [combo, setCombo] = useState(0)
@@ -75,7 +99,15 @@ export function LessonScreen({
 
   const sayPrompt = (slow?: boolean) => {
     setMood('talk')
-    void speak(promptParts(settings.instructions, step), { slow }).then(() =>
+    const intro =
+      boss && index === 0 && !slow
+        ? instruction(
+            settings.instructions,
+            `A venit ${BOSS_NAME}! Răspunde bine din prima ca să-l învingi!`,
+            `Here comes ${BOSS_NAME}! Answer right the first time to beat him!`,
+          )
+        : []
+    void speak([...intro, ...promptParts(settings.instructions, step)], { slow }).then(() =>
       setMood((m) => (m === 'talk' ? 'idle' : m)),
     )
   }
@@ -88,14 +120,38 @@ export function LessonScreen({
 
   useEffect(() => () => stopSpeaking(), [])
 
+  const bossResult = (): BossResult | undefined =>
+    boss ? { defeated: bossOver.current, correct: bossCorrect.current, total: bossAnswered.current } : undefined
+
   const next = () => {
-    if (index + 1 >= steps.length) onFinish(mistakes.current, combos.current)
+    if (index + 1 >= steps.length) onFinish(mistakes.current, combos.current, bossResult())
     else setIndex(index + 1)
   }
 
   const onCorrect = (w: Word, praise?: string) => {
     sfx.correct()
     setMood('happy')
+    if (boss) {
+      bossAnswered.current++
+      if (!missedThisStep.current) {
+        bossCorrect.current++
+        setThrowKey((k) => k + 1)
+        const hp = bossHp - 1
+        setBossHp(hp)
+        setTimeout(() => setBossMood(hp <= 0 ? 'down' : 'hit'), 380)
+        if (hp <= 0) {
+          bossOver.current = true
+          setTimeout(() => sfx.fanfare(), 600)
+          void speak([
+            { text: 'Hooray! You beat the boss!', lang: 'en' },
+            ...instruction(settings.instructions, `L-ai învins pe ${BOSS_NAME}!`, ''),
+          ])
+          setTimeout(() => onFinish(mistakes.current, combos.current, bossResult()), 2600)
+          return
+        }
+        setTimeout(() => setBossMood('idle'), 1300)
+      }
+    }
     let isCombo = false
     if (missedThisStep.current) streak.current = 0
     else {
@@ -117,6 +173,10 @@ export function LessonScreen({
   const onWrong = (target: Word, attempt: number, custom?: Part[]) => {
     sfx.wrong()
     setMood('oops')
+    if (boss) {
+      setBossMood('laugh')
+      setTimeout(() => setBossMood('idle'), 1300)
+    }
     missedThisStep.current = true
     streak.current = 0
     if (attempt <= 2) mistakes.current++
@@ -145,8 +205,31 @@ export function LessonScreen({
         </div>
       </header>
 
+      {boss && (
+        <div className="boss-bar">
+          <div className="boss-info">
+            <b>{BOSS_NAME}</b>
+            <span className="boss-hp" aria-label={`Viață: ${bossHp}`}>
+              {Array.from({ length: BOSS_HP }, (_, i) => (
+                <span key={i} className={i < bossHp ? 'on' : ''}>
+                  ♥
+                </span>
+              ))}
+            </span>
+          </div>
+          <div className="boss-stage">
+            {throwKey > 0 && (
+              <span className="throw-star" key={throwKey} aria-hidden>
+                ⭐
+              </span>
+            )}
+            <Boss color={boss.color} dark={boss.dark} mood={bossMood} size={130} />
+          </div>
+        </div>
+      )}
+
       <div className="lesson-guide">
-        {step.type !== 'feed' && <Ninja mood={mood} size={130} />}
+        {step.type !== 'feed' && step.type !== 'dress' && <Ninja mood={mood} size={130} />}
         <div className="bubble">
           <span className="bubble-text">{bubbleText(step)}</span>
           <span className="speak-btns">
@@ -175,6 +258,21 @@ export function LessonScreen({
         )}
         {step.type === 'house' && (
           <House target={step.target} choices={step.choices} onCorrect={onCorrect} onWrong={onWrong} />
+        )}
+        {step.type === 'dress' && (
+          <Feed
+            target={step.target}
+            choices={step.choices}
+            mood={mood}
+            happy="✨"
+            onCorrect={(w) => onCorrect(w, 'Thank you!')}
+            onWrong={(t, a) =>
+              onWrong(t, a, [
+                { text: 'Not that one!', lang: 'en' },
+                { text: `I need my ${t.say}!`, lang: 'en' },
+              ])
+            }
+          />
         )}
         {step.type === 'feed' && (
           <Feed
@@ -318,7 +416,7 @@ function House(props: ChoiceProps) {
   )
 }
 
-function Feed(props: ChoiceProps & { mood: Mood }) {
+function Feed(props: ChoiceProps & { mood: Mood; happy?: string }) {
   const { wrong, done, hint, pick } = useChoice(props)
   const dinoRef = useRef<HTMLDivElement>(null)
   const [drag, setDrag] = useState<{ id: string; x: number; y: number; sx: number; sy: number; moved: boolean } | null>(null)
@@ -360,7 +458,7 @@ function Feed(props: ChoiceProps & { mood: Mood }) {
     <div className="feed">
       <div className="feed-dino" ref={dinoRef}>
         <Ninja mood={done ? 'happy' : props.mood === 'oops' ? 'oops' : 'talk'} size={210} />
-        {done && <span className="yum">😋</span>}
+        {done && <span className="yum">{props.happy ?? '😋'}</span>}
       </div>
       <div className="feed-table">
         {props.choices.map((w) => {

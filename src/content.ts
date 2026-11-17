@@ -18,7 +18,7 @@ export interface Word {
   check?: string
 }
 
-export type Game = 'listen' | 'balloons' | 'house' | 'feed'
+export type Game = 'listen' | 'balloons' | 'house' | 'feed' | 'dress'
 
 export interface World {
   /** Sky gradient, top to bottom. */
@@ -37,6 +37,8 @@ export interface Lesson {
   sticker: string
   /** Extra "say it" phrase at the end of the lesson. */
   bonusSpeak?: Word
+  /** Boss stage: a test over the whole unit that must be won to move on. */
+  boss?: boolean
 }
 
 export interface Unit {
@@ -49,6 +51,8 @@ export interface Unit {
   /** Exercise types used in this unit, in rotation. */
   games: Game[]
   world: World
+  /** Wardrobe item given when every sticker of this unit is collected. */
+  setReward: string
 }
 
 const color = (id: string, ro: string, hex: string): Word => ({
@@ -94,6 +98,7 @@ export const UNITS: Unit[] = [
     colorDark: '#e0653a',
     games: BASIC,
     world: { sky: ['#ffe3f1', '#fff4e0'], ground: '#ffd6a8', decor: ['🌈', '🌸', '🦋', '🌷', '🎨', '🌼'], icon: '🎨' },
+    setReward: 'rainbow-cape',
     words: [
       color('red', 'roșu', '#ef3b3b'),
       color('blue', 'albastru', '#2f7cf6'),
@@ -111,7 +116,7 @@ export const UNITS: Unit[] = [
       { id: 'colors-2', newWords: ['green', 'orange', 'purple'], sticker: '🖍️' },
       { id: 'colors-3', newWords: ['pink', 'brown'], sticker: '🦋' },
       { id: 'colors-4', newWords: ['black', 'white'], sticker: '🎨' },
-      { id: 'colors-5', newWords: [], sticker: '🏆' },
+      { id: 'colors-5', newWords: [], sticker: '🏆', boss: true },
     ],
   },
   {
@@ -121,6 +126,7 @@ export const UNITS: Unit[] = [
     colorDark: '#22a872',
     games: BASIC,
     world: { sky: ['#d6f1ff', '#effbe8'], ground: '#b8e986', decor: ['🌳', '🏡', '🌻', '🐝', '🌾', '🍄'], icon: '🐮' },
+    setReward: 'cat-ears',
     words: [
       animal('cat', 'pisică', '🐱'),
       animal('dog', 'câine', '🐶'),
@@ -138,7 +144,7 @@ export const UNITS: Unit[] = [
       { id: 'animals-2', newWords: ['duck', 'pig', 'fish'], sticker: '🐠' },
       { id: 'animals-3', newWords: ['bird', 'horse'], sticker: '🐥' },
       { id: 'animals-4', newWords: ['lion', 'frog'], sticker: '🦒' },
-      { id: 'animals-5', newWords: [], sticker: '🦖' },
+      { id: 'animals-5', newWords: [], sticker: '🦖', boss: true },
     ],
   },
   {
@@ -148,6 +154,7 @@ export const UNITS: Unit[] = [
     colorDark: '#3a66d6',
     games: BASIC,
     world: { sky: ['#dcd6ff', '#eef2ff'], ground: '#c3d0ff', decor: ['🚀', '⭐', '🪐', '🌙', '✨', '☄️'], icon: '🔢' },
+    setReward: 'rocket-pack',
     words: [
       number(1, 'one', 'unu'),
       number(2, 'two', 'doi'),
@@ -165,7 +172,7 @@ export const UNITS: Unit[] = [
       { id: 'numbers-2', newWords: ['four', 'five', 'six'], sticker: '🎈' },
       { id: 'numbers-3', newWords: ['seven', 'eight'], sticker: '🚀' },
       { id: 'numbers-4', newWords: ['nine', 'ten'], sticker: '⭐' },
-      { id: 'numbers-5', newWords: [], sticker: '👑' },
+      { id: 'numbers-5', newWords: [], sticker: '👑', boss: true },
     ],
   },
   {
@@ -175,6 +182,7 @@ export const UNITS: Unit[] = [
     colorDark: '#e0558f',
     games: ['listen', 'house', 'balloons'],
     world: { sky: ['#ffe9d6', '#fff7ef'], ground: '#ffd0a6', decor: ['🏠', '🌳', '🎈', '🐕', '🌼', '☀️'], icon: '🏠' },
+    setReward: 'heart-balloon',
     words: [
       thing('mom', 'mama', '👩'),
       thing('dad', 'tata', '👨'),
@@ -191,11 +199,10 @@ export const UNITS: Unit[] = [
       { id: 'family-1', newWords: ['mom', 'dad', 'baby'], sticker: '💐' },
       { id: 'family-2', newWords: ['brother', 'sister'], sticker: '🧸' },
       { id: 'family-3', newWords: ['grandma', 'grandpa'], sticker: '🍪' },
-      { id: 'family-4', newWords: ['family', 'friend', 'home'], sticker: '🏰' },
       {
-        id: 'family-5',
-        newWords: [],
-        sticker: '💖',
+        id: 'family-4',
+        newWords: ['family', 'friend', 'home'],
+        sticker: '🏰',
         bonusSpeak: {
           id: 'i-love-you',
           say: 'I love you, mom!',
@@ -205,6 +212,7 @@ export const UNITS: Unit[] = [
           visual: { kind: 'emoji', value: '❤️' },
         },
       },
+      { id: 'family-5', newWords: [], sticker: '💖', boss: true },
     ],
   },
   {
@@ -214,6 +222,7 @@ export const UNITS: Unit[] = [
     colorDark: '#de8f00',
     games: ['listen', 'feed', 'balloons'],
     world: { sky: ['#fff1c9', '#fffaf0'], ground: '#ffe0a3', decor: ['🧺', '🍓', '🌼', '🍯', '🥕', '🍉'], icon: '🍎' },
+    setReward: 'chef-hat',
     words: [
       thing('apple', 'măr', '🍎'),
       thing('banana', 'banană', '🍌'),
@@ -230,11 +239,10 @@ export const UNITS: Unit[] = [
       { id: 'food-1', newWords: ['apple', 'banana', 'milk'], sticker: '🍒' },
       { id: 'food-2', newWords: ['bread', 'cheese', 'egg'], sticker: '🥐' },
       { id: 'food-3', newWords: ['water', 'cake'], sticker: '🧁' },
-      { id: 'food-4', newWords: ['pizza', 'ice-cream'], sticker: '🍭' },
       {
-        id: 'food-5',
-        newWords: [],
-        sticker: '🍔',
+        id: 'food-4',
+        newWords: ['pizza', 'ice-cream'],
+        sticker: '🍭',
         bonusSpeak: {
           id: 'i-like-pizza',
           say: 'I like pizza!',
@@ -244,6 +252,91 @@ export const UNITS: Unit[] = [
           visual: { kind: 'emoji', value: '😋' },
         },
       },
+      { id: 'food-5', newWords: [], sticker: '🍔', boss: true },
+    ],
+  },
+  {
+    id: 'clothes',
+    title: 'Haine',
+    color: '#9b6bff',
+    colorDark: '#7a49e0',
+    games: ['listen', 'dress', 'balloons'],
+    world: { sky: ['#ece6ff', '#fbf9ff'], ground: '#d9ccff', decor: ['🛍️', '🧵', '🎀', '👜', '🪞', '🌼'], icon: '👕' },
+    setReward: 'super-mask',
+    words: [
+      thing('hat', 'pălărie', '👒'),
+      thing('shoes', 'pantofi', '👟'),
+      thing('socks', 'șosete', '🧦'),
+      thing('shirt', 'tricou', '👕'),
+      thing('pants', 'pantaloni', '👖'),
+      thing('dress', 'rochie', '👗'),
+      thing('coat', 'haină', '🧥'),
+      thing('gloves', 'mănuși', '🧤'),
+      thing('scarf', 'fular', '🧣'),
+      thing('boots', 'cizme', '🥾'),
+    ],
+    lessons: [
+      { id: 'clothes-1', newWords: ['hat', 'shoes', 'socks'], sticker: '🎩' },
+      { id: 'clothes-2', newWords: ['shirt', 'pants', 'dress'], sticker: '🧢' },
+      { id: 'clothes-3', newWords: ['coat', 'gloves'], sticker: '🧶' },
+      { id: 'clothes-4', newWords: ['scarf', 'boots'], sticker: '🕶️' },
+      { id: 'clothes-5', newWords: [], sticker: '🥇', boss: true },
+    ],
+  },
+  {
+    id: 'body',
+    title: 'Corpul',
+    color: '#22c3b4',
+    colorDark: '#119a8d',
+    games: ['listen', 'balloons'],
+    world: { sky: ['#dcfff4', '#f7fffc'], ground: '#b6eedb', decor: ['⚽', '🤸', '🎾', '🛝', '🏃', '🌳'], icon: '✋' },
+    setReward: 'headphones',
+    words: [
+      thing('hand', 'mână', '✋'),
+      thing('eye', 'ochi', '👁️'),
+      thing('nose', 'nas', '👃'),
+      thing('ear', 'ureche', '👂'),
+      thing('mouth', 'gură', '👄'),
+      thing('tooth', 'dinte', '🦷'),
+      thing('face', 'față', '🙂'),
+      thing('arm', 'braț', '💪'),
+      thing('leg', 'picior', '🦵'),
+      thing('foot', 'talpă', '🦶'),
+    ],
+    lessons: [
+      { id: 'body-1', newWords: ['hand', 'eye', 'nose'], sticker: '🤚' },
+      { id: 'body-2', newWords: ['ear', 'mouth', 'tooth'], sticker: '🪥' },
+      { id: 'body-3', newWords: ['face', 'arm'], sticker: '🤸' },
+      { id: 'body-4', newWords: ['leg', 'foot'], sticker: '⚽' },
+      { id: 'body-5', newWords: [], sticker: '🏅', boss: true },
+    ],
+  },
+  {
+    id: 'weather',
+    title: 'Vremea',
+    color: '#4aa8ff',
+    colorDark: '#2a86dd',
+    games: ['listen', 'balloons'],
+    world: { sky: ['#d2ecff', '#f4fbff'], ground: '#c4e4ff', decor: ['☁️', '🪁', '🌈', '❄️', '☀️', '🌧️'], icon: '🌦️' },
+    setReward: 'umbrella',
+    words: [
+      thing('sun', 'soare', '☀️'),
+      thing('rain', 'ploaie', '🌧️'),
+      thing('snow', 'zăpadă', '❄️'),
+      thing('cloud', 'nor', '☁️'),
+      thing('wind', 'vânt', '🌬️'),
+      thing('rainbow', 'curcubeu', '🌈'),
+      thing('storm', 'furtună', '⛈️'),
+      thing('umbrella', 'umbrelă', '☂️'),
+      thing('hot', 'cald', '🥵'),
+      thing('cold', 'frig', '🥶'),
+    ],
+    lessons: [
+      { id: 'weather-1', newWords: ['sun', 'rain', 'snow'], sticker: '🌞' },
+      { id: 'weather-2', newWords: ['cloud', 'wind', 'rainbow'], sticker: '🪁' },
+      { id: 'weather-3', newWords: ['storm', 'umbrella'], sticker: '⛄' },
+      { id: 'weather-4', newWords: ['hot', 'cold'], sticker: '🌻' },
+      { id: 'weather-5', newWords: [], sticker: '🌟', boss: true },
     ],
   },
 ]

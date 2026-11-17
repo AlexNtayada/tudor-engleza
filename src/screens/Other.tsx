@@ -1,6 +1,9 @@
 import { useEffect, useMemo, useState } from 'react'
-import { UNITS } from '../content'
-import { CHEST_STARS } from '../gamify'
+import { ALL_LESSONS, UNITS } from '../content'
+import { BOSS_BONUS, CHEST_STARS, setProgress, itemById, type Item } from '../gamify'
+import { BOSS_NAME, Boss } from '../components/Boss'
+import type { BossResult } from './Lesson'
+import { BOSS_HP, BOSS_QUESTIONS } from '../lessons'
 import { Ninja } from '../components/Ninja'
 import { instruction, speak, hasRomanianVoice, speechSupported } from '../speech'
 import { micSupported, recognitionSupported } from '../recorder'
@@ -49,7 +52,15 @@ export function FinishScreen({
   onOpenChest,
   onContinue,
   onBreak,
+  boss,
+  gifts = [],
+  onRetry,
+  lessonIndex = null,
 }: {
+  lessonIndex?: number | null
+  boss?: BossResult
+  gifts?: Item[]
+  onRetry?: () => void
   stars: number
   sticker?: string
   gained: number
@@ -64,11 +75,25 @@ export function FinishScreen({
   onBreak: () => void
 }) {
   const [chestOpen, setChestOpen] = useState(false)
+  const lost = !!boss && !boss.defeated
   useEffect(() => {
     sfx.fanfare()
     const t = setTimeout(() => {
+      if (boss && !boss.defeated) {
+        void speak([
+          { text: `Good try, ${name}!`, lang: 'en' },
+          ...instruction(
+            mode,
+            `${BOSS_NAME} a scăpat de data asta. Mai exersăm puțin și îl prindem!`,
+            `${BOSS_NAME} got away this time. Let's practice and try again!`,
+          ),
+        ])
+        return
+      }
       void speak([
         { text: `Great job, ${name}!`, lang: 'en' },
+        ...(boss ? instruction(mode, `Ai trecut testul! ${BOSS_NAME} a fost învins!`, 'You passed the test!') : []),
+        ...(gifts.length ? instruction(mode, 'Album complet! Ai primit un cadou pentru Ninja!', 'Album complete! A present for Ninja!') : []),
         ...(levelUp ? instruction(mode, `Ura! Ninja a crescut! Nivelul ${levelUp}!`, `Hooray! Ninja is now level ${levelUp}!`) : []),
         ...(sticker ? instruction(mode, 'Bravo! Ai câștigat un abțibild nou!', 'You got a new sticker!') : []),
         ...(chest ? instruction(mode, 'Uite, un cufăr! Deschide-l!', 'Look, a treasure chest! Open it!') : []),
@@ -80,6 +105,35 @@ export function FinishScreen({
     return () => clearTimeout(t)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+  if (lost && boss) {
+    const unitColor = lessonIndex !== null ? ALL_LESSONS[lessonIndex]?.unit : undefined
+    return (
+      <div className="center-screen finish finish-boss-lost">
+        <div className="boss-duel">
+          <Ninja mood="oops" size={150} />
+          <Boss color={unitColor?.color ?? '#9b6bff'} dark={unitColor?.colorDark ?? '#7a49e0'} mood="laugh" size={150} />
+        </div>
+        <h2 className="finish-title">{BOSS_NAME} a scăpat de data asta!</h2>
+        <p className="finish-sub">
+          Din prima: {boss.correct} din {boss.total}. Mai exersăm și îl prindem!
+        </p>
+        <div className="finish-gains">
+          <span className="gain">+{gained} ⭐</span>
+        </div>
+        <div className="finish-actions">
+          <button className="big-btn big-btn-soft" onClick={onContinue}>
+            🗺️ Hartă
+          </button>
+          {onRetry && (
+            <button className="big-btn" onClick={onRetry}>
+              ⚔️ Din nou
+            </button>
+          )}
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className="center-screen finish">
       <div className="confetti" aria-hidden>
@@ -95,8 +149,10 @@ export function FinishScreen({
         ))}
       </div>
       <Ninja mood="dance" size={200} />
+      {boss && <h2 className="finish-title">🏆 Test trecut! {BOSS_NAME} a fost învins!</h2>}
       <div className="finish-gains">
         <span className="gain">+{gained} ⭐</span>
+        {boss && <span className="gain gain-level">⚔️ +{BOSS_BONUS} ⭐ boss</span>}
         {combos > 0 && <span className="gain gain-combo">🔥 × {combos}</span>}
         {levelUp && <span className="gain gain-level">🥷 Nivelul {levelUp}!</span>}
       </div>
@@ -121,6 +177,14 @@ export function FinishScreen({
           <span>Abțibild nou!</span>
         </div>
       )}
+      {gifts.map((g) => (
+        <div key={g.id} className="gift-won">
+          <Ninja size={90} outfit={{ [g.slot]: g.id }} />
+          <span>
+            Album complet! Cadou: <b>{g.name}</b>
+          </span>
+        </div>
+      ))}
       <div className="finish-actions">
         {suggestBreak && (
           <button className="big-btn big-btn-soft" onClick={onBreak}>
@@ -149,31 +213,62 @@ export function BreakScreen({ onBack }: { onBack: () => void }) {
 
 export function Album({ progress, onBack }: { progress: Progress; onBack: () => void }) {
   const owned = new Set(progress.stickers)
+  const [pop, setPop] = useState<string | null>(null)
+  const tap = (sticker: string) => {
+    sfx.pop()
+    setPop(sticker)
+    setTimeout(() => setPop((x) => (x === sticker ? null : x)), 700)
+  }
   return (
-    <div className="page">
+    <div className="page page-white">
       <header className="page-top">
         <button className="icon-btn" onClick={onBack} aria-label="Înapoi">
           ←
         </button>
         <h2>Albumul meu</h2>
       </header>
-      {UNITS.map((u) => (
-        <section key={u.id} className="album-unit">
-          <h3 style={{ color: u.colorDark }}>{u.title}</h3>
-          <div className="album-grid">
-            {u.lessons.map((l) => (
-              <button
-                key={l.id}
-                className={`album-slot ${owned.has(l.sticker) ? 'owned' : ''}`}
-                style={owned.has(l.sticker) ? { borderColor: u.color } : undefined}
-                onClick={() => owned.has(l.sticker) && sfx.tap()}
-              >
-                {owned.has(l.sticker) ? l.sticker : '?'}
-              </button>
-            ))}
-          </div>
-        </section>
-      ))}
+      <p className="album-hint">Strânge toate abțibildurile unei teme și Ninja primește un cadou special!</p>
+      {UNITS.map((u) => {
+        const { have, total } = setProgress(progress, u)
+        const reward = itemById(u.setReward)
+        const complete = have === total
+        return (
+          <section key={u.id} className={`album-unit ${complete ? 'album-complete' : ''}`}>
+            <div className="album-head">
+              <h3 style={{ color: u.colorDark }}>
+                {u.world.icon} {u.title}
+              </h3>
+              <span className="album-count">
+                {have}/{total}
+              </span>
+            </div>
+            <div className="album-row">
+              <div className="album-grid">
+                {u.lessons.map((l) => {
+                  const has = owned.has(l.sticker)
+                  return (
+                    <button
+                      key={l.id}
+                      className={`album-slot ${has ? 'owned' : ''} ${l.boss ? 'album-boss' : ''} ${pop === l.sticker ? 'album-pop' : ''}`}
+                      style={has ? { borderColor: u.color } : undefined}
+                      onClick={() => has && tap(l.sticker)}
+                      aria-label={has ? 'Abțibild' : l.boss ? 'Abțibild boss' : 'Abțibild lipsă'}
+                    >
+                      {has ? l.sticker : l.boss ? '⚔️' : '?'}
+                    </button>
+                  )
+                })}
+              </div>
+              {reward && (
+                <div className={`album-reward ${complete ? 'on' : ''}`} title={reward.name}>
+                  <Ninja size={74} outfit={{ [reward.slot]: reward.id }} />
+                  <span>{complete ? '✓ ' : '🎁 '}{reward.name}</span>
+                </div>
+              )}
+            </div>
+          </section>
+        )
+      })}
     </div>
   )
 }
@@ -282,6 +377,39 @@ export function Parents({
             </div>
           ))}
         </div>
+      </section>
+
+      <section className="panel">
+        <h3>Teste (boss)</h3>
+        <p className="note">
+          La finalul fiecărei teme, {BOSS_NAME} pune {BOSS_QUESTIONS} întrebări din toate cuvintele temei. Testul e trecut
+          cu {BOSS_HP} răspunsuri corecte din prima; abia apoi se deschide tema următoare.
+        </p>
+        <table className="boss-table">
+          <thead>
+            <tr>
+              <th>Tema</th>
+              <th>Rezultat</th>
+              <th>Cel mai bun</th>
+              <th>Încercări</th>
+            </tr>
+          </thead>
+          <tbody>
+            {UNITS.map((u) => {
+              const r = progress.boss[u.id]
+              return (
+                <tr key={u.id}>
+                  <td>
+                    {u.world.icon} {u.title}
+                  </td>
+                  <td>{!r ? '—' : r.beaten ? '✅ trecut' : '⏳ încă nu'}</td>
+                  <td>{r ? `${Math.round(r.best * 100)}%` : '—'}</td>
+                  <td>{r?.tries ?? 0}</td>
+                </tr>
+              )
+            })}
+          </tbody>
+        </table>
       </section>
 
       <section className="panel">

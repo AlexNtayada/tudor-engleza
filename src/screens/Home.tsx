@@ -4,6 +4,7 @@ import { UNITS } from '../content'
 import { Ninja, type Mood } from '../components/Ninja'
 import { currentLessonIndex, type Progress } from '../progress'
 import { WorldBackdrop } from '../components/WorldBackdrop'
+import { Boss, BOSS_NAME } from '../components/Boss'
 import { instruction, speak } from '../speech'
 import { sfx } from '../sfx'
 
@@ -40,7 +41,7 @@ export function Home({ progress, onStart }: { progress: Progress; onStart: (glob
                 const stars = progress.stars[lesson.id] ?? 0
                 const state = g < current ? 'done' : g === current ? 'current' : 'locked'
                 const offset = OFFSETS[g % OFFSETS.length]
-                const isReview = lesson.newWords.length === 0
+                const isBoss = !!lesson.boss
                 return (
                   <div key={lesson.id} className="node-row" style={{ '--x': offset } as React.CSSProperties}>
                     {state === 'current' && (
@@ -49,7 +50,7 @@ export function Home({ progress, onStart }: { progress: Progress; onStart: (glob
                       </div>
                     )}
                     <button
-                      className={`node node-${state}`}
+                      className={`node node-${state} ${isBoss ? 'node-boss' : ''}`}
                       style={
                         state !== 'locked'
                           ? { background: unit.color, boxShadow: `0 8px 0 ${unit.colorDark}` }
@@ -60,10 +61,24 @@ export function Home({ progress, onStart }: { progress: Progress; onStart: (glob
                         sfx.tap()
                         onStart(g)
                       }}
-                      aria-label={`${unit.title} lecția ${i + 1}`}
+                      aria-label={isBoss ? `${unit.title}: ${BOSS_NAME}, testul temei` : `${unit.title} lecția ${i + 1}`}
                     >
-                      {state === 'locked' ? '🔒' : isReview ? '🏆' : state === 'done' ? '★' : '▶'}
+                      {isBoss ? (
+                        <Boss
+                          color={state === 'locked' ? '#cfc6b6' : unit.color}
+                          dark={state === 'locked' ? '#b3a994' : unit.colorDark}
+                          mood={state === 'done' ? 'down' : 'idle'}
+                          size={92}
+                        />
+                      ) : state === 'locked' ? (
+                        '🔒'
+                      ) : state === 'done' ? (
+                        '★'
+                      ) : (
+                        '▶'
+                      )}
                     </button>
+                    {isBoss && <span className="node-boss-label">{state === 'done' ? '🏆 Învins!' : '⚔️ BOSS'}</span>}
                     {state === 'done' && (
                       <div className="node-stars">
                         {[1, 2, 3].map((s) => (
@@ -81,7 +96,7 @@ export function Home({ progress, onStart }: { progress: Progress; onStart: (glob
         ))}
         <div className="path-end">
           <Ninja mood="sleep" size={90} />
-          <p>Urmează: haine, corpul, vremea…</p>
+          <p>Urmează: și mai multe teme, în curând…</p>
         </div>
       </div>
     </div>
