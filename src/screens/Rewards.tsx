@@ -1,5 +1,5 @@
 import { mascot } from '../mascots';
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { UNITS } from "../content";
 import { Mascot, type Mood } from '../components/Mascot';
 import {
@@ -24,6 +24,20 @@ export function Playground({
 }) {
   const learned = learnedWordIds(progress);
   const units = UNITS.filter((u) => u.words.some((w) => learned.has(w.id)));
+  const mode = progress.settings.instructions;
+  useEffect(() => {
+    const t = setTimeout(
+      () =>
+        void speak(
+          units.length === 0
+            ? instruction(mode, "Termină prima lecție de pe hartă și aici se deschid jocurile!", "Finish the first lesson on the map to open the games!")
+            : instruction(mode, "Alege un joc!", "Pick a game!"),
+        ),
+      300,
+    );
+    return () => clearTimeout(t);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   return (
     <div className="page page-white">
       <h2 className="page-title">Locul de joacă</h2>

@@ -52,7 +52,7 @@ function wordLines(englishInstructions: boolean): string[] {
 /** The English versions of the instructions (only used when a parent switches instructions to English). */
 function englishInstructionLines(): string[] {
   const out = [
-    'Pick a friend!', 'Not yet! First the lesson next to me.', 'Do you want to play with me?', "Let's learn English!",
+    'Pick a friend!', 'Pick a game!', 'Finish the first lesson on the map to open the games!', 'Not yet! First the lesson next to me.', 'Do you want to play with me?', "Let's learn English!",
     'Now you say it!', 'Now you say it:', 'Try again!', 'Good try! Say it with me:', 'Listen!', 'Listen and find the picture:',
     'What is missing?', 'Listen! Is it true?', "Let's say whole sentences!", 'You passed the test!',
     'You got a new sticker!', 'Look, a treasure chest! Open it!', 'You worked hard. Do you want a little break?',
@@ -84,7 +84,8 @@ function friendEnglish(m: MascotInfo): string[] {
 function friendRomanian(m: MascotInfo): string[] {
   const g = (masc: string, fem: string) => (m.fem ? fem : masc)
   const out = [
-    'Alege-ți un prieten!', 'Hai să învățăm engleză.',
+    'Alege-ți un prieten!', 'Hai să învățăm engleză.', 'Alege un joc!',
+    'Termină prima lecție de pe hartă și aici se deschid jocurile!',
     `Eu sunt ${m.title}. ${m.blurb}!`, `Salut! Eu sunt ${m.title}.`,
     'Încă nu! Mai întâi lecția de lângă mine.',
     'Spune și tu!', 'Acum spune tu:', 'Unde este', 'Cine e la fereastră? Unde este', 'Sparge balonul cu', 'Mai încearcă!',
