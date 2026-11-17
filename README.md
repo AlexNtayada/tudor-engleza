@@ -1,6 +1,6 @@
-# Ninja English
+# Tudoo!
 
-O aplicație jucăușă pentru ca Tudor (5 ani) să învețe engleză, cu Ninja, un mic ninja prietenos.
+O aplicație jucăușă pentru ca Tudor (5 ani) să învețe engleză, cu un prieten pe care și-l alege singur (Ninja, Pip, Bobo, Rici, Bip sau Zuzu).
 Merge în browser pe calculator și se poate instala pe telefon (PWA).
 
 ## Ce are prototipul

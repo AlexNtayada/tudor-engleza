@@ -4685,3 +4685,274 @@ button.avatar:active {
     fill: #ffd45c;
   }
 }
+
+/* ---------- Tudoo! logo: the two o's are googly eyes ---------- */
+
+.tudoo {
+  display: inline-flex;
+  align-items: baseline;
+  white-space: nowrap;
+  line-height: 1;
+}
+
+.tudoo-eyes {
+  width: 1.08em;
+  height: 0.56em;
+  margin: 0 0.02em 0 0.03em;
+  overflow: visible;
+  align-self: baseline;
+  transform: translateY(0.04em);
+}
+
+.tudoo b {
+  margin-left: 0.02em;
+}
+
+.tudoo-pupil {
+  animation: tudoo-look 6s ease-in-out infinite;
+}
+
+@keyframes tudoo-look {
+  0%, 40%, 100% { transform: translate(0, 0); }
+  50%, 70% { transform: translate(-9px, -2px); }
+  80% { transform: translate(0, 0); }
+}
+
+.logo-text .tudoo,
+.appbar-hero .logo-text .tudoo {
+  color: #1f6b4f;
+}
+
+.logo-text .tudoo b,
+.appbar-hero .logo-text .tudoo b {
+  color: #e2551f;
+}
+
+/* ---------- intro ---------- */
+
+.intro {
+  background: linear-gradient(180deg, #a9e6ff 0%, #d8f5ff 45%, #fff8ec 100%);
+  justify-content: flex-start;
+  gap: 18px;
+  padding-top: clamp(40px, 9vh, 96px);
+  padding-bottom: 40px;
+}
+
+.intro > :not(.intro-sky) {
+  position: relative;
+  z-index: 1;
+}
+
+.intro-sky {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.intro-hills {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: 42%;
+}
+
+.intro-cloud {
+  position: absolute;
+  width: 180px;
+  height: 56px;
+  border-radius: 999px;
+  background: #fff;
+  opacity: 0.9;
+  animation: intro-drift 26s linear infinite alternate;
+}
+
+.intro-cloud::before,
+.intro-cloud::after {
+  content: '';
+  position: absolute;
+  background: #fff;
+  border-radius: 50%;
+}
+
+.intro-cloud::before {
+  width: 80px;
+  height: 80px;
+  left: 28px;
+  top: -40px;
+}
+
+.intro-cloud::after {
+  width: 60px;
+  height: 60px;
+  left: 92px;
+  top: -26px;
+}
+
+.intro-cloud-1 { top: 9%; left: 6%; }
+.intro-cloud-2 { top: 18%; right: 8%; transform: scale(0.8); animation-duration: 32s; }
+.intro-cloud-3 { top: 40%; left: 70%; transform: scale(0.55); opacity: 0.7; animation-duration: 22s; }
+
+@keyframes intro-drift {
+  from { translate: -30px 0; }
+  to { translate: 30px 0; }
+}
+
+.intro-bubble {
+  position: absolute;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-weight: 800;
+  font-size: 26px;
+  color: #fff;
+  box-shadow: inset 0 -5px 0 rgba(0, 0, 0, 0.12), 0 6px 14px rgba(40, 90, 120, 0.15);
+  animation: intro-float 5s ease-in-out infinite;
+}
+
+.intro-bubble-1 { left: 12%; top: 30%; background: #ff6f61; }
+.intro-bubble-2 { left: 24%; top: 12%; background: #5b8cff; animation-delay: -1s; }
+.intro-bubble-3 { right: 22%; top: 34%; background: #22b573; animation-delay: -2s; }
+.intro-bubble-4 { right: 12%; top: 8%; background: #ffb020; animation-delay: -3s; }
+.intro-bubble-5 { left: 6%; top: 52%; background: #a77bdc; animation-delay: -1.5s; }
+.intro-bubble-6 { right: 6%; top: 50%; background: #ff8fc7; animation-delay: -2.5s; }
+.intro-bubble-7 { left: 40%; top: 4%; background: #ffc21a; animation-delay: -0.5s; width: 40px; height: 40px; font-size: 20px; }
+.intro-bubble-8 { right: 36%; top: 2%; background: #3ccf91; animation-delay: -3.5s; width: 40px; height: 40px; font-size: 20px; }
+
+@keyframes intro-float {
+  0%, 100% { transform: translateY(0) rotate(-6deg); }
+  50% { transform: translateY(-14px) rotate(6deg); }
+}
+
+.intro-title {
+  margin: 0;
+  font-size: clamp(72px, 13vw, 140px);
+  font-weight: 800;
+  letter-spacing: -2px;
+  color: var(--ink);
+  text-shadow: 0 6px 0 #fff;
+}
+
+.intro-title .tudoo b {
+  color: #ff6f3d;
+}
+
+.intro-sub {
+  margin: 8px 0 0;
+  display: inline-block;
+  padding: 8px 20px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.85);
+  font-size: clamp(18px, 2.4vw, 22px);
+  font-weight: 700;
+  color: #3a5a6a;
+}
+
+.intro-crew {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0 6px;
+  max-width: 900px;
+  margin-top: auto;
+}
+
+.intro-friend {
+  animation: intro-hop 2.4s ease-in-out infinite;
+}
+
+.intro-friend.on {
+  order: -1;
+}
+
+@keyframes intro-hop {
+  0%, 70%, 100% { transform: translateY(0); }
+  80% { transform: translateY(-14px); }
+}
+
+.intro-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+}
+
+.intro-go {
+  font-size: 32px;
+}
+
+.intro-play {
+  padding: 10px 26px;
+  border-radius: 999px;
+  background: #fff;
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--green-dark);
+  border: 2px solid var(--edge);
+  box-shadow: 0 5px 0 var(--lift);
+}
+
+@media (max-width: 640px) {
+  .intro {
+    padding-top: 48px;
+  }
+  .intro-crew {
+    max-width: 360px;
+  }
+  .intro-friend .dino,
+  .intro-friend .dino svg {
+    width: 96px !important;
+    height: 96px !important;
+  }
+  .intro-friend.on .dino,
+  .intro-friend.on .dino svg {
+    width: 112px !important;
+    height: 112px !important;
+  }
+  .intro-go {
+    font-size: 26px;
+    padding: 0 28px;
+  }
+  .intro-bubble {
+    width: 40px;
+    height: 40px;
+    font-size: 20px;
+  }
+  .intro-sub {
+    font-size: 16px;
+    padding: 6px 14px;
+  }
+  .intro-cloud-1 {
+    top: 30%;
+    left: -40px;
+    transform: scale(0.6);
+  }
+  .intro-cloud-2 {
+    display: none;
+  }
+  .intro-cloud-3 {
+    top: 44%;
+  }
+  .intro-bubble-2 {
+    left: 8%;
+    top: 36%;
+  }
+  .intro-bubble-4 {
+    right: 8%;
+    top: 30%;
+  }
+  .intro-bubble-1 {
+    left: 74%;
+    top: 46%;
+  }
+  .intro-bubble-3,
+  .intro-bubble-6,
+  .intro-bubble-7,
+  .intro-bubble-8 {
+    display: none;
+  }
+}

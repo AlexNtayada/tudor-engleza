@@ -1,6 +1,7 @@
 import { mascot } from '../mascots'
 import { useEffect, useRef, useState } from 'react'
 import { Mascot } from './Mascot'
+import { TudooLogo } from './TudooLogo'
 import { levelFor } from '../gamify'
 import type { Progress } from '../progress'
 
@@ -20,7 +21,7 @@ function Logo() {
     <span className="logo">
       <Mascot size={52} mood="idle" />
       <span className="logo-text">
-        Ninja <b>English</b>
+        <TudooLogo />
       </span>
     </span>
   )
