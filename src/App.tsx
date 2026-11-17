@@ -12,6 +12,9 @@ import { OutfitContext } from './components/Outfit'
 import { instruction, setSlowVoice, speak } from './speech'
 import { micSupported } from './recorder'
 import { Logopedie } from './logopedie/Logopedie'
+import { Propozitii, SentenceLesson } from './propozitii/Propozitii'
+import { PACKS } from './propozitii/data'
+import { buildSentenceLesson, type SentenceStep } from './propozitii/lessons'
 
 type Screen =
   | { name: 'start' }
@@ -35,12 +38,15 @@ type Screen =
       boss?: BossResult
       lessonIndex: number | null
       gifts: Item[]
+      /** Set when the round was a sentence pack: go back to the sentences page, retry the same pack. */
+      pack?: string
     }
+  | { name: 'sentence'; pack: string; steps: SentenceStep[]; id: number }
   | { name: 'gate' }
   | { name: 'break' }
 
 const BREAK_AFTER_SECONDS = 15 * 60
-const TABS: string[] = ['home', 'play', 'speech', 'album', 'dino', 'parents']
+const TABS: string[] = ['home', 'play', 'sentences', 'speech', 'album', 'dino', 'parents']
 
 export default function App() {
   const [progress, setProgress] = useState<Progress>(() => claimSetRewards(loadProgress()).progress)
@@ -59,7 +65,7 @@ export default function App() {
 
   // Count play time while a lesson is open and the tab is visible.
   useEffect(() => {
-    if (screen.name !== 'lesson') return
+    if (screen.name !== 'lesson' && screen.name !== 'sentence') return
     const id = setInterval(() => {
       if (document.visibilityState !== 'visible') return
       sinceBreak.current += 5
@@ -146,6 +152,38 @@ export default function App() {
     })
   }
 
+  const startSentences = (packId: string) => {
+    const pack = PACKS.find((p) => p.id === packId)
+    if (!pack) return
+    const steps = buildSentenceLesson(pack).filter((s) => useMic || s.type !== 'say')
+    setScreen({ name: 'sentence', pack: packId, steps, id: Date.now() })
+  }
+
+  const finishSentences = (packId: string, mistakes: number) => {
+    const day = today()
+    const stars = starsFor(mistakes)
+    const before = levelFor(progress.earned)
+    const after = levelFor(progress.earned + stars)
+    setProgress({
+      ...progress,
+      sentences: { ...progress.sentences, [packId]: Math.max(progress.sentences[packId] ?? 0, stars) },
+      wallet: progress.wallet + stars,
+      earned: progress.earned + stars,
+      daysPlayed: progress.daysPlayed.includes(day) ? progress.daysPlayed : [...progress.daysPlayed, day],
+    })
+    setScreen({
+      name: 'finish',
+      stars,
+      gained: stars,
+      combos: 0,
+      levelUp: after > before ? after : undefined,
+      chest: chestAvailable(progress, day),
+      lessonIndex: null,
+      gifts: [],
+      pack: packId,
+    })
+  }
+
   const openChest = () =>
     setProgress((p) => ({
       ...p,
@@ -191,6 +229,21 @@ export default function App() {
         return <Playground progress={progress} onPlay={startFreePlay} />
       case 'speech':
         return <Logopedie progress={progress} onEarn={earnSpeech} onParents={() => setScreen({ name: 'gate' })} />
+      case 'sentences':
+        return <Propozitii progress={progress} onStart={startSentences} />
+      case 'sentence': {
+        const pack = PACKS.find((p) => p.id === screen.pack)!
+        return (
+          <SentenceLesson
+            key={screen.id}
+            pack={pack}
+            steps={screen.steps}
+            settings={progress.settings}
+            onExit={() => setScreen({ name: 'sentences' })}
+            onFinish={(m) => finishSentences(screen.pack, m)}
+          />
+        )
+      }
       case 'dino':
         return <NinjaRoom progress={progress} onChange={setProgress} />
       case 'lesson':
@@ -215,8 +268,14 @@ export default function App() {
             mode={progress.settings.instructions}
             suggestBreak={sinceBreak.current >= BREAK_AFTER_SECONDS}
             onOpenChest={openChest}
-            onContinue={() => setScreen({ name: 'home' })}
-            onRetry={screen.lessonIndex !== null ? () => startLesson(screen.lessonIndex!) : undefined}
+            onContinue={() => setScreen({ name: screen.pack ? 'sentences' : 'home' })}
+            onRetry={
+              screen.pack
+                ? () => startSentences(screen.pack!)
+                : screen.lessonIndex !== null
+                  ? () => startLesson(screen.lessonIndex!)
+                  : undefined
+            }
             onBreak={() => {
               sinceBreak.current = 0
               setScreen({ name: 'break' })
