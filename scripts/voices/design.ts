@@ -52,10 +52,17 @@ async function design(id: string, descriptions: string[]) {
     const body = { voice_description: description, text: sampleText(id), model_id: 'eleven_ttv_v3', guidance_scale: 5 }
     let data: { previews: { audio_base_64: string; generated_voice_id: string }[] }
     try {
-      data = await postOk(['/text-to-voice/design'], body)
+      try {
+        data = await postOk(['/text-to-voice/design'], body)
+      } catch (e) {
+        if (/blocked/.test(String(e))) throw e
+        console.log('v3 design failed, trying the older endpoint:', String(e).slice(0, 200))
+        data = await postOk(['/text-to-voice/create-previews'], { voice_description: description, text: sampleText(id) })
+      }
     } catch (e) {
-      console.log('v3 design failed, trying the older endpoint:', String(e).slice(0, 200))
-      data = await postOk(['/text-to-voice/create-previews'], { voice_description: description, text: sampleText(id) })
+      // One refused description (e.g. blocked by the safety filter) shouldn't lose the others.
+      console.log(`Skipped "${description.slice(0, 60)}...": ${String(e).slice(0, 200)}`)
+      continue
     }
     for (const p of data.previews) {
       n++
@@ -66,13 +73,14 @@ async function design(id: string, descriptions: string[]) {
     }
   }
   writeFileSync(join(dir, 'previews.json'), JSON.stringify(index, null, 2) + '\n')
+  if (!index.length) throw new Error('No previews were made')
 }
 
 async function save(id: string, generated: string) {
   const m = mascotById(id)
   const prevFile = join(root, 'auditions', id, 'previews.json')
   const prev = existsSync(prevFile) ? (JSON.parse(readFileSync(prevFile, 'utf8')) as { generated_voice_id: string; description: string }[]) : []
-  const description = prev.find((p) => p.generated_voice_id === generated)?.description ?? `Tudoo! ${m.title}`
+  const description = prev.find((p) => p.generated_voice_id === generated)?.description ?? `Playful cartoon voice for ${m.title}, a friendly character in the Tudoo! English app`
   const body = { voice_name: `Tudoo ${m.title}`, voice_description: description.slice(0, 1000), generated_voice_id: generated }
   const voice = (await postOk(['/text-to-voice', '/text-to-voice/create-voice-from-preview'], body)) as { voice_id: string }
   const cfgFile = join(here, 'voices.json')

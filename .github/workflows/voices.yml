@@ -56,6 +56,7 @@ jobs:
           FRIEND: ${{ inputs.friend }}
           DESIGN: ${{ inputs.design }}
         run: |
+          set -o pipefail
           git config user.name "github-actions[bot]"
           git config user.email "41898315+github-actions[bot]@users.noreply.github.com"
           if [ "$MODE" = "voce-noua" ]; then
