@@ -1125,7 +1125,7 @@ button:focus-visible {
 }
 
 .logo-text {
-  font-size: 26px;
+  font-size: 42px;
   font-weight: 700;
   color: var(--green-dark);
   letter-spacing: -0.5px;
@@ -1198,7 +1198,7 @@ button:focus-visible {
     display: none;
   }
   .logo-text {
-    font-size: 22px;
+    font-size: 36px;
   }
   .appbar {
     justify-content: space-between;
@@ -1235,7 +1235,7 @@ button:focus-visible {
 
 @media (max-width: 420px) {
   .logo-text {
-    font-size: 19px;
+    font-size: 32px;
   }
   .appbar .pill {
     height: 42px;
