@@ -3961,6 +3961,10 @@ body {
   box-shadow: 0 0 0 2px var(--yellow), 0 4px 12px rgba(176, 124, 30, 0.2);
 }
 
+.avatar-on .avatar-face {
+  box-shadow: 0 0 0 3px var(--green), 0 4px 12px rgba(23, 146, 90, 0.3);
+}
+
 .avatar-face .dino {
   position: absolute;
   left: -20px;

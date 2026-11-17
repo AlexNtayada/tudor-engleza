@@ -36,6 +36,8 @@ export interface Progress {
   boss: Record<string, BossRecord>
   /** Speech-therapy practice: per day, the activities finished (e.g. "r:words"). */
   speechLog: Record<string, string[]>
+  /** Sentence packs: best stars per pack id. */
+  sentences: Record<string, number>
 }
 
 export interface BossRecord {
@@ -60,6 +62,7 @@ export const DEFAULT_PROGRESS: Progress = {
   outfit: {},
   boss: {},
   speechLog: {},
+  sentences: {},
   settings: { childName: 'Tudor', instructions: 'ro', slowVoice: false, mic: true, micCheck: true, speechSave: true },
 }
 

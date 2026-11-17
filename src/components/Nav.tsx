@@ -2,14 +2,14 @@ import { Ninja } from './Ninja'
 import { levelFor } from '../gamify'
 import type { Progress } from '../progress'
 
-export type Tab = 'home' | 'play' | 'speech' | 'album' | 'dino' | 'parents'
+export type Tab = 'home' | 'play' | 'sentences' | 'speech' | 'album' | 'dino' | 'parents'
 
 const TABS: { id: Tab; icon: string; label: string }[] = [
   { id: 'home', icon: '🗺️', label: 'Hartă' },
   { id: 'play', icon: '🎈', label: 'Joacă' },
+  { id: 'sentences', icon: '💬', label: 'Propoziții' },
   { id: 'speech', icon: '👅', label: 'Sunete' },
   { id: 'album', icon: '📒', label: 'Album' },
-  { id: 'dino', icon: '🥷', label: 'Ninja' },
   { id: 'parents', icon: '🔒', label: 'Părinți' },
 ]
 
@@ -49,7 +49,7 @@ export function Nav({ tab, progress, onTab }: { tab: Tab; progress: Progress; on
             <span className="profile-star">⭐</span>
             <b>{progress.wallet}</b>
           </span>
-          <button className="avatar" onClick={() => onTab('dino')} aria-label="Pagina lui Ninja" title="Pagina lui Ninja">
+          <button className={`avatar ${tab === 'dino' ? 'avatar-on' : ''}`} onClick={() => onTab('dino')} aria-label="Pagina lui Ninja" title="Pagina lui Ninja">
             <span className="avatar-face">
               <Ninja size={92} mood="idle" />
             </span>
