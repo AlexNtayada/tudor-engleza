@@ -23,6 +23,8 @@ export type Biome = {
   shore: PropId[]
   /** Less (or more) scenery than usual, 1 = normal. */
   density?: number
+  /** A wider trail with a dark outline, paw prints and a clear strip of grass beside it. */
+  bold?: boolean
 }
 
 const meadow = {
@@ -66,6 +68,9 @@ export const BIOMES: Record<string, Biome> = {
   animals: {
     ...meadow,
     name: 'Ferma',
+    bold: true,
+    path: '#ffeac2',
+    pathEdge: '#e0b46e',
     big: [
       ['barn', 1],
       ['haystack', 3],
