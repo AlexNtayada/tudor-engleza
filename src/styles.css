@@ -5071,6 +5071,8 @@ button.avatar:active {
   padding: 4px 12px 4px 8px;
   border-radius: 999px;
   background: #fff;
+}
+
 /* Daily challenges: three compact cards side by side, so the map shows sooner */
 .daily-grid {
   display: grid;
