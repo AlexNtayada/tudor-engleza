@@ -5071,4 +5071,102 @@ button.avatar:active {
   padding: 4px 12px 4px 8px;
   border-radius: 999px;
   background: #fff;
+/* Daily challenges: three compact cards side by side, so the map shows sooner */
+.daily-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.daily-grid .challenge {
+  position: relative;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  margin: 0;
+  padding: 12px;
+  border-radius: 22px;
+}
+
+.daily-grid .hex {
+  width: 50px;
+  height: 50px;
+  font-size: 27px;
+  border-radius: 15px;
+}
+
+.daily-grid .challenge-text {
+  width: 100%;
+}
+
+.daily-grid .challenge-text b {
+  font-size: 18px;
+  line-height: 1.15;
+}
+
+.daily-grid .challenge-text span {
+  font-size: 14px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.daily-grid .challenge-badge {
+  position: absolute;
+  top: 14px;
+  right: 58px;
+  font-size: 14px;
+}
+
+.daily-grid .check {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 38px;
+  height: 36px;
+  border-radius: 12px;
+  font-size: 18px;
+  box-shadow: 0 4px 0 #f0d79c;
+}
+
+.daily-grid .challenge-done .check {
+  box-shadow: 0 4px 0 var(--green-dark);
+}
+
+@media (max-width: 640px) {
+  .daily-grid {
+    gap: 8px;
+  }
+  .daily-grid .challenge {
+    padding: 10px 8px 10px;
+    align-items: center;
+    text-align: center;
+    gap: 6px;
+  }
+  .daily-grid .hex {
+    width: 46px;
+    height: 46px;
+    font-size: 25px;
+  }
+  .daily-grid .challenge-text b {
+    font-size: 15px;
+    text-wrap: balance;
+  }
+  .daily-grid .challenge-text span,
+  .daily-grid .challenge-badge {
+    display: none;
+  }
+  .daily-grid .check {
+    top: 6px;
+    right: 6px;
+    width: 26px;
+    height: 24px;
+    border-radius: 9px;
+    font-size: 13px;
+    box-shadow: 0 3px 0 #f0d79c;
+  }
+  .daily-grid .challenge-done .check {
+    box-shadow: 0 3px 0 var(--green-dark);
+  }
 }

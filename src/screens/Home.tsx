@@ -247,6 +247,7 @@ function DailyChallenges({
           🔥 {streak} {streak === 1 ? 'zi' : 'zile'}
         </span>
       </div>
+      <div className="daily-grid" style={{ gridTemplateColumns: `repeat(${rows.length}, minmax(0, 1fr))` }}>
       {rows.map((r) => (
         <button
           key={r.key}
@@ -269,6 +270,7 @@ function DailyChallenges({
           </span>
         </button>
       ))}
+      </div>
     </section>
   )
 }
