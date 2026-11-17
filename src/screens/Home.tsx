@@ -136,9 +136,6 @@ function HomeHero({ progress, current, mood, onTab }: { progress: Progress; curr
           <span>Salut,</span>
           <b>{name}!</b>
         </div>
-        <button className="hero-icon" onClick={() => onTab('album')} aria-label="Albumul meu">
-          📒
-        </button>
       </div>
       <div className="hero-stage">
         <Ninja mood={mood === 'idle' ? 'happy' : mood} size={150} />
