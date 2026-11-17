@@ -236,13 +236,7 @@ export function FinishScreen({
         <div className="trophy">
           <span className="hero-bubble finish-bubble">Bravo, {name}!</span>
           <div className="trophy-frame">
-            {sticker ? (
-              <span className="sticker">{sticker}</span>
-            ) : boss ? (
-              <span className="sticker">🏆</span>
-            ) : (
-              <Mascot mood="dance" size={120} />
-            )}
+            <Mascot mood="dance" size={120} />
             <span className="trophy-clip" aria-hidden />
           </div>
           <div className="finish-stars">
@@ -267,7 +261,14 @@ export function FinishScreen({
         </div>
 
         {boss && <p className="finish-sub finish-boss-won">🏆 {bossName} a fost învins!</p>}
-        {sticker && <p className="finish-sub">Abțibild nou în album!</p>}
+        {sticker && (
+          <div className="finish-sticker">
+            <span className="finish-sub">Abțibild nou în album!</span>
+            <span className="finish-sticker-card" aria-label="Abțibildul nou">
+              {sticker}
+            </span>
+          </div>
+        )}
 
         <div className="finish-level">
           <b>{mascot().name} {g('isteț', 'isteață')} 🏅</b>
