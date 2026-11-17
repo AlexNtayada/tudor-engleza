@@ -1,4 +1,4 @@
-import { mascot, mascotById, setActiveMascot, type MascotId } from './mascots'
+import { mascotById, setActiveMascot, type MascotId } from './mascots'
 import { MascotPicker } from './screens/MascotPicker'
 import { useEffect, useRef, useState } from 'react'
 import { ALL_LESSONS, PLAYGROUND, UNITS, type World } from './content'
@@ -231,7 +231,7 @@ export default function App() {
             onPlay={() => {
               void speak([
                 { text: `Hello, ${name}!`, lang: 'en' },
-                ...instruction(progress.settings.instructions, `Eu sunt ${mascot().title}. Hai să învățăm engleză!`, `I'm ${mascot().name}. Let's learn English!`),
+                ...instruction(progress.settings.instructions, 'Hai să învățăm engleză!', "Let's learn English!"),
               ])
               setScreen({ name: 'home' })
             }}
@@ -272,8 +272,8 @@ export default function App() {
               setProgress((p) => ({ ...p, mascot: id }))
               if (screen.back === 'start') {
                 void speak([
-                  { text: `Yay! Let's go, ${name}!`, lang: 'en' },
-                  ...instruction(progress.settings.instructions, `Super! Eu și cu tine, ${name}. Hai să învățăm engleză!`, `Let's learn English together!`),
+                  { text: `Hello, ${name}!`, lang: 'en' },
+                  ...instruction(progress.settings.instructions, 'Hai să învățăm engleză!', "Let's learn English!"),
                 ])
                 setScreen({ name: 'home' })
               } else {

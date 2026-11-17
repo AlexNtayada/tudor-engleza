@@ -23,6 +23,10 @@ on:
         description: 'voce-noua: descrierea vocii (mai multe descrieri separate prin ||). salveaza-voce: id-ul mostrei alese'
         required: false
         default: ''
+      match:
+        description: 'Doar replicile care se potrivesc (regex) si le reinregistreaza, ex: ^Hello, Tudor!$'
+        required: false
+        default: ''
       english_instructions:
         description: 'Inregistreaza si instructiunile in engleza (folosite doar daca parintele alege engleza)'
         type: boolean
@@ -78,6 +82,7 @@ jobs:
           ELEVENLABS_API_KEY: ${{ secrets.ELEVENLABS_API_KEY }}
           MODE: ${{ inputs.mode }}
           VOICES: ${{ inputs.voices }}
+          MATCH: ${{ inputs.match }}
           EN_INSTR: ${{ inputs.english_instructions }}
         run: |
           set -o pipefail
@@ -88,6 +93,7 @@ jobs:
             lista-voci) ARGS+=(--list-voices) ;;
           esac
           if [ -n "$VOICES" ]; then ARGS+=(--voices "$VOICES"); fi
+          if [ -n "$MATCH" ]; then ARGS+=(--match "$MATCH" --redo); fi
           if [ "$EN_INSTR" = "true" ]; then ARGS+=(--english-instructions); fi
           npx vite-node scripts/voices/generate.ts -- "${ARGS[@]}" | tee -a "$GITHUB_STEP_SUMMARY"
       - name: Commit clips
