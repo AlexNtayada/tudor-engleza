@@ -1,0 +1,227 @@
+import { memo, useMemo } from 'react'
+import { biomeFor, type Biome } from './biomes'
+import { PROPS, shade, type PropId } from './props'
+import { crossing, distToPath, edgePath, hash, seeded, wave, type MapLayout } from './geometry'
+
+const PATH_W = 44
+
+type Placed = { id: PropId; x: number; y: number; s: number; v: number }
+
+function weighted(list: [PropId, number][], r: number): PropId {
+  const total = list.reduce((a, [, w]) => a + w, 0)
+  let t = r * total
+  for (const [id, w] of list) {
+    t -= w
+    if (t <= 0) return id
+  }
+  return list[list.length - 1][0]
+}
+
+function placeProps(layout: MapLayout, biome: Biome, seed: number, river: (x: number) => number, ledge: (x: number) => number): Placed[] {
+  const { width: W, height: H, nodes, samples } = layout
+  const rng = seeded(seed)
+  const placed: Placed[] = []
+  const big: Placed[] = []
+  const phone = W < 520
+  const base = phone ? 0.82 : 1
+
+  const free = (x: number, y: number, r: number, isBig: boolean) => {
+    if (y < 8 || y > H - 2) return false
+    if (distToPath(samples, x, y) < PATH_W / 2 + 4 + r * (isBig ? 0.75 : 0.4)) return false
+    const topY = y - (isBig ? r * 1.6 : 0)
+    for (const n of nodes) {
+      if (Math.hypot(n.x - x, n.y - 14 - y) < 64 + r * 0.6) return false
+      if (isBig && Math.abs(n.x - x) < 50 + r * 0.7 && topY < n.y + 30 && y > n.y - 60) return false
+      const side = n.x < W / 2 ? 1 : -1
+      if (Math.hypot(n.x + side * 92 - x, n.y - y) < 52 + r * 0.5) return false
+    }
+    if (Math.abs(y - river(x)) < 26 + (isBig ? r * 0.15 : 2)) return false
+    const l = ledge(x)
+    if (y > l - 6 && y < l + 36 + r * 0.2) return false
+    if (isBig) for (const b of big) if (Math.hypot(b.x - x, b.y - y) < (PROPS[b.id].r * b.s + r) * 0.8) return false
+    return true
+  }
+
+  // Big pieces, crowded towards the edges like a forest border.
+  const dens = biome.density ?? 1
+  const nBig = Math.min(150, Math.round(((W * H) / (phone ? 7000 : 9500)) * dens))
+  for (let i = 0; i < nBig * 3 && big.length < nBig; i++) {
+    const edge = rng() < 0.62
+    const u = edge ? (rng() < 0.5 ? rng() * 0.2 : 1 - rng() * 0.2) : rng()
+    const x = -12 + u * (W + 24)
+    const y = rng() * H
+    const id = weighted(biome.big, rng())
+    const s = base * (0.85 + rng() * 0.35)
+    if (!free(x, y, PROPS[id].r * s, true)) continue
+    const p = { id, x, y, s, v: rng() }
+    big.push(p)
+    placed.push(p)
+  }
+  // Small pieces scattered everywhere.
+  const nSmall = Math.min(260, Math.round(((W * H) / (phone ? 3800 : 5200)) * dens))
+  for (let i = 0; i < nSmall * 2; i++) {
+    const x = rng() * W
+    const y = rng() * H
+    const id = weighted(biome.small, rng())
+    const s = base * (0.85 + rng() * 0.4)
+    if (!free(x, y, PROPS[id].r * s, false)) continue
+    placed.push({ id, x, y, s, v: rng() })
+    if (placed.length - big.length >= nSmall) break
+  }
+  // Reeds and stones along the river banks.
+  for (let x = 10; x < W; x += 34 + rng() * 40) {
+    const below = rng() < 0.55
+    const y = river(x) + (below ? 24 : -18)
+    if (distToPath(samples, x, y) < PATH_W / 2 + 18) continue
+    placed.push({
+      id: biome.shore[Math.floor(rng() * biome.shore.length)],
+      x,
+      y,
+      s: base * (0.8 + rng() * 0.3),
+      v: rng(),
+    })
+  }
+  return placed.sort((a, b) => a.y - b.y)
+}
+
+function Scene({ unitId, layout }: { unitId: string; layout: MapLayout }) {
+  const biome = biomeFor(unitId)
+  const { width: W, height: H, samples, d } = layout
+  const seed = hash(unitId)
+
+  const scene = useMemo(() => {
+    const rng = seeded(seed ^ 0x9e3779b9)
+    const river = wave(layout.riverY, 9, rng() * 6)
+    const ledge = wave(layout.ledgeY, 7, rng() * 6)
+    const props = placeProps(layout, biome, seed, river, ledge)
+    const patches = Array.from({ length: Math.round((W * H) / 40000) + 4 }, () => ({
+      x: rng() * W,
+      y: rng() * H,
+      rx: 40 + rng() * 90,
+      ry: 18 + rng() * 34,
+    }))
+    const riverTop = edgePath((x) => river(x) - 18, W)
+    const riverBot = edgePath((x) => river(x) + 18, W).reverse()
+    const bankTop = edgePath((x) => river(x) - 25, W)
+    const bankBot = edgePath((x) => river(x) + 25, W).reverse()
+    const ledgeTop = edgePath(ledge, W)
+    const ledgeBot = edgePath((x) => ledge(x) + 32, W).reverse()
+    const ledgeMid = edgePath((x) => ledge(x) + 22, W)
+    const ripples = Array.from({ length: Math.max(4, Math.round(W / 70)) }, (_, i) => {
+      const x = (i + rng()) * (W / Math.max(4, Math.round(W / 70)))
+      return { x, y: river(x) + (rng() - 0.5) * 16, w: 10 + rng() * 14 }
+    })
+    const cliffLines = Array.from({ length: Math.round(W / 22) }, (_, i) => i * 22 + rng() * 10)
+    return {
+      river,
+      ledge,
+      props,
+      patches,
+      riverPoly: `M${riverTop.join(' L ')} L ${riverBot.join(' L ')} Z`,
+      bankPoly: `M${bankTop.join(' L ')} L ${bankBot.join(' L ')} Z`,
+      plateauPoly: `M-20 -20 L ${W + 20} -20 L ${[...ledgeTop].reverse().join(' L ')} Z`,
+      cliffPoly: `M${ledgeTop.join(' L ')} L ${ledgeBot.join(' L ')} Z`,
+      lipLine: `M${ledgeTop.join(' L ')}`,
+      cliffDark: `M${ledgeMid.join(' L ')} L ${ledgeBot.join(' L ')} Z`,
+      ripples,
+      cliffLines,
+      bridge: crossing(samples, layout.riverY),
+      stairs: crossing(samples, layout.ledgeY),
+    }
+  }, [W, H, seed, layout, biome, samples])
+
+  const deg = (a: number) => (a * 180) / Math.PI - 90
+  const bridgeAt = { x: scene.bridge.x, y: scene.river(scene.bridge.x) }
+  const stairsAt = { x: scene.stairs.x, y: scene.ledge(scene.stairs.x) + 14 }
+  const stoneMarks = biome.pathDetail === 'stones' || biome.pathDetail === 'glow' ? samples.filter((_, i) => i % 3 === 0) : []
+
+  return (
+    <svg className="bm-scene" width={W} height={H} viewBox={`0 0 ${W} ${H}`} aria-hidden>
+      <rect x="0" y="0" width={W} height={H} fill={biome.ground} />
+      {scene.patches.map((p, i) => (
+        <ellipse key={i} cx={p.x} cy={p.y} rx={p.rx} ry={p.ry} fill={biome.patch} opacity="0.55" />
+      ))}
+
+      {/* higher ground and its cliff */}
+      <path d={scene.plateauPoly} fill={biome.plateau} />
+      <path d={`M${edgePath((x) => scene.ledge(x) + 34, W).join(' L ')}`} stroke="rgba(0,0,0,0.13)" strokeWidth="10" fill="none" />
+      <path d={scene.cliffPoly} fill={biome.cliff} />
+      <path d={scene.cliffDark} fill={shade(biome.cliff, -0.18)} />
+      {scene.cliffLines.map((x, i) => (
+        <path
+          key={i}
+          d={`M${x} ${scene.ledge(x) + 7} L ${x + 2} ${scene.ledge(x) + 27}`}
+          stroke={shade(biome.cliff, -0.28)}
+          strokeWidth="3"
+          strokeLinecap="round"
+          opacity="0.7"
+        />
+      ))}
+      <path d={scene.lipLine} stroke={shade(biome.plateau, 0.25)} strokeWidth="4" fill="none" />
+      <path d={`M${edgePath((x) => scene.ledge(x) + 4, W).join(' L ')}`} stroke={shade(biome.cliff, 0.25)} strokeWidth="3" fill="none" />
+
+      {/* river */}
+      <path d={scene.bankPoly} fill={biome.bank} />
+      <path d={scene.riverPoly} fill={biome.water} />
+      {scene.ripples.map((r, i) => (
+        <path
+          key={i}
+          d={`M${r.x} ${r.y} q ${r.w / 2} -4 ${r.w} 0`}
+          stroke={biome.waterLight}
+          strokeWidth="3"
+          strokeLinecap="round"
+          fill="none"
+          opacity="0.9"
+        />
+      ))}
+
+      {/* the path */}
+      <path d={d} stroke="rgba(0,0,0,0.10)" strokeWidth={PATH_W + 12} fill="none" strokeLinecap="round" transform="translate(0 5)" />
+      <path d={d} stroke={biome.pathEdge} strokeWidth={PATH_W + 8} fill="none" strokeLinecap="round" />
+      <path d={d} stroke={biome.path} strokeWidth={PATH_W} fill="none" strokeLinecap="round" />
+      {biome.pathDetail === 'road' && <path d={d} stroke="#fff" strokeWidth="3.5" strokeDasharray="14 14" fill="none" />}
+      {biome.pathDetail === 'stones' &&
+        stoneMarks.map((p, i) => (
+          <ellipse key={i} cx={p.x + (i % 2 ? 9 : -9)} cy={p.y} rx="7" ry="4.5" fill={biome.pathEdge} opacity="0.55" />
+        ))}
+      {biome.pathDetail === 'glow' && stoneMarks.map((p, i) => <circle key={i} cx={p.x} cy={p.y} r="3" fill="#fff" opacity="0.85" />)}
+
+      {/* bridge over the river */}
+      <g transform={`translate(${bridgeAt.x} ${bridgeAt.y}) rotate(${deg(scene.bridge.angle)})`}>
+        <rect x="-27" y="-36" width="54" height="72" rx="4" fill={shade(biome.bridge, -0.25)} />
+        <rect x="-24" y="-34" width="48" height="68" rx="3" fill={biome.bridge} />
+        {[-24, -12, 0, 12, 24].map((y) => (
+          <path key={y} d={`M-24 ${y} L 24 ${y}`} stroke={shade(biome.bridge, -0.22)} strokeWidth="2" />
+        ))}
+        <rect x="-30" y="-36" width="7" height="72" rx="3" fill={shade(biome.bridge, -0.35)} />
+        <rect x="23" y="-36" width="7" height="72" rx="3" fill={shade(biome.bridge, -0.35)} />
+        {[-36, 30].map((y) => (
+          <g key={y}>
+            <rect x="-32" y={y} width="11" height="10" rx="2" fill={shade(biome.bridge, -0.15)} />
+            <rect x="21" y={y} width="11" height="10" rx="2" fill={shade(biome.bridge, -0.15)} />
+          </g>
+        ))}
+      </g>
+
+      {/* steps up the cliff */}
+      {biome.pathDetail !== 'road' && (
+        <g transform={`translate(${stairsAt.x} ${stairsAt.y}) rotate(${deg(scene.stairs.angle)})`}>
+          {[-18, -6, 6, 18].map((y, i) => (
+            <g key={y}>
+              <rect x={-26 + i * 1} y={y} width={52 - i * 2} height="13" rx="5" fill={shade(biome.path, -0.22)} />
+              <rect x={-26 + i * 1} y={y} width={52 - i * 2} height="8" rx="4" fill={shade(biome.path, 0.12)} />
+            </g>
+          ))}
+        </g>
+      )}
+
+      {scene.props.map((p, i) => (
+        <g key={i} transform={`translate(${p.x.toFixed(1)} ${p.y.toFixed(1)}) scale(${p.s.toFixed(2)})`}>
+          {PROPS[p.id].draw(p.v)}
+        </g>
+      ))}
+    </svg>
+  )
+}
+
+export const BiomeScene = memo(Scene)

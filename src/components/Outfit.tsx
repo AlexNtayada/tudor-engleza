@@ -320,6 +320,65 @@ export function Accessory({ id }: { id: string }) {
           <path d="M166 -8 Q 156 10 155 32 M 166 -8 Q 176 10 177 32" fill="none" stroke="#2a86dd" strokeWidth="2.5" />
         </g>
       )
+    case 'house-key':
+      return (
+        <g>
+          <path d="M94 114 Q 108 134 122 114" fill="none" stroke="#ff5a6e" strokeWidth="4" strokeLinecap="round" />
+          <g transform="rotate(18 108 140)">
+            <circle cx="108" cy="134" r="9" fill="#ffd23f" stroke={L} strokeWidth="3" />
+            <circle cx="108" cy="134" r="3.5" fill="#fff6d0" />
+            <path d="M108 143 L 108 162 M 108 152 L 115 152 M 108 158 L 114 158" stroke={L} strokeWidth="7" strokeLinecap="round" />
+            <path d="M108 143 L 108 162 M 108 152 L 115 152 M 108 158 L 114 158" stroke="#ffd23f" strokeWidth="3.5" strokeLinecap="round" />
+          </g>
+        </g>
+      )
+    case 'propeller-hat':
+      return (
+        <g>
+          <path d="M66 40 Q 112 -18 158 40 Z" fill="#ffd23f" stroke={L} strokeWidth="3.5" strokeLinejoin="round" />
+          <path d="M82 22 Q 112 -2 142 22 L 146 30 Q 112 8 78 30 Z" fill="#ff5a6e" />
+          <path d="M100 6 Q 112 0 124 6 L 120 14 Q 112 10 104 14 Z" fill="#2f7cf6" />
+          <path d="M112 8 L 112 -10" stroke={L} strokeWidth="4" strokeLinecap="round" />
+          <g className="prop-spin">
+            <ellipse cx="94" cy="-12" rx="18" ry="5" fill="#3ccf91" stroke={L} strokeWidth="3" />
+            <ellipse cx="130" cy="-12" rx="18" ry="5" fill="#2f7cf6" stroke={L} strokeWidth="3" />
+          </g>
+          <circle cx="112" cy="-12" r="5" fill="#ff5a6e" stroke={L} strokeWidth="2.5" />
+        </g>
+      )
+    case 'pilot-goggles':
+      return (
+        <g>
+          <path d="M58 64 Q 113 52 168 64" fill="none" stroke="#8b5a2b" strokeWidth="8" strokeLinecap="round" />
+          <circle cx="94" cy="66" r="17" fill="#9fe0ff" stroke="#c9a46a" strokeWidth="6" />
+          <circle cx="132" cy="66" r="17" fill="#9fe0ff" stroke="#c9a46a" strokeWidth="6" />
+          <circle cx="94" cy="66" r="20" fill="none" stroke={L} strokeWidth="2.5" />
+          <circle cx="132" cy="66" r="20" fill="none" stroke={L} strokeWidth="2.5" />
+          <path d="M86 58 Q 90 54 96 55 M 124 58 Q 128 54 134 55" stroke="#fff" strokeWidth="3.5" strokeLinecap="round" fill="none" />
+          <path d="M111 64 L 115 64" stroke={L} strokeWidth="5" />
+        </g>
+      )
+    case 'giant-pencil':
+      return (
+        <g transform="rotate(14 160 145)">
+          <rect x="152" y="40" width="18" height="100" rx="3" fill="#ffd23f" stroke={L} strokeWidth="3.5" />
+          <path d="M158 44 L 158 136" stroke="#ffb020" strokeWidth="3" />
+          <rect x="152" y="30" width="18" height="12" rx="3" fill="#ff8fb0" stroke={L} strokeWidth="3" />
+          <path d="M152 140 L 161 162 L 170 140 Z" fill="#f4d3a2" stroke={L} strokeWidth="3" strokeLinejoin="round" />
+          <path d="M158 155 L 161 162 L 164 155 Z" fill={L} />
+        </g>
+      )
+    case 'butterfly-wings':
+      return (
+        <g>
+          <path d="M100 124 Q 50 70 26 100 Q 14 128 54 134 Q 28 152 46 172 Q 70 182 100 140 Z" fill="#ff9ad1" stroke={L} strokeWidth="3.5" strokeLinejoin="round" />
+          <path d="M120 124 Q 170 70 194 100 Q 206 128 166 134 Q 192 152 174 172 Q 150 182 120 140 Z" fill="#9ad8ff" stroke={L} strokeWidth="3.5" strokeLinejoin="round" />
+          <circle cx="50" cy="108" r="9" fill="#ffd23f" />
+          <circle cx="170" cy="108" r="9" fill="#ffd23f" />
+          <circle cx="56" cy="158" r="6" fill="#fff" opacity="0.8" />
+          <circle cx="164" cy="158" r="6" fill="#fff" opacity="0.8" />
+        </g>
+      )
     default:
       return null
   }

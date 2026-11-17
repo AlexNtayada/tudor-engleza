@@ -323,6 +323,110 @@ const drawCloud: Draw = (mood) => (
   </>
 )
 
+// ---------- 9. Casa: Scârțâilă, the creaky door ----------
+const drawDoor: Draw = (mood) => (
+  <>
+    <ellipse cx="66" cy="186" rx="18" ry="8" fill="#7a4a24" {...ink} />
+    <ellipse cx="134" cy="186" rx="18" ry="8" fill="#7a4a24" {...ink} />
+    <Arms color="#c98a4b" y={120} x={36} />
+    <path d="M40 182 L 40 70 Q 40 22 100 22 Q 160 22 160 70 L 160 182 Z" fill="#c98a4b" {...ink} />
+    <path d="M56 176 L 56 132 Q 56 126 62 126 L 138 126 Q 144 126 144 132 L 144 176 Z" fill="#a8693a" opacity="0.55" />
+    <path d="M58 64 Q 60 38 100 36 Q 140 38 142 64" fill="none" stroke="#e6ad74" strokeWidth="6" strokeLinecap="round" />
+    <path d="M70 150 L 130 150" stroke="#7a4a24" strokeWidth="3" opacity="0.5" />
+    <circle cx="140" cy="140" r="8" fill="#ffd23f" stroke={L} strokeWidth="3.5" />
+    <path d="M30 100 L 40 100 M 30 160 L 40 160" stroke="#8a9bb0" strokeWidth="8" strokeLinecap="round" />
+    {mood !== 'down' && (
+      <path d="M170 60 q 8 -6 14 0 M 172 76 q 10 -4 16 4" fill="none" stroke={L} strokeWidth="3" strokeLinecap="round" opacity="0.6" />
+    )}
+    <Face mood={mood} y={88} s={0.82} />
+  </>
+)
+
+// ---------- 10. Jucării: Țopăilă, the jack-in-the-box ----------
+const drawJack: Draw = (mood) => (
+  <>
+    <path d="M100 128 L 82 118 L 118 106 L 82 94 L 110 84" fill="none" stroke={L} strokeWidth="10" strokeLinejoin="round" strokeLinecap="round" />
+    <path d="M100 128 L 82 118 L 118 106 L 82 94 L 110 84" fill="none" stroke="#c9d3e3" strokeWidth="5" strokeLinejoin="round" strokeLinecap="round" />
+    <rect x="38" y="128" width="124" height="60" rx="10" fill="#ff5a6e" {...ink} />
+    <path d="M60 128 L 60 188 M 100 128 L 100 188 M 140 128 L 140 188" stroke="#ffd23f" strokeWidth="12" />
+    <rect x="38" y="128" width="124" height="60" rx="10" fill="none" {...ink} />
+    <path d="M38 128 L 22 104 L 70 104 L 86 128 Z" fill="#2f7cf6" {...ink} strokeWidth={4} />
+    <circle cx="170" cy="158" r="7" fill="#ffd23f" stroke={L} strokeWidth="3" />
+    <path d="M170 158 L 186 150" stroke={L} strokeWidth="4" strokeLinecap="round" />
+    <Arms color="#3ccf91" y={92} x={46} />
+    <circle cx="100" cy="64" r="46" fill="#ffe0c2" {...ink} />
+    <path d="M60 40 L 52 6 L 82 26 L 100 -2 L 118 26 L 148 6 L 140 40 Q 100 22 60 40 Z" fill="#3ccf91" {...ink} strokeWidth={4} />
+    <circle cx="52" cy="6" r="6" fill="#ffd23f" stroke={L} strokeWidth="3" />
+    <circle cx="100" cy="-2" r="6" fill="#ff5a6e" stroke={L} strokeWidth="3" />
+    <circle cx="148" cy="6" r="6" fill="#2f7cf6" stroke={L} strokeWidth="3" />
+    <circle cx="100" cy="80" r="8" fill="#ff5a6e" stroke={L} strokeWidth="3" />
+    <Face mood={mood} y={66} s={0.62} brows />
+  </>
+)
+
+// ---------- 11. Transport: Claxonel, the honking little bus ----------
+const drawBus: Draw = (mood) => (
+  <>
+    <path d="M86 42 L 86 26 L 72 18" fill="none" {...ink} strokeWidth={5} />
+    <path d="M60 10 L 74 18 L 70 28 L 56 22 Z" fill="#ffd23f" {...ink} strokeWidth={3.5} />
+    <rect x="22" y="40" width="156" height="132" rx="28" fill="#ffb020" {...ink} />
+    <rect x="36" y="52" width="128" height="44" rx="14" fill="#bfe8ff" {...ink} strokeWidth={4} />
+    <path d="M100 52 L 100 96" stroke={L} strokeWidth="4" />
+    <path d="M46 60 L 60 60" stroke="#fff" strokeWidth="5" strokeLinecap="round" opacity="0.9" />
+    <rect x="30" y="146" width="140" height="14" rx="7" fill="#de8f00" />
+    <circle cx="40" cy="132" r="10" fill="#fff6c2" {...ink} strokeWidth={3.5} />
+    <circle cx="160" cy="132" r="10" fill="#fff6c2" {...ink} strokeWidth={3.5} />
+    <circle cx="58" cy="178" r="16" fill="#3a3a48" {...ink} />
+    <circle cx="142" cy="178" r="16" fill="#3a3a48" {...ink} />
+    <circle cx="58" cy="178" r="6" fill="#c9d3e3" />
+    <circle cx="142" cy="178" r="6" fill="#c9d3e3" />
+    {mood === 'laugh' && <path d="M180 70 l 14 -8 M 182 84 l 16 0 M 180 98 l 14 8" stroke={L} strokeWidth="4" strokeLinecap="round" />}
+    <Face mood={mood} y={110} s={0.7} />
+  </>
+)
+
+// ---------- 12. Școala: Mâzgălici, the scribbling pencil ----------
+const drawPencil: Draw = (mood) => (
+  <>
+    <Arms color="#ffd23f" y={118} x={44} />
+    <path d="M52 150 L 100 196 L 148 150 Z" fill="#f4d3a2" {...ink} />
+    <path d="M86 182 L 100 196 L 114 182 Z" fill={L} />
+    <rect x="52" y="44" width="96" height="108" fill="#ffd23f" {...ink} />
+    <path d="M76 48 L 76 148 M 124 48 L 124 148" stroke="#ffb020" strokeWidth="5" />
+    <rect x="48" y="30" width="104" height="18" rx="4" fill="#c9d3e3" {...ink} strokeWidth={4} />
+    <path d="M52 30 Q 52 6 100 6 Q 148 6 148 30 Z" fill="#ff8fb0" {...ink} />
+    <path d="M18 172 q 10 -14 20 0 t 20 0" fill="none" stroke="#5b8cff" strokeWidth="4" strokeLinecap="round" />
+    <path d="M150 182 q 8 -12 16 0 t 16 0" fill="none" stroke="#ff5a6e" strokeWidth="4" strokeLinecap="round" />
+    <Face mood={mood} y={98} s={0.62} />
+  </>
+)
+
+// ---------- 13. Natura: Ghimpilă, the prickly bush ----------
+const drawBush: Draw = (mood) => {
+  const spikes = Array.from({ length: 14 }, (_, i) => {
+    const a = (Math.PI * 2 * i) / 14 - Math.PI / 2
+    const x = 100 + Math.cos(a) * 70
+    const y = 110 + Math.sin(a) * 66
+    const tx = 100 + Math.cos(a) * 90
+    const ty = 110 + Math.sin(a) * 86
+    const nx = Math.cos(a + Math.PI / 2) * 9
+    const ny = Math.sin(a + Math.PI / 2) * 9
+    return `M${(x + nx).toFixed(1)} ${(y + ny).toFixed(1)} L ${tx.toFixed(1)} ${ty.toFixed(1)} L ${(x - nx).toFixed(1)} ${(y - ny).toFixed(1)} Z`
+  }).join(' ')
+  return (
+    <>
+      <path d={spikes} fill="#2f9a2e" {...ink} strokeWidth={3.5} />
+      <ellipse cx="100" cy="110" rx="74" ry="70" fill="#4cbf4a" {...ink} />
+      <path d="M36 122 C 44 160 80 178 120 174 C 80 166 56 148 46 112 Z" fill="#2f9a2e" opacity="0.45" />
+      <path d="M100 42 Q 104 18 128 12 Q 126 36 104 44 Z" fill="#8be06a" {...ink} strokeWidth={3.5} />
+      <circle cx="48" cy="88" r="7" fill="#ef3b3b" stroke={L} strokeWidth="3" />
+      <circle cx="156" cy="132" r="7" fill="#ef3b3b" stroke={L} strokeWidth="3" />
+      <circle cx="146" cy="72" r="6" fill="#ef3b3b" stroke={L} strokeWidth="3" />
+      <Face mood={mood} y={112} s={0.78} />
+    </>
+  )
+}
+
 export const BOSSES: Record<string, BossInfo> = {
   colors: {
     id: 'colors',
@@ -379,6 +483,41 @@ export const BOSSES: Record<string, BossInfo> = {
     title: 'norul morocănos',
     taunt: 'Vrea să plouă peste toată ziua!',
     draw: drawCloud,
+  },
+  house: {
+    id: 'house',
+    name: 'Scârțâilă',
+    title: 'ușa care scârțâie',
+    taunt: 'Scârț! Nu te lasă să intri în casă!',
+    draw: drawDoor,
+  },
+  toys: {
+    id: 'toys',
+    name: 'Țopăilă',
+    title: 'cutia cu arc',
+    taunt: 'Hop! A ascuns toate jucăriile!',
+    draw: drawJack,
+  },
+  transport: {
+    id: 'transport',
+    name: 'Claxonel',
+    title: 'autobuzul gălăgios',
+    taunt: 'Tit-tit! Vrea să blocheze tot drumul!',
+    draw: drawBus,
+  },
+  school: {
+    id: 'school',
+    name: 'Mâzgălici',
+    title: 'creionul care mâzgălește',
+    taunt: 'Vrea să mâzgălească toate caietele!',
+    draw: drawPencil,
+  },
+  nature: {
+    id: 'nature',
+    name: 'Ghimpilă',
+    title: 'tufișul țepos',
+    taunt: 'Înțeapă pe oricine trece prin pădure!',
+    draw: drawBush,
   },
 }
 

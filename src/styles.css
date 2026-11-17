@@ -4060,3 +4060,297 @@ button.avatar:active {
     opacity: 1;
   }
 }
+
+/* ======================================================
+   Illustrated biome map (src/map)
+   ====================================================== */
+
+.unit.biome-unit {
+  padding: 0;
+  overflow: hidden;
+  content-visibility: auto;
+  contain-intrinsic-size: auto 900px;
+}
+
+.biome-unit .unit-banner {
+  position: relative;
+  z-index: 3;
+  margin: 16px 16px 0;
+}
+
+.bm {
+  position: relative;
+  width: 100%;
+  margin-top: -10px;
+}
+
+.bm-scene {
+  position: absolute;
+  inset: 0;
+  display: block;
+}
+
+.bm-node {
+  position: absolute;
+  z-index: 2;
+  width: 0;
+  height: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.bm-stone {
+  position: absolute;
+  left: -48px;
+  top: -34px;
+  width: 96px;
+  height: 68px;
+  padding: 0;
+  border: 0 !important;
+  background: none !important;
+  box-shadow: none !important;
+  cursor: pointer;
+  transition: transform 0.1s;
+}
+
+.bm-stone:active {
+  transform: translateY(4px) scale(0.97);
+}
+
+.bm-stone-svg {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  display: block;
+  overflow: visible;
+}
+
+.bm-ring {
+  position: absolute;
+  left: 2px;
+  right: 2px;
+  top: 8px;
+  bottom: 4px;
+  border-radius: 50%;
+  background: var(--ring);
+  opacity: 0.45;
+  animation: bm-ring 1.6s ease-out infinite;
+}
+
+@keyframes bm-ring {
+  0% {
+    transform: scale(0.9);
+    opacity: 0.55;
+  }
+  100% {
+    transform: scale(1.45);
+    opacity: 0;
+  }
+}
+
+.bm-current .bm-stone {
+  animation: bm-hop 1.6s ease-in-out infinite;
+}
+
+@keyframes bm-hop {
+  50% {
+    translate: 0 -4px;
+  }
+}
+
+.bm-lock {
+  position: absolute;
+  z-index: 2;
+  right: 2px;
+  bottom: 2px;
+  font-size: 20px;
+  line-height: 1;
+  font-family: 'Apple Color Emoji', 'Segoe UI Emoji', 'Noto Color Emoji', sans-serif;
+}
+
+.bm-locked .bm-stone-svg {
+  opacity: 0.9;
+}
+
+.bm-stars {
+  position: absolute;
+  top: -66px;
+  left: -48px;
+  width: 96px;
+  height: 40px;
+  overflow: visible;
+  pointer-events: none;
+  filter: drop-shadow(0 2px 0 rgba(0, 0, 0, 0.12));
+}
+
+.bm-boss .bm-stone {
+  left: -66px;
+  top: -40px;
+  width: 132px;
+  height: 92px;
+}
+
+.bm-boss-figure {
+  position: absolute;
+  z-index: 2;
+  left: 50%;
+  bottom: 30px;
+  transform: translateX(-50%);
+}
+
+.bm-boss .bm-stars {
+  top: -130px;
+}
+
+.bm-boss-label {
+  position: absolute;
+  top: 54px;
+  white-space: nowrap;
+  padding: 2px 14px;
+  border-radius: 12px;
+  background: #fff;
+  font-size: 17px;
+  font-weight: 800;
+  box-shadow: 0 3px 0 var(--lift), var(--soft);
+}
+
+.bm-avatar {
+  position: absolute;
+  top: -92px;
+  width: 78px;
+  height: 78px;
+  border-radius: 22px;
+  border: 5px solid;
+  background: #fff7e0;
+  box-shadow: 0 6px 0 rgba(0, 0, 0, 0.15);
+  animation: bm-bob 2.4s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.bm-avatar-right {
+  left: 40px;
+}
+
+.bm-avatar-left {
+  right: 40px;
+}
+
+.bm-avatar-clip {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  border-radius: 17px;
+  display: flex;
+  justify-content: center;
+}
+
+.bm-avatar-clip > * {
+  flex: none;
+  margin-top: -6px;
+}
+
+.bm-avatar i {
+  position: absolute;
+  bottom: -16px;
+  border: 10px solid transparent;
+}
+
+.bm-avatar-right i {
+  left: 6px;
+  border-left-width: 0;
+}
+
+.bm-avatar-left i {
+  right: 6px;
+  border-right-width: 0;
+}
+
+@keyframes bm-bob {
+  50% {
+    translate: 0 -6px;
+  }
+}
+
+.bm-flutter {
+  animation: bm-flutter 3s ease-in-out infinite;
+}
+
+@keyframes bm-flutter {
+  50% {
+    translate: 6px -6px;
+  }
+}
+
+.bm-float {
+  animation: bm-flutter 5s ease-in-out infinite;
+}
+
+.bm-twinkle {
+  animation: bm-twinkle 2.4s ease-in-out infinite;
+}
+
+@keyframes bm-twinkle {
+  50% {
+    opacity: 0.3;
+  }
+}
+
+.prop-spin {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: prop-spin 1.2s linear infinite;
+}
+
+@keyframes prop-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.bm-sub {
+  white-space: nowrap;
+}
+
+@media (max-width: 640px) {
+  .bm-count {
+    display: none;
+  }
+  .biome-unit .unit-banner {
+    margin: 12px 12px 0;
+  }
+  .bm-avatar {
+    width: 66px;
+    height: 66px;
+    top: -84px;
+  }
+  .bm-avatar-clip > * {
+    transform: scale(0.85);
+    transform-origin: top center;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bm-flutter,
+  .bm-float,
+  .bm-twinkle,
+  .bm-avatar,
+  .bm-ring,
+  .bm-current .bm-stone,
+  .prop-spin {
+    animation: none;
+  }
+}
+
+.bm-boss .bm-avatar {
+  top: -128px;
+}
+
+.bm-boss .bm-avatar-right {
+  left: 62px;
+}
+
+.bm-boss .bm-avatar-left {
+  right: 62px;
+}
