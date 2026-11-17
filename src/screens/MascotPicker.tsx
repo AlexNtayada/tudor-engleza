@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Mascot } from '../components/Mascot'
 import { MASCOTS, mascotById, type MascotId } from '../mascots'
-import { instruction, speak } from '../speech'
+import { speak } from '../speech'
 import { sfx } from '../sfx'
 import type { Settings } from '../progress'
 
@@ -9,13 +9,12 @@ import type { Settings } from '../progress'
 export function MascotPicker({
   current,
   name,
-  mode,
   onPick,
   onBack,
 }: {
   current?: MascotId
   name: string
-  mode: Settings['instructions']
+  mode?: Settings['instructions']
   onPick: (id: MascotId) => void
   onBack?: () => void
 }) {
@@ -26,7 +25,8 @@ export function MascotPicker({
     const m = mascotById(id)
     sfx.tap()
     setChosen(id)
-    void speak(instruction(mode, `Eu sunt ${m.title}!`, `I'm ${m.name}!`), { friend: id })
+    // Each friend introduces itself in its own recorded voice.
+    void speak([{ text: `Eu sunt ${m.title}!`, lang: 'ro' }], { friend: id })
   }
 
   return (
