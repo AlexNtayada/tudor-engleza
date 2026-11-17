@@ -234,6 +234,7 @@ export function FinishScreen({
 
       <div className="finish-card">
         <div className="trophy">
+          <span className="hero-bubble finish-bubble">Bravo, {name}!</span>
           <div className="trophy-frame">
             {sticker ? (
               <span className="sticker">{sticker}</span>
@@ -246,8 +247,20 @@ export function FinishScreen({
           </div>
           <div className="finish-stars">
             {[1, 2, 3].map((s) => (
-              <span key={s} className={s <= stars ? 'on' : ''} style={{ animationDelay: `${0.3 + s * 0.25}s` }}>
+              <span
+                key={s}
+                className={`finish-star ${s <= stars ? 'on' : ''}`}
+                style={{ '--d': `${0.35 + s * 0.3}s` } as React.CSSProperties}
+              >
                 <RoundStar />
+                {s <= stars && (
+                  <span className="star-sparks" aria-hidden="true">
+                    <i />
+                    <i />
+                    <i />
+                    <i />
+                  </span>
+                )}
               </span>
             ))}
           </div>
@@ -322,10 +335,6 @@ export function FinishScreen({
               <span>{chestOpen ? `+${CHEST_STARS} ⭐` : 'Cufărul zilei'}</span>
             </button>
           )}
-          <div className="finish-cheer">
-            <span className="hero-bubble">Bravo, {name}!</span>
-            <Mascot mood="dance" size={96} />
-          </div>
         </div>
       </div>
 
