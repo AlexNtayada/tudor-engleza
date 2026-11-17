@@ -49,12 +49,12 @@ export function Nav({ tab, progress, onTab }: { tab: Tab; progress: Progress; on
             <span className="profile-star">⭐</span>
             <b>{progress.wallet}</b>
           </span>
-          <span className="avatar">
+          <button className="avatar" onClick={() => onTab('dino')} aria-label="Pagina lui Ninja" title="Pagina lui Ninja">
             <span className="avatar-face">
               <Ninja size={92} mood="idle" />
             </span>
             <span className="avatar-level">{levelFor(progress.earned)}</span>
-          </span>
+          </button>
         </div>
       </header>
       <nav className="tabbar">{links}</nav>
