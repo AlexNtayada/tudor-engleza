@@ -49,7 +49,7 @@ export function Home({
             <section key={unit.id} id={`unit-${unit.id}`} className="unit biome-unit" style={{ background: biome.ground }}>
               <div
                 className="unit-banner bm-banner"
-                style={{ color: unit.colorDark, boxShadow: `0 6px 0 ${unit.color}, 0 10px 22px rgba(60, 40, 10, 0.16)` }}
+                style={{ color: unit.colorDark, boxShadow: '0 8px 22px rgba(60, 40, 10, 0.14)' }}
               >
                 <span className="bm-title">
                   <span className="unit-icon bm-icon" style={{ background: `${unit.color}2e` }}>
