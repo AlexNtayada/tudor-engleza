@@ -26,6 +26,11 @@ jobs:
       - run: npm ci
       - run: npm test
       - run: npm run build
+        env:
+          # Parent accounts (docs/conturi.md). Empty = the app works without accounts, as before.
+          VITE_SUPABASE_URL: ${{ vars.SUPABASE_URL }}
+          VITE_SUPABASE_ANON_KEY: ${{ vars.SUPABASE_ANON_KEY }}
+          VITE_SUPABASE_GOOGLE: ${{ vars.SUPABASE_GOOGLE }}
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist
