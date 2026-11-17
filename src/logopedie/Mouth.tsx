@@ -1,3 +1,4 @@
+import { mascot } from '../mascots'
 import type { MouthAnim } from './data'
 
 const INK = '#2b2118'
@@ -12,7 +13,7 @@ export function Mouth({ anim, size = 300 }: { anim: MouthAnim; size?: number }) 
       width={size}
       height={(size * 240) / 300}
       role="img"
-      aria-label="Gura lui Ninja"
+      aria-label={`Gura lui ${mascot().name}`}
     >
       <defs>
         <clipPath id="mouth-cavity">

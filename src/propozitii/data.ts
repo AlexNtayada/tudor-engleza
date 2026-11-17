@@ -1,3 +1,4 @@
+import { mascot } from '../mascots'
 // Simple English sentences, grouped in small packs that reuse words from the units.
 // Every sentence has a picture (a "scene") and one key word that changes between sentences.
 
@@ -143,7 +144,9 @@ export const PACKS: Pack[] = [
   },
   {
     id: 'body',
-    title: 'Ninja spune',
+    get title() {
+      return `${mascot().name} spune`
+    },
     pattern: 'Touch your …',
     emoji: '👃',
     color: '#ff6f61',

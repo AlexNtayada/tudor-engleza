@@ -1,3 +1,5 @@
+import { mascot, mascotById, setActiveMascot, type MascotId } from './mascots'
+import { MascotPicker } from './screens/MascotPicker'
 import { useEffect, useRef, useState } from 'react'
 import { ALL_LESSONS, PLAYGROUND, UNITS, type World } from './content'
 import { buildFreePlay, buildLesson, starsFor, type Step } from './lessons'
@@ -43,6 +45,8 @@ type Screen =
     }
   | { name: 'sentence'; pack: string; steps: SentenceStep[]; id: number }
   | { name: 'gate' }
+  /** Pick the friend: from the intro (then go home) or from the friend's page / Parents (then go back). */
+  | { name: 'pick'; back: 'start' | 'dino' | 'parents' }
   | { name: 'break' }
 
 const BREAK_AFTER_SECONDS = 15 * 60
@@ -52,6 +56,8 @@ export default function App() {
   const [progress, setProgress] = useState<Progress>(() => claimSetRewards(loadProgress()).progress)
   const [screen, setScreen] = useState<Screen>({ name: 'start' })
   const sinceBreak = useRef(0)
+  // Set before rendering so every screen (and every spoken sentence) uses the friend the child picked.
+  setActiveMascot(progress.mascot)
 
   useEffect(() => {
     saveProgress(progress)
@@ -214,10 +220,19 @@ export default function App() {
         return (
           <StartScreen
             name={name}
+            chosen={!!progress.mascot}
             onGo={() => {
+              if (!progress.mascot) {
+                void speak([
+                  { text: `Hello, ${name}!`, lang: 'en' },
+                  ...instruction(progress.settings.instructions, 'Alege-ți un prieten!', 'Pick a friend!'),
+                ])
+                setScreen({ name: 'pick', back: 'start' })
+                return
+              }
               void speak([
                 { text: `Hello, ${name}!`, lang: 'en' },
-                ...instruction(progress.settings.instructions, 'Eu sunt Ninja. Hai să învățăm engleză!', "I'm Ninja. Let's learn English!"),
+                ...instruction(progress.settings.instructions, `Eu sunt ${mascot().title}. Hai să învățăm engleză!`, `I'm ${mascot().name}. Let's learn English!`),
               ])
               setScreen({ name: 'home' })
             }}
@@ -245,7 +260,30 @@ export default function App() {
         )
       }
       case 'dino':
-        return <NinjaRoom progress={progress} onChange={setProgress} />
+        return <NinjaRoom progress={progress} onChange={setProgress} onPickFriend={() => setScreen({ name: 'pick', back: 'dino' })} />
+      case 'pick':
+        return (
+          <MascotPicker
+            current={progress.mascot}
+            name={name}
+            mode={progress.settings.instructions}
+            onBack={screen.back === 'start' ? undefined : () => setScreen({ name: screen.back as Tab })}
+            onPick={(id: MascotId) => {
+              const m = mascotById(id)
+              setProgress((p) => ({ ...p, mascot: id }))
+              if (screen.back === 'start') {
+                void speak([
+                  { text: `Yay! Let's go, ${name}!`, lang: 'en' },
+                  ...instruction(progress.settings.instructions, `Super! Eu și cu tine, ${name}. Hai să învățăm engleză!`, `Let's learn English together!`),
+                ])
+                setScreen({ name: 'home' })
+              } else {
+                void speak([{ text: m.hello, lang: 'en' }])
+                setScreen(screen.back === 'parents' ? { name: 'parents' } : { name: 'dino' })
+              }
+            }}
+          />
+        )
       case 'lesson':
         return (
           <LessonScreen
@@ -289,7 +327,14 @@ export default function App() {
       case 'gate':
         return <ParentGate onPass={() => setScreen({ name: 'parents' })} onBack={() => setScreen({ name: 'home' })} />
       case 'parents':
-        return <Parents progress={progress} onChange={setProgress} onBack={() => setScreen({ name: 'home' })} />
+        return (
+          <Parents
+            progress={progress}
+            onChange={setProgress}
+            onBack={() => setScreen({ name: 'home' })}
+            onPickFriend={() => setScreen({ name: 'pick', back: 'parents' })}
+          />
+        )
     }
   }
 

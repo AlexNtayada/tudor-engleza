@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import type React from 'react'
 import type { Unit } from '../content'
-import { Ninja, type Mood } from '../components/Ninja'
+import { Mascot, type Mood } from '../components/Mascot'
 import { Boss, bossFor } from '../components/Boss'
 import { BiomeScene } from './BiomeScene'
 import { layoutUnit } from './geometry'
@@ -142,7 +142,7 @@ export function UnitMap({
             {state === 'current' && (
               <div className={`bm-avatar ${side > 0 ? 'bm-avatar-right' : 'bm-avatar-left'}`} style={{ borderColor: unit.colorDark }}>
                 <div className="bm-avatar-clip">
-                  <Ninja mood={mood} size={104} />
+                  <Mascot mood={mood} size={104} />
                 </div>
                 <i style={{ borderTopColor: unit.colorDark }} />
               </div>

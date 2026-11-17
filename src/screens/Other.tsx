@@ -1,10 +1,11 @@
+import { mascot, g, MASCOTS } from '../mascots'
 import { useEffect, useMemo, useState } from 'react'
 import { ALL_LESSONS, UNITS } from '../content'
 import { BOSS_BONUS, CHEST_STARS, levelFor, setProgress, itemById, STARS_PER_LEVEL, type Item } from '../gamify'
 import { Boss, bossFor } from '../components/Boss'
 import type { BossResult } from './Lesson'
 import { BOSS_HP, BOSS_QUESTIONS } from '../lessons'
-import { Ninja } from '../components/Ninja'
+import { Mascot } from '../components/Mascot'
 import { instruction, speak, hasRomanianVoice, speechSupported } from '../speech'
 import { micSupported, recognitionSupported } from '../recorder'
 import { sfx } from '../sfx'
@@ -20,11 +21,19 @@ import {
   type Settings,
 } from '../progress'
 
-export function StartScreen({ name, onGo }: { name: string; onGo: () => void }) {
+export function StartScreen({ name, chosen, onGo }: { name: string; chosen: boolean; onGo: () => void }) {
   return (
     <div className="center-screen start">
       <h1 className="title">Ninja English</h1>
-      <Ninja mood="happy" size={220} />
+      {chosen ? (
+        <Mascot mood="happy" size={220} />
+      ) : (
+        <div className="start-crew">
+          {MASCOTS.map((m, i) => (
+            <Mascot key={m.id} kind={m.id} mood={i % 2 ? 'idle' : 'happy'} size={104} outfit={{}} />
+          ))}
+        </div>
+      )}
       <button
         className="big-btn"
         onClick={() => {
@@ -99,8 +108,8 @@ export function FinishScreen({
       void speak([
         { text: `Great job, ${name}!`, lang: 'en' },
         ...(boss ? instruction(mode, `Ai trecut testul! ${bossName} a fost învins!`, 'You passed the test!') : []),
-        ...(gifts.length ? instruction(mode, 'Album complet! Ai primit un cadou pentru Ninja!', 'Album complete! A present for Ninja!') : []),
-        ...(levelUp ? instruction(mode, `Ura! Ninja a crescut! Nivelul ${levelUp}!`, `Hooray! Ninja is now level ${levelUp}!`) : []),
+        ...(gifts.length ? instruction(mode, `Album complet! Ai primit un cadou pentru ${mascot().name}!`, `Album complete! A present for ${mascot().name}!`) : []),
+        ...(levelUp ? instruction(mode, `Ura! ${mascot().name} a crescut! Nivelul ${levelUp}!`, `Hooray! ${mascot().name} is now level ${levelUp}!`) : []),
         ...(sticker ? instruction(mode, 'Bravo! Ai câștigat un abțibild nou!', 'You got a new sticker!') : []),
         ...(chest ? instruction(mode, 'Uite, un cufăr! Deschide-l!', 'Look, a treasure chest! Open it!') : []),
         ...(suggestBreak
@@ -115,7 +124,7 @@ export function FinishScreen({
     return (
       <div className="center-screen finish finish-boss-lost">
         <div className="boss-duel">
-          <Ninja mood="oops" size={150} />
+          <Mascot mood="oops" size={150} />
           <Boss unitId={bossUnit} mood="laugh" size={150} />
         </div>
         <h2 className="finish-title">{bossName} a scăpat de data asta!</h2>
@@ -174,7 +183,7 @@ export function FinishScreen({
             ) : boss ? (
               <span className="sticker">🏆</span>
             ) : (
-              <Ninja mood="dance" size={120} />
+              <Mascot mood="dance" size={120} />
             )}
             <span className="trophy-clip" aria-hidden />
           </div>
@@ -191,7 +200,7 @@ export function FinishScreen({
         {sticker && <p className="finish-sub">Abțibild nou în album!</p>}
 
         <div className="finish-level">
-          <b>Ninja isteț 🏅</b>
+          <b>{mascot().name} {g('isteț', 'isteață')} 🏅</b>
           <div className="finish-level-row">
             <span className="lv-chip">Nv {level}</span>
             <span className="meter">
@@ -234,7 +243,7 @@ export function FinishScreen({
 
         {gifts.map((g) => (
           <div key={g.id} className="gift-won">
-            <Ninja size={90} outfit={{ [g.slot]: g.id }} />
+            <Mascot size={90} outfit={{ [g.slot]: g.id }} />
             <span>
               Album complet! Cadou: <b>{g.name}</b>
             </span>
@@ -259,7 +268,7 @@ export function FinishScreen({
           )}
           <div className="finish-cheer">
             <span className="hero-bubble">Bravo, {name}!</span>
-            <Ninja mood="dance" size={96} />
+            <Mascot mood="dance" size={96} />
           </div>
         </div>
       </div>
@@ -281,8 +290,8 @@ export function FinishScreen({
 export function BreakScreen({ onBack }: { onBack: () => void }) {
   return (
     <div className="center-screen break">
-      <Ninja mood="sleep" size={220} />
-      <p className="break-text">Ninja se odihnește puțin. Bea apă, sari de 5 ori și revino!</p>
+      <Mascot mood="sleep" size={220} />
+      <p className="break-text">{mascot().name} se odihnește puțin. Bea apă, sari de 5 ori și revino!</p>
       <button className="big-btn" onClick={onBack}>
         ▶ Gata, înapoi!
       </button>
@@ -306,7 +315,7 @@ export function Album({ progress, onBack }: { progress: Progress; onBack: () => 
         </button>
         <h2>Albumul meu</h2>
       </header>
-      <p className="album-hint">Strânge toate abțibildurile unei teme și Ninja primește un cadou special!</p>
+      <p className="album-hint">Strânge toate abțibildurile unei teme și {mascot().name} primește un cadou special!</p>
       {UNITS.map((u) => {
         const { have, total } = setProgress(progress, u)
         const reward = itemById(u.setReward)
@@ -340,7 +349,7 @@ export function Album({ progress, onBack }: { progress: Progress; onBack: () => 
               </div>
               {reward && (
                 <div className={`album-reward ${complete ? 'on' : ''}`} title={reward.name}>
-                  <Ninja size={74} outfit={{ [reward.slot]: reward.id }} />
+                  <Mascot size={74} outfit={{ [reward.slot]: reward.id }} />
                   <span>{complete ? '✓ ' : '🎁 '}{reward.name}</span>
                 </div>
               )}
@@ -397,10 +406,12 @@ export function Parents({
   progress,
   onChange,
   onBack,
+  onPickFriend,
 }: {
   progress: Progress
   onChange: (p: Progress) => void
   onBack: () => void
+  onPickFriend: () => void
 }) {
   const s = progress.settings
   const set = (patch: Partial<Settings>) => onChange({ ...progress, settings: { ...s, ...patch } })
@@ -498,7 +509,15 @@ export function Parents({
           <input value={s.childName} onChange={(e) => set({ childName: e.target.value })} maxLength={20} />
         </label>
         <div className="field">
-          <span>Instrucțiunile lui Ninja</span>
+          <span>Prietenul din aplicație</span>
+          <button className="friend-pick" onClick={onPickFriend}>
+            <Mascot size={44} outfit={{}} />
+            <b>{mascot().title}</b>
+            <span>Schimbă ›</span>
+          </button>
+        </div>
+        <div className="field">
+          <span>Instrucțiunile lui {mascot().name}</span>
           <div className="seg">
             <button className={s.instructions === 'ro' ? 'on' : ''} onClick={() => set({ instructions: 'ro' })}>
               Română
@@ -519,13 +538,13 @@ export function Parents({
             </button>
           </div>
         </div>
-        <button className="link-btn" onClick={() => void speak(instruction(s.instructions, 'Salut! Eu sunt Ninja.', 'Hi! I am Ninja.'))}>
+        <button className="link-btn" onClick={() => void speak(instruction(s.instructions, `Salut! Eu sunt ${mascot().title}.`, `Hi! I am ${mascot().name}.`))}>
           🔊 Testează vocea
         </button>
         {!speechSupported() && <p className="note warn">Browserul acesta nu poate vorbi. Folosește Chrome sau Edge.</p>}
         {speechSupported() && !roVoice && s.instructions === 'ro' && (
           <p className="note warn">
-            Pe acest dispozitiv nu am găsit o voce în română, așa că Ninja spune instrucțiunile în engleză (textul în
+            Pe acest dispozitiv nu am găsit o voce în română, așa că {mascot().name} spune instrucțiunile în engleză (textul în
             română apare în bulă). Cea mai simplă soluție pe PC: deschide aplicația în <b>Microsoft Edge</b>, care are
             voci românești incluse. Pe Windows mai poți adăuga vocea din Setări → Oră și limbă → Vorbire → Adaugă voci →
             Română.
@@ -559,7 +578,7 @@ export function Parents({
         </div>
         <p className="note">
           Tudor apasă 🎤, spune cuvântul și își aude imediat vocea. Înregistrarea din lecțiile de engleză rămâne doar pe
-          acest dispozitiv și nu se salvează. Ninja nu spune niciodată „greșit”: dacă nu e sigur, îl roagă să mai spună o dată.
+          acest dispozitiv și nu se salvează. {mascot().name} nu spune niciodată „greșit”: dacă nu e sigur, îl roagă să mai spună o dată.
         </p>
         {s.micCheck && recognitionSupported() && (
           <p className="note">
@@ -570,7 +589,7 @@ export function Parents({
         )}
         {s.micCheck && !recognitionSupported() && (
           <p className="note warn">
-            Browserul acesta nu poate verifica ce a spus; Ninja îl laudă oricum după ce se aude. Verificarea merge în Chrome și
+            Browserul acesta nu poate verifica ce a spus; {mascot().name} îl laudă oricum după ce se aude. Verificarea merge în Chrome și
             Edge.
           </p>
         )}
@@ -582,7 +601,7 @@ export function Parents({
       <section className="panel">
         <h3>Despre timp</h3>
         <p className="note">
-          Nu există limită de timp. Ninja propune o pauză după aproximativ 15 minute de joacă, dar nu blochează nimic.
+          Nu există limită de timp. {mascot().name} propune o pauză după aproximativ 15 minute de joacă, dar nu blochează nimic.
         </p>
         <button
           className="link-btn danger"

@@ -1,6 +1,7 @@
+import { mascot } from '../mascots'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import type React from 'react'
-import { Ninja, type Mood } from '../components/Ninja'
+import { Mascot, type Mood } from '../components/Mascot'
 import { getCamera } from '../recorder'
 import { speakRo, stopSpeaking } from '../speech'
 import { sfx } from '../sfx'
@@ -82,7 +83,7 @@ function Shell({
         )}
       </header>
       <div className="lesson-guide lp-guide">
-        <Ninja mood={mood} size={104} />
+        <Mascot mood={mood} size={104} />
         <div className="bubble">
           <span>{bubble}</span>
           {onRepeat && (
@@ -569,7 +570,7 @@ export function Listen({ s, hasRo, onFinish, onBack }: ActivityProps) {
     return (
       <Shell title="Urechiușa" onBack={onBack} mood="oops" bubble="Aici am nevoie de voce în română.">
         <p className="note warn lp-note">
-          Pe acest dispozitiv nu există o voce românească, așa că Ninja nu poate rosti cuvintele. Jocul merge în
+          Pe acest dispozitiv nu există o voce românească, așa că {mascot().name} nu poate rosti cuvintele. Jocul merge în
           Microsoft Edge pe Windows (sau pe un telefon cu voce română). Până atunci îl puteți juca voi: spuneți un cuvânt
           corect sau „cu i” (rață / iață), iar Tudor ghicește.
         </p>
@@ -586,11 +587,11 @@ export function Listen({ s, hasRo, onFinish, onBack }: ActivityProps) {
     void speakRo(
       right
         ? round.silly
-          ? ['Exact! Ninja a greșit. Corect este:', text]
-          : ['Da! Ninja a spus bine:', text]
+          ? [`Exact! ${mascot().name} a greșit. Corect este:`, text]
+          : [`Da! ${mascot().name} a spus bine:`, text]
         : round.silly
-          ? ['Ascultă: Ninja a zis', sillyForm(text, s.id), 'Corect este:', text]
-          : ['Ninja a spus bine:', text],
+          ? [`Ascultă: ${mascot().name} a zis`, sillyForm(text, s.id), 'Corect este:', text]
+          : [`${mascot().name} a spus bine:`, text],
     )
   }
 
@@ -601,21 +602,21 @@ export function Listen({ s, hasRo, onFinish, onBack }: ActivityProps) {
   }
 
   const bubble = !answer ? (
-    'Ninja a spus bine?'
+    `${mascot().name} a spus bine?`
   ) : answer === 'right' ? (
     round.silly ? (
       <>
         Exact! Corect este <Marked text={round.word.text} sound={s.id} />
       </>
     ) : (
-      'Da! Ninja a spus bine.'
+      `Da! ${mascot().name} a spus bine.`
     )
   ) : round.silly ? (
     <>
-      Ninja a zis „{sillyForm(round.word.text, s.id)}”. Corect: <Marked text={round.word.text} sound={s.id} />
+      {mascot().name} a zis „{sillyForm(round.word.text, s.id)}”. Corect: <Marked text={round.word.text} sound={s.id} />
     </>
   ) : (
-    'Ninja a spus bine de data asta!'
+    `${mascot().name} a spus bine de data asta!`
   )
 
   return (

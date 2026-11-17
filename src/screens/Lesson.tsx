@@ -1,7 +1,8 @@
+import { mascot, g } from '../mascots'
 import { useEffect, useMemo, useRef, useState, type PointerEvent as RPointerEvent } from 'react'
 import { PLAYGROUND, type Word, type World } from '../content'
 import type { Step } from '../lessons'
-import { Ninja, type Mood } from '../components/Ninja'
+import { Mascot, type Mood } from '../components/Mascot'
 import { Picture } from '../components/Picture'
 import { instruction, speak, stopSpeaking, type Part } from '../speech'
 import { sfx } from '../sfx'
@@ -35,10 +36,10 @@ function promptParts(mode: Settings['instructions'], step: Step): Part[] {
     case 'house':
       return instruction(mode, 'Cine e la fereastră? Unde este', `Who is it? Where is ${w.say}?`, w.say)
     case 'feed':
-      return [...instruction(mode, 'Ninja e flămând! Dă-i ce cere.', 'Ninja is hungry!'), { text: `I want ${w.say}!`, lang: 'en' }]
+      return [...instruction(mode, `${mascot().name} e ${g('flămând', 'flămândă')}! Dă-i ce cere.`, `${mascot().name} is hungry!`), { text: `I want ${w.say}!`, lang: 'en' }]
     case 'dress':
       return [
-        ...instruction(mode, 'Ninja vrea să se îmbrace! Dă-i ce cere.', 'Ninja wants to get dressed!'),
+        ...instruction(mode, `${mascot().name} vrea să se îmbrace! Dă-i ce cere.`, `${mascot().name} wants to get dressed!`),
         { text: `I need my ${w.say}!`, lang: 'en' },
       ]
     default:
@@ -51,7 +52,7 @@ function bubbleText(step: Step): string {
   if (step.type === 'listen') return `Unde este ${step.target.en}?`
   if (step.type === 'speak') return `Spune tu: ${step.target.en}`
   if (step.type === 'house') return `Cine e? Unde este ${step.target.en}?`
-  if (step.type === 'feed' || step.type === 'dress') return `Ninja vrea: ${step.target.en}!`
+  if (step.type === 'feed' || step.type === 'dress') return `${mascot().name} vrea: ${step.target.en}!`
   return `Sparge balonul: ${step.target.en}!`
 }
 
@@ -231,7 +232,7 @@ export function LessonScreen({
       )}
 
       <div className="lesson-guide">
-        {step.type !== 'feed' && step.type !== 'dress' && <Ninja mood={mood} size={130} />}
+        {step.type !== 'feed' && step.type !== 'dress' && <Mascot mood={mood} size={130} />}
         <div className="bubble">
           <span className="bubble-text">{bubbleText(step)}</span>
           <span className="speak-btns">
@@ -459,7 +460,7 @@ function Feed(props: ChoiceProps & { mood: Mood; happy?: string }) {
   return (
     <div className="feed">
       <div className="feed-dino" ref={dinoRef}>
-        <Ninja mood={done ? 'happy' : props.mood === 'oops' ? 'oops' : 'talk'} size={210} />
+        <Mascot mood={done ? 'happy' : props.mood === 'oops' ? 'oops' : 'talk'} size={210} />
         {done && <span className="yum">{props.happy ?? '😋'}</span>}
       </div>
       <div className="feed-table">

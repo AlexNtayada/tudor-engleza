@@ -1,6 +1,7 @@
+import { mascot, g } from '../mascots'
 import { useState } from 'react'
 import { ALL_LESSONS, UNITS } from '../content'
-import { Ninja, type Mood } from '../components/Ninja'
+import { Mascot, type Mood } from '../components/Mascot'
 import { currentLessonIndex, learnedWordIds, today, type Progress } from '../progress'
 import { levelFor, levelProgress, STARS_PER_LEVEL, streakDays } from '../gamify'
 import type { Tab } from '../components/Nav'
@@ -40,7 +41,7 @@ export function Home({
       <div className="home">
       <UnitTiles progress={progress} current={current} />
       <DailyChallenges progress={progress} current={current} onStart={onStart} onFreePlay={onFreePlay} onTab={onTab} />
-      <h2 className="home-section-title">Harta lui Ninja</h2>
+      <h2 className="home-section-title">Harta lui {mascot().name}</h2>
       <div className="path">
         {UNITS.map((unit, ui) => {
           const first = globalIndex
@@ -80,7 +81,7 @@ export function Home({
           )
         })}
         <div className="path-end">
-          <Ninja mood="sleep" size={90} />
+          <Mascot mood="sleep" size={90} />
           <p>Urmează: și mai multe teme, în curând…</p>
         </div>
       </div>
@@ -115,14 +116,14 @@ function HomeHero({ progress, current, mood, onTab }: { progress: Progress; curr
         </div>
       </div>
       <div className="hero-stage">
-        <Ninja mood={mood === 'idle' ? 'happy' : mood} size={150} />
+        <Mascot mood={mood === 'idle' ? 'happy' : mood} size={150} />
         <span className="hero-bubble">
           {done ? 'Ai terminat tot! Bravo!' : progress.earned ? 'Hai să continuăm!' : 'Hai să învățăm engleză!'}
         </span>
       </div>
-      <button className="level-card" onClick={() => onTab('dino')} aria-label={`Ninja, nivelul ${level}`}>
+      <button className="level-card" onClick={() => onTab('dino')} aria-label={`${mascot().name}, nivelul ${level}`}>
         <span className="level-card-head">
-          <b>Ninja isteț 🏅</b>
+          <b>{mascot().name} {g('isteț', 'isteață')} 🏅</b>
           <span className="level-card-link">Garderoba ›</span>
         </span>
         <span className="level-card-row">
@@ -234,7 +235,7 @@ function DailyChallenges({
     icon: '👅',
     color: '#ff8fb1',
     title: 'Sunetele R și L',
-    sub: 'Exersăm cu Ninja',
+    sub: `Exersăm cu ${mascot().name}`,
     done: (progress.speechLog[day] ?? []).length > 0,
     go: () => onTab('speech'),
   })

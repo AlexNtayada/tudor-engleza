@@ -1,6 +1,7 @@
+import { mascot } from '../mascots';
 import { useState } from "react";
 import { UNITS } from "../content";
-import { Ninja, type Mood } from '../components/Ninja';
+import { Mascot, type Mood } from '../components/Mascot';
 import {
   buy,
   ITEMS,
@@ -28,13 +29,13 @@ export function Playground({
       <h2 className="page-title">Locul de joacă</h2>
       {units.length === 0 ? (
         <div className="empty">
-          <Ninja mood="talk" size={150} />
+          <Mascot mood="talk" size={150} />
           <p>Termină prima lecție de pe hartă și aici se deschid jocurile!</p>
         </div>
       ) : (
         <>
           <div className="play-hello">
-            <Ninja mood="talk" size={110} />
+            <Mascot mood="talk" size={110} />
             <span className="bubble">Alege un joc!</span>
           </div>
           <div className="play-grid">
@@ -82,13 +83,15 @@ function twoWeeks(): { key: string; future: boolean; today: boolean }[] {
   });
 }
 
-/** Ninja's room: level, wardrobe bought with stars, and sunny days. */
+/** The friend's room: level, wardrobe bought with stars, and sunny days. */
 export function NinjaRoom({
   progress,
   onChange,
+  onPickFriend,
 }: {
   progress: Progress;
   onChange: (p: Progress) => void;
+  onPickFriend: () => void;
 }) {
   const [mood, setMood] = useState<Mood>("idle");
   const [slot, setSlot] = useState<Slot | "all">("all");
@@ -144,7 +147,7 @@ export function NinjaRoom({
   return (
     <div className="page page-white">
       <div className="room-hero room-stage">
-        <Ninja mood={mood} size={220} />
+        <Mascot mood={mood} size={220} />
         <div className="room-level">
           <span className="level-badge">Nivelul {level}</span>
           <div className="level-bar">
@@ -156,11 +159,14 @@ export function NinjaRoom({
           <span className="level-hint">
             încă {toNext} ⭐ până la nivelul {level + 1}
           </span>
+          <button className="friend-swap" onClick={onPickFriend}>
+            🔄 Schimbă prietenul
+          </button>
         </div>
       </div>
 
       <section className="panel panel-kid">
-        <h3>Garderoba lui Ninja</h3>
+        <h3>Garderoba lui {mascot().name}</h3>
         <div className="ward-tabs" role="tablist">
           {[{ id: "all" as const, label: "Toate" }, ...SLOTS].map((t) => (
             <button
@@ -191,7 +197,7 @@ export function NinjaRoom({
                 aria-label={item.name}
                 title={item.name}
               >
-                <Ninja size={92} outfit={{ [item.slot]: item.id }} />
+                <Mascot size={92} outfit={{ [item.slot]: item.id }} />
                 <span className="ward-tag">
                   {owned
                     ? wearing
