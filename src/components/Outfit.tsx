@@ -379,6 +379,81 @@ export function Accessory({ id }: { id: string }) {
           <circle cx="164" cy="158" r="6" fill="#fff" opacity="0.8" />
         </g>
       )
+    case 'diving-mask':
+      return (
+        <g>
+          <path d="M58 62 Q 113 50 168 62" fill="none" stroke="#1fb5d6" strokeWidth="7" strokeLinecap="round" />
+          <rect x="74" y="50" width="78" height="32" rx="14" fill="#bdf1ff" fillOpacity="0.75" stroke="#ff8a1f" strokeWidth="6" />
+          <rect x="74" y="50" width="78" height="32" rx="14" fill="none" stroke={L} strokeWidth="2.5" />
+          <path d="M84 58 Q 90 54 98 55" stroke="#fff" strokeWidth="3.5" strokeLinecap="round" fill="none" />
+          <path d="M156 70 L 166 70 L 166 18 Q 166 10 174 10" fill="none" stroke={L} strokeWidth="9" strokeLinecap="round" strokeLinejoin="round" />
+          <path d="M156 70 L 166 70 L 166 18 Q 166 10 174 10" fill="none" stroke="#ffd23f" strokeWidth="5" strokeLinecap="round" strokeLinejoin="round" />
+        </g>
+      )
+    case 'explorer-hat':
+      return (
+        <g>
+          <ellipse cx="112" cy="34" rx="62" ry="12" fill="#d9b276" stroke={L} strokeWidth="3.5" />
+          <path d="M74 32 Q 74 -10 112 -10 Q 150 -10 150 32 Z" fill="#e8c88e" stroke={L} strokeWidth="3.5" strokeLinejoin="round" />
+          <path d="M75 22 Q 112 14 149 22 L 150 30 Q 112 22 74 30 Z" fill="#7a4a24" />
+          <path d="M92 -2 Q 100 -8 110 -8" stroke="#fff6dc" strokeWidth="4" strokeLinecap="round" fill="none" />
+        </g>
+      )
+    case 'bee-antennae':
+      return (
+        <g>
+          <path d="M66 42 Q 112 8 158 42" fill="none" stroke={L} strokeWidth="8" strokeLinecap="round" />
+          <path d="M66 42 Q 112 8 158 42" fill="none" stroke="#ffd23f" strokeWidth="4" strokeLinecap="round" />
+          <path d="M94 24 Q 84 0 74 -12" fill="none" stroke={L} strokeWidth="4" strokeLinecap="round" />
+          <path d="M130 24 Q 140 0 150 -12" fill="none" stroke={L} strokeWidth="4" strokeLinecap="round" />
+          <circle cx="72" cy="-14" r="9" fill="#ffd23f" stroke={L} strokeWidth="3" />
+          <circle cx="152" cy="-14" r="9" fill="#ffd23f" stroke={L} strokeWidth="3" />
+          <path d="M66 -14 L 78 -14 M 146 -14 L 158 -14" stroke={L} strokeWidth="3" />
+        </g>
+      )
+    case 'watering-can':
+      return (
+        <g>
+          <path d="M150 112 L 186 112 L 182 150 L 154 150 Z" fill="#3ccf91" stroke={L} strokeWidth="3.5" strokeLinejoin="round" />
+          <path d="M184 120 L 206 98" stroke={L} strokeWidth="8" strokeLinecap="round" />
+          <path d="M184 120 L 206 98" stroke="#3ccf91" strokeWidth="4" strokeLinecap="round" />
+          <ellipse cx="208" cy="96" rx="6" ry="4" fill="#ffd23f" stroke={L} strokeWidth="2.5" transform="rotate(-45 208 96)" />
+          <path d="M156 112 Q 168 88 180 112" fill="none" stroke={L} strokeWidth="4" />
+          <path d="M158 132 L 180 132" stroke="#22a872" strokeWidth="4" />
+          <circle cx="214" cy="110" r="2.5" fill="#5fb6ff" />
+          <circle cx="220" cy="100" r="2" fill="#5fb6ff" />
+        </g>
+      )
+    case 'smile-badge':
+      return (
+        <g>
+          <path d="M94 114 Q 108 130 122 114" fill="none" stroke="#ff8fc8" strokeWidth="4" strokeLinecap="round" />
+          <circle cx="108" cy="140" r="13" fill="#ffd23f" stroke={L} strokeWidth="3" />
+          <circle cx="103" cy="137" r="2" fill={L} />
+          <circle cx="113" cy="137" r="2" fill={L} />
+          <path d="M102 143 Q 108 149 114 143" fill="none" stroke={L} strokeWidth="2.5" strokeLinecap="round" />
+        </g>
+      )
+    case 'gold-cup':
+      return (
+        <g>
+          <path d="M146 98 L 182 98 Q 182 130 164 134 Q 146 130 146 98 Z" fill="#ffd23f" stroke={L} strokeWidth="3.5" strokeLinejoin="round" />
+          <path d="M146 104 Q 132 106 138 118 Q 142 124 150 122 M 182 104 Q 196 106 190 118 Q 186 124 178 122" fill="none" stroke={L} strokeWidth="3.5" />
+          <path d="M160 134 L 160 144 L 168 144 L 168 134" fill="#e2a400" stroke={L} strokeWidth="3" />
+          <rect x="152" y="144" width="24" height="8" rx="2" fill="#7a4a24" stroke={L} strokeWidth="3" />
+          <polygon points={star(164, 112, 6)} fill="#fff6c2" />
+        </g>
+      )
+    case 'fire-helmet':
+      return (
+        <g>
+          <path d="M58 40 Q 60 -8 112 -10 Q 164 -8 166 40 Q 112 28 58 40 Z" fill="#ef3b3b" stroke={L} strokeWidth="3.5" strokeLinejoin="round" />
+          <path d="M50 40 Q 112 26 174 40 L 178 46 Q 112 34 46 46 Z" fill="#c42b2b" stroke={L} strokeWidth="3" strokeLinejoin="round" />
+          <path d="M112 -10 L 112 30" stroke="#c42b2b" strokeWidth="6" />
+          <path d="M100 8 L 124 8 L 124 26 Q 112 32 100 26 Z" fill="#ffd23f" stroke={L} strokeWidth="3" strokeLinejoin="round" />
+          <polygon points={star(112, 17, 6)} fill="#ef3b3b" />
+        </g>
+      )
     default:
       return null
   }

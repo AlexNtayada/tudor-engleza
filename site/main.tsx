@@ -29,3 +29,34 @@ document.querySelectorAll<HTMLElement>('.friend').forEach((card) => {
   card.addEventListener('pointerenter', () => dino()?.classList.replace('dino-idle', 'dino-happy'))
   card.addEventListener('pointerleave', () => dino()?.classList.replace('dino-happy', 'dino-idle'))
 })
+
+// The numbers in "Tudoo! în cifre" count up from 0 the first time they scroll into view.
+// The HTML already holds the final numbers, so without JS (or with reduced motion) nothing changes.
+const counters = document.querySelectorAll<HTMLElement>('[data-count]')
+const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+if (counters.length && !reduce && 'IntersectionObserver' in window) {
+  const run = (el: HTMLElement) => {
+    const target = Number(el.dataset.count) || 0
+    const ms = 1100 + Math.min(target, 200) * 3
+    const t0 = performance.now()
+    const tick = (now: number) => {
+      const t = Math.min(1, (now - t0) / ms)
+      el.textContent = String(Math.round(target * (1 - Math.pow(1 - t, 3))))
+      if (t < 1) requestAnimationFrame(tick)
+      else el.classList.add('counted')
+    }
+    requestAnimationFrame(tick)
+  }
+  counters.forEach((el) => (el.textContent = '0'))
+  const io = new IntersectionObserver(
+    (entries) => {
+      for (const e of entries) {
+        if (!e.isIntersecting) continue
+        io.unobserve(e.target)
+        run(e.target as HTMLElement)
+      }
+    },
+    { threshold: 0.6 },
+  )
+  counters.forEach((el) => io.observe(el))
+}
