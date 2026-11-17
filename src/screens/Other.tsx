@@ -462,12 +462,10 @@ export function Parents({
   progress,
   onChange,
   onBack,
-  onSettings,
 }: {
   progress: Progress
   onChange: (p: Progress) => void
   onBack: () => void
-  onSettings: () => void
 }) {
   const s = progress.settings
   const set = (patch: Partial<Settings>) => onChange({ ...progress, settings: { ...s, ...patch } })
@@ -489,16 +487,8 @@ export function Parents({
         <button className="icon-btn" onClick={onBack} aria-label="Înapoi">
           ←
         </button>
-        <h2>Zona părinților</h2>
+        <h2>Progres și date</h2>
       </header>
-      <button className="parents-settings" onClick={onSettings}>
-        <span className="parents-settings-icon" aria-hidden="true">⚙️</span>
-        <span className="parents-settings-text">
-          <b>Setări</b>
-          <span>Cont, copii, sunet, voce, microfon, de unde începe harta</span>
-        </span>
-        <span aria-hidden="true">›</span>
-      </button>
 
       <section className="panel">
         <h3>Progres</h3>

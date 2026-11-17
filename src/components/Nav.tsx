@@ -7,13 +7,16 @@ import type { Progress } from '../progress'
 
 export type Tab = 'home' | 'play' | 'sentences' | 'speech' | 'album' | 'dino' | 'parents'
 
+const FRIEND_ICON: Record<string, string> = { ninja: '🥷', pip: '🦊', bobo: '🐻', rici: '🦔', bip: '🤖', zuzu: '🐲' }
+
 const TABS: { id: Tab; icon: string; label: string }[] = [
   { id: 'home', icon: '🗺️', label: 'Hartă' },
   { id: 'play', icon: '🎈', label: 'Joacă' },
   { id: 'sentences', icon: '💬', label: 'Propoziții' },
   { id: 'speech', icon: '👅', label: 'Sunete' },
   { id: 'album', icon: '📒', label: 'Album' },
-  { id: 'parents', icon: '🔒', label: 'Părinți' },
+  // The friend's page (wardrobe); its icon and name follow the chosen friend. Parents get in through Settings.
+  { id: 'dino', icon: '', label: '' },
 ]
 
 function Logo() {
@@ -62,12 +65,12 @@ export function Nav({
   const links = TABS.map((t) => (
     <button
       key={t.id}
-      className={`nav-link ${tab === t.id ? 'on' : ''} ${t.id === 'parents' ? 'nav-parents' : ''}`}
+      className={`nav-link ${tab === t.id ? 'on' : ''}`}
       onClick={() => onTab(t.id)}
       aria-current={tab === t.id ? 'page' : undefined}
     >
-      <span className="nav-icon">{t.icon}</span>
-      <span className="nav-label">{t.label}</span>
+      <span className="nav-icon">{t.id === 'dino' ? FRIEND_ICON[mascot().id] ?? '🥷' : t.icon}</span>
+      <span className="nav-label">{t.id === 'dino' ? mascot().name : t.label}</span>
     </button>
   ))
   const bar = useRef<HTMLElement>(null)

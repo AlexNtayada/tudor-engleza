@@ -38,6 +38,7 @@ export function SettingsScreen({
   syncState,
   onChange,
   onBack,
+  onProgress,
   onPickFriend,
   onAccount,
   onSignOut,
@@ -51,6 +52,8 @@ export function SettingsScreen({
   syncState: 'idle' | 'saving' | 'saved' | 'error'
   onChange: (p: Progress) => void
   onBack: () => void
+  /** The parents' area: progress, boss tests, recordings, moving progress, reset. */
+  onProgress: () => void
   onPickFriend: () => void
   onAccount: () => void
   onSignOut: () => void
@@ -77,6 +80,15 @@ export function SettingsScreen({
         </button>
         <h1>Setări</h1>
       </header>
+
+      <button className="parents-settings" onClick={onProgress}>
+        <span className="parents-settings-icon" aria-hidden="true">📊</span>
+        <span className="parents-settings-text">
+          <b>Progres și date</b>
+          <span>Minute pe zi, cuvinte, teste boss, înregistrări, mută sau șterge progresul</span>
+        </span>
+        <span aria-hidden="true">›</span>
+      </button>
 
       {accountsEnabled && !email && (
         <section className="set-account">
