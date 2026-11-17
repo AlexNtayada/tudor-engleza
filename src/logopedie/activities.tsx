@@ -577,11 +577,11 @@ export function Listen({ s, hasRo, onFinish, onBack }: ActivityProps) {
     void speakRo(
       right
         ? round.silly
-          ? [`Exact! ${mascot().name} a greșit. Corect este:`, text]
-          : [`Da! ${mascot().name} a spus bine:`, text]
+          ? ['Exact! Corect e:', text]
+          : ['Da, e bine:', text]
         : round.silly
-          ? [`Ascultă: ${mascot().name} a zis`, sillyForm(text, s.id), 'Corect este:', text]
-          : [`${mascot().name} a spus bine:`, text],
+          ? ['Am zis', sillyForm(text, s.id), 'Corect e:', text]
+          : ['Am zis bine:', text],
     )
   }
 

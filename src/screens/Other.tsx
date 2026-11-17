@@ -7,7 +7,7 @@ import { Boss, bossFor } from '../components/Boss'
 import type { BossResult } from './Lesson'
 import { BOSS_HP, BOSS_QUESTIONS } from '../lessons'
 import { Mascot } from '../components/Mascot'
-import { instruction, speak, hasRomanianVoice } from '../speech'
+import { instruction, speak } from '../speech'
 import { sfx } from '../sfx'
 import { SpeechPanel } from '../logopedie/Recordings'
 import {
@@ -140,31 +140,24 @@ export function FinishScreen({
     sfx.fanfare()
     const t = setTimeout(() => {
       if (boss && !boss.defeated) {
-        void speak([
-          { text: `Good try, ${name}!`, lang: 'en' },
-          ...instruction(
-            mode,
-            `${bossName} a scăpat de data asta. Mai exersăm puțin și îl prindem!`,
-            `${bossName} got away this time. Let's practice and try again!`,
-          ),
-        ])
+        void speak([{ text: 'Good try!', lang: 'en' }, ...instruction(mode, 'Mai încercăm!', "Let's try again!")])
         return
       }
-      void speak([
-        { text: `Great job, ${name}!`, lang: 'en' },
-        ...(boss ? instruction(mode, `Ai trecut testul! ${bossName} a fost învins!`, 'You passed the test!') : []),
-        ...(gifts.length ? instruction(mode, `Album complet! Ai primit un cadou pentru ${mascot().name}!`, `Album complete! A present for ${mascot().name}!`) : []),
-        ...(levelUp
-          ? instruction(mode, `Ura! ${mascot().name} a crescut!`, `Hooray! ${mascot().name} is now level ${levelUp}!`).concat(
-              mode === 'ro' && hasRomanianVoice() ? [{ text: `Nivelul ${levelUp}!`, lang: 'ro' }] : [],
-            )
-          : []),
-        ...(sticker ? instruction(mode, 'Bravo! Ai câștigat un abțibild nou!', 'You got a new sticker!') : []),
-        ...(chest ? instruction(mode, 'Uite, un cufăr! Deschide-l!', 'Look, a treasure chest! Open it!') : []),
-        ...(suggestBreak
-          ? instruction(mode, 'Ai lucrat frumos. Vrei o mică pauză?', 'You worked hard. Do you want a little break?')
-          : []),
-      ])
+      // One short cheer and only the most important news, so the friend doesn't talk too long.
+      const news: [string, string] | undefined = boss
+        ? ['Ai câștigat!', 'You won!']
+        : gifts.length
+          ? ['Ai un cadou!', 'A present!']
+          : levelUp
+            ? ['Nivel nou!', 'New level!']
+            : chest
+              ? ['Un cufăr!', 'A treasure chest!']
+              : sticker
+                ? ['Abțibild nou!', 'New sticker!']
+                : suggestBreak
+                  ? ['Facem o pauză?', 'A little break?']
+                  : undefined
+      void speak([{ text: 'Great job!', lang: 'en' }, ...(news ? instruction(mode, news[0], news[1]) : [])])
     }, 700)
     return () => clearTimeout(t)
     // eslint-disable-next-line react-hooks/exhaustive-deps

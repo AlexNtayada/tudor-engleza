@@ -30,7 +30,7 @@ export function Home({
     sfx.wrong()
     setMood('oops')
     void speak(
-      instruction(progress.settings.instructions, 'Încă nu! Mai întâi lecția de lângă mine.', 'Not yet! First the lesson next to me.'),
+      instruction(progress.settings.instructions, 'Încă nu. Întâi lecția asta.', 'Not yet. This lesson first.'),
     )
     setTimeout(() => setMood('idle'), 1500)
   }

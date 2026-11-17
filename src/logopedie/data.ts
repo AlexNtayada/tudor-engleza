@@ -265,11 +265,11 @@ export const RO_NUMBERS = ['unu', 'doi', 'trei', 'patru', 'cinci', 'șase', 'șa
 /** What the friend says in the long-sound game. */
 export const SOUND_SAY: Record<string, { ask: string; goal: string }> = {
   r: {
-    ask: 'Pornește motorașul! Spune rrrrr cât poți de lung, cu limba sus, după dinți.',
-    goal: 'Ura! Motorașul a ajuns la steag!',
+    ask: 'Spune rrrrr lung, cu limba sus!',
+    goal: 'Ura! Am ajuns!',
   },
   l: {
-    ask: 'Cântă ca păsărica: llllll, cu vârful limbii sus, după dinți.',
-    goal: 'Ura! Păsărica a ajuns în copac!',
+    ask: 'Cântă llllll, cu limba sus!',
+    goal: 'Ura! Am ajuns!',
   },
 }

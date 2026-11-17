@@ -1,4 +1,4 @@
-import { mascot, g } from '../mascots'
+import { mascot } from '../mascots'
 import { useEffect, useMemo, useRef, useState, type PointerEvent as RPointerEvent } from 'react'
 import { PLAYGROUND, type Word, type World } from '../content'
 import type { Step } from '../lessons'
@@ -19,7 +19,7 @@ const cap = (s: string) => s.charAt(0).toUpperCase() + s.slice(1)
 
 function introParts(mode: Settings['instructions'], w: Word): Part[] {
   return [
-    ...instruction(mode, `${cap(w.ro)}. În engleză se spune:`, `This is ${w.say}.`),
+    ...instruction(mode, `${cap(w.ro)}. În engleză:`, `This is ${w.say}.`),
     { text: w.say, lang: 'en' },
     ...instruction(mode, 'Spune și tu!', 'Now you say it!'),
   ]
@@ -29,17 +29,17 @@ function promptParts(mode: Settings['instructions'], step: Step): Part[] {
   if (step.type === 'intro') return introParts(mode, step.word)
   const w = step.target
   if (step.type === 'speak')
-    return [...instruction(mode, 'Acum spune tu:', 'Now you say it:'), { text: w.say, lang: 'en' }]
+    return [...instruction(mode, 'Spune tu:', 'Your turn:'), { text: w.say, lang: 'en' }]
   switch (step.type) {
     case 'listen':
-      return instruction(mode, 'Unde este', `Where is ${w.say}?`, w.say)
+      return instruction(mode, 'Unde e', `Where is ${w.say}?`, w.say)
     case 'house':
-      return instruction(mode, 'Cine e la fereastră? Unde este', `Who is it? Where is ${w.say}?`, w.say)
+      return instruction(mode, 'Unde e', `Where is ${w.say}?`, w.say)
     case 'feed':
-      return [...instruction(mode, `${mascot().name} e ${g('flămând', 'flămândă')}! Dă-i ce cere.`, `${mascot().name} is hungry!`), { text: `I want ${w.say}!`, lang: 'en' }]
+      return [...instruction(mode, 'Mi-e foame!', "I'm hungry!"), { text: `I want ${w.say}!`, lang: 'en' }]
     case 'dress':
       return [
-        ...instruction(mode, `${mascot().name} vrea să se îmbrace! Dă-i ce cere.`, `${mascot().name} wants to get dressed!`),
+        ...instruction(mode, 'Mă îmbraci?', 'Dress me up!'),
         { text: `I need my ${w.say}!`, lang: 'en' },
       ]
     default:
@@ -49,9 +49,9 @@ function promptParts(mode: Settings['instructions'], step: Step): Part[] {
 
 function bubbleText(step: Step): string {
   if (step.type === 'intro') return `${cap(step.word.ro)} = ${step.word.en}`
-  if (step.type === 'listen') return `Unde este ${step.target.en}?`
+  if (step.type === 'listen') return `Unde e ${step.target.en}?`
   if (step.type === 'speak') return `Spune tu: ${step.target.en}`
-  if (step.type === 'house') return `Cine e? Unde este ${step.target.en}?`
+  if (step.type === 'house') return `Unde e ${step.target.en}?`
   if (step.type === 'feed' || step.type === 'dress') return `${mascot().name} vrea: ${step.target.en}!`
   return `Sparge balonul: ${step.target.en}!`
 }
@@ -105,8 +105,8 @@ export function LessonScreen({
       boss && index === 0 && !slow
         ? instruction(
             settings.instructions,
-            `A venit ${bossInfo.name}, ${bossInfo.title}! ${bossInfo.taunt} Răspunde bine din prima ca să-l învingi!`,
-            `Here comes ${bossInfo.name}! Answer right the first time to win!`,
+            `A venit ${bossInfo.name}!`,
+            `Here comes ${bossInfo.name}!`,
           )
         : []
     void speak([...intro, ...promptParts(settings.instructions, step)], { slow }).then(() =>
@@ -145,8 +145,7 @@ export function LessonScreen({
           bossOver.current = true
           setTimeout(() => sfx.fanfare(), 600)
           void speak([
-            { text: 'Hooray! You beat the boss!', lang: 'en' },
-            ...instruction(settings.instructions, `L-ai învins pe ${bossInfo.name}!`, ''),
+            { text: 'You won!', lang: 'en' },
           ])
           setTimeout(() => onFinish(mistakes.current, combos.current, bossResult()), 2600)
           return
