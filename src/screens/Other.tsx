@@ -153,7 +153,11 @@ export function FinishScreen({
         { text: `Great job, ${name}!`, lang: 'en' },
         ...(boss ? instruction(mode, `Ai trecut testul! ${bossName} a fost învins!`, 'You passed the test!') : []),
         ...(gifts.length ? instruction(mode, `Album complet! Ai primit un cadou pentru ${mascot().name}!`, `Album complete! A present for ${mascot().name}!`) : []),
-        ...(levelUp ? instruction(mode, `Ura! ${mascot().name} a crescut! Nivelul ${levelUp}!`, `Hooray! ${mascot().name} is now level ${levelUp}!`) : []),
+        ...(levelUp
+          ? instruction(mode, `Ura! ${mascot().name} a crescut!`, `Hooray! ${mascot().name} is now level ${levelUp}!`).concat(
+              mode === 'ro' && hasRomanianVoice() ? [{ text: `Nivelul ${levelUp}!`, lang: 'ro' }] : [],
+            )
+          : []),
         ...(sticker ? instruction(mode, 'Bravo! Ai câștigat un abțibild nou!', 'You got a new sticker!') : []),
         ...(chest ? instruction(mode, 'Uite, un cufăr! Deschide-l!', 'Look, a treasure chest! Open it!') : []),
         ...(suggestBreak

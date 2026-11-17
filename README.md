@@ -30,6 +30,17 @@ npm run build
 
 Toate cuvintele și lecțiile sunt în `src/content.ts`. Adaugi o temă nouă adăugând un obiect în `UNITS`.
 
+## Voci (ElevenLabs)
+
+Tot ce spune aplicația e înregistrat o dată cu ElevenLabs în `public/audio/` (cuvintele englezești cu o voce
+americană, iar fiecare prieten are vocea lui în română). Ce nu are clip e citit în continuare de vocea browserului.
+
+- Lista replicilor: `scripts/voices/lines.ts` (când adaugi o replică nouă în aplicație, adaug-o și aici)
+- Vocile alese: `scripts/voices/voices.json`
+- Generare: GitHub → Actions → **Voci ElevenLabs** → Run workflow (are nevoie de secretul `ELEVENLABS_API_KEY`).
+  `numara` arată câte caractere/credite ar costa, `mostre` face câteva clipuri de probă, `tot` face restul.
+  Se înregistrează doar replicile noi, deci rularea din nou e ieftină.
+
 ## Publicare
 
 La fiecare push pe `main`, GitHub Actions construiește aplicația și o publică pe GitHub Pages
