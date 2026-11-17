@@ -77,6 +77,8 @@ export default function App() {
   const sinceBreak = useRef(0)
   /** The last progress written for each child, so loading or switching a child is not counted as a change. */
   const lastSaved = useRef<string>('')
+  /** While adding another child from Settings: the child who was active before, so × can cancel back to them. */
+  const addingFrom = useRef<string | null>(null)
   const pushTimer = useRef<number>()
   // Set before rendering so every screen (and every spoken sentence) uses the friend the child picked.
   setActiveMascot(progress.mascot)
@@ -473,6 +475,7 @@ export default function App() {
               setScreen({ name: 'home' })
             }}
             onAddChild={() => {
+              addingFrom.current = store.active
               const next = addChild(store)
               saveStore(next)
               switchChild(next.active, next)
@@ -486,12 +489,23 @@ export default function App() {
             }}
           />
         )
-      case 'onboard':
+      case 'onboard': {
+        const from = addingFrom.current
+        const cancelAdd = from
+          ? () => {
+              addingFrom.current = null
+              const next = removeChild({ ...store, active: from }, store.active)
+              saveStore(next)
+              switchChild(from, next)
+              setScreen({ name: 'settings', section: 'copii' })
+            }
+          : undefined
         return screen.step === 'name' ? (
           <OnboardName
             initial={progress.settings.childName}
             canLogIn={accountsEnabled && !email}
             onLogIn={() => setScreen({ name: 'account', back: 'onboard' })}
+            onClose={cancelAdd}
             onNext={(childName) => {
               setProgress((p) => ({ ...p, settings: { ...p.settings, childName } }))
               void speak([{ text: 'Hello.', lang: 'en' }, ...instruction(progress.settings.instructions, 'Alege un prieten!', 'Pick a friend!')])
@@ -502,7 +516,9 @@ export default function App() {
           <OnboardLevel
             name={name}
             settings={progress.settings}
+            onClose={cancelAdd}
             onDone={(patch) => {
+              addingFrom.current = null
               setProgress((p) => ({ ...p, onboarded: true, settings: { ...p.settings, ...patch } }))
               void speak([
                 { text: 'Hello.', lang: 'en' },
@@ -512,6 +528,7 @@ export default function App() {
             }}
           />
         )
+      }
       case 'account':
         return (
           <AccountScreen

@@ -112,16 +112,19 @@ export function SettingsScreen({
                       onClick={() => !c.on && onSwitchChild(c.id)}
                       aria-label={c.on ? `${c.name} (se joacă acum)` : `Treci la ${c.name}`}
                       aria-pressed={c.on}
+                      data-tip={c.on ? undefined : 'Alege personajul'}
                     >
                       <span className="set-kid-face">
                         <Mascot kind={c.mascot} size={58} mood="idle" outfit={{}} />
                       </span>
+                      {c.on && <span className="set-kid-badge">Activ</span>}
                       <b>{c.name}</b>
                     </button>
                     {!c.on && (
                       <button
                         className="set-kid-x"
                         aria-label={`Șterge profilul lui ${c.name}`}
+                      data-tip="Șterge personajul"
                         onClick={() => {
                           if (window.confirm(`Ștergi profilul lui ${c.name} și progresul lui?`)) onRemoveChild(c.id)
                         }}

@@ -16,22 +16,36 @@ function Steps({ at }: { at: 1 | 2 | 3 }) {
   )
 }
 
+/** Close (×) at the top right, shown only while adding another child: cancels without creating it. */
+function Close({ onClose }: { onClose?: () => void }) {
+  if (!onClose) return null
+  return (
+    <button className="ob-close" onClick={onClose} aria-label="Renunță la copilul nou">
+      ×
+    </button>
+  )
+}
+
 /** First run, step 1: the parent types the child's name. Step 2 is the friend picker. */
 export function OnboardName({
   initial,
   canLogIn,
   onNext,
   onLogIn,
+  onClose,
 }: {
   initial: string
   canLogIn: boolean
   onNext: (name: string) => void
   onLogIn: () => void
+  /** Set when adding another child from Settings. */
+  onClose?: () => void
 }) {
   const [name, setName] = useState(initial)
   const clean = name.trim()
   return (
     <div className="setup-screen ob ob-sky">
+      <Close onClose={onClose} />
       <Steps at={1} />
       <h1 className="ob-logo">
         <TudooLogo />
@@ -88,15 +102,19 @@ export function OnboardLevel({
   name,
   settings,
   onDone,
+  onClose,
 }: {
   name: string
   settings: Settings
   onDone: (patch: Partial<Settings>) => void
+  /** Set when adding another child from Settings. */
+  onClose?: () => void
 }) {
   const [skip, setSkip] = useState(settings.skipUnits)
   const [lang, setLang] = useState(settings.instructions)
   return (
     <div className="setup-screen ob">
+      <Close onClose={onClose} />
       <Steps at={3} />
       <div className="ob-q">
         <span className="ob-q-friend">
