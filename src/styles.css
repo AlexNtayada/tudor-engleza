@@ -4353,3 +4353,40 @@ button.avatar:active {
 .bm-boss .bm-avatar-left {
   right: 62px;
 }
+
+/* white theme banner on the map, for more contrast */
+.unit-banner.bm-banner {
+  background: #fff;
+  align-items: center;
+  padding-top: 12px;
+  padding-bottom: 12px;
+}
+
+.bm-title {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.bm-icon {
+  display: grid;
+  place-items: center;
+  width: 54px;
+  height: 54px;
+  border-radius: 16px;
+  font-size: 30px;
+}
+
+.bm-banner .unit-banner-sub {
+  color: #6b5a48;
+  opacity: 1;
+}
+
+@media (max-width: 640px) {
+  .bm-icon {
+    width: 44px;
+    height: 44px;
+    font-size: 24px;
+    border-radius: 13px;
+  }
+}
