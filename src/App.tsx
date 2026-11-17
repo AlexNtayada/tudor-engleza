@@ -494,7 +494,7 @@ export default function App() {
             onLogIn={() => setScreen({ name: 'account', back: 'onboard' })}
             onNext={(childName) => {
               setProgress((p) => ({ ...p, settings: { ...p.settings, childName } }))
-              void speak([{ text: `Hello, ${childName}!`, lang: 'en' }, ...instruction(progress.settings.instructions, 'Alege-ți un prieten!', 'Pick a friend!')])
+              void speak([{ text: 'Hello.', lang: 'en' }, ...instruction(progress.settings.instructions, 'Alege-ți un prieten!', 'Pick a friend!')])
               setScreen({ name: 'pick', back: 'onboard' })
             }}
           />
@@ -505,8 +505,8 @@ export default function App() {
             onDone={(patch) => {
               setProgress((p) => ({ ...p, onboarded: true, settings: { ...p.settings, ...patch } }))
               void speak([
-                { text: `Hello, ${name}!`, lang: 'en' },
-                ...instruction(patch.instructions ?? progress.settings.instructions, 'Hai să învățăm engleză!', "Let's learn English!"),
+                { text: 'Hello.', lang: 'en' },
+                ...instruction(patch.instructions ?? progress.settings.instructions, 'Hai să învățăm engleză.', "Let's learn English!"),
               ])
               setScreen({ name: 'home' })
             }}
