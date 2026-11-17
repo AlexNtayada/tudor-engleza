@@ -11,6 +11,9 @@
 //   --list-voices             print the voices on the account and exit
 //   --redo                    record again even when a clip exists (use with --voices)
 //   --match "^Hello"          only lines matching this regex (with --redo: re-record just those)
+//
+// voices.json "spoken" can give a line a different text to send to ElevenLabs (same clip key), e.g.
+// "Hat." for "hat" when the bare word comes out with an extra vowel.
 
 import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { dirname, join } from 'node:path'
@@ -57,7 +60,8 @@ async function credits() {
 async function record(line: Line): Promise<Buffer> {
   const voice = config.voices[line.voice]
   const model = config.models[line.lang]
-  const body: Record<string, unknown> = { text: line.text, model_id: model, voice_settings: { ...config.settings, ...(voice.settings ?? {}) } }
+  const text = config.spoken?.[line.voice]?.[line.text] ?? line.text
+  const body: Record<string, unknown> = { text, model_id: model, voice_settings: { ...config.settings, ...(voice.settings ?? {}) } }
   if (/v2_5|v3/.test(model)) body.language_code = line.lang
   for (let attempt = 1; ; attempt++) {
     try {
@@ -76,8 +80,11 @@ async function record(line: Line): Promise<Buffer> {
   }
 }
 
-function writeManifest() {
+function writeManifest(redone: string[] = []) {
   const voices: Record<string, string[]> = {}
+  const file = join(audioDir, 'manifest.json')
+  const v: Record<string, number> = existsSync(file) ? (JSON.parse(readFileSync(file, 'utf8')).v ?? {}) : {}
+  for (const k of redone) v[k] = (v[k] ?? 1) + 1
   if (existsSync(audioDir))
     for (const d of readdirSync(audioDir, { withFileTypes: true })) {
       if (!d.isDirectory()) continue
@@ -87,7 +94,7 @@ function writeManifest() {
         .sort()
       if (hashes.length) voices[d.name] = hashes
     }
-  writeFileSync(join(audioDir, 'manifest.json'), JSON.stringify({ voices }) + '\n')
+  writeFileSync(file, JSON.stringify(Object.keys(v).length ? { voices, v } : { voices }) + '\n')
   return voices
 }
 
@@ -124,16 +131,19 @@ async function main() {
   if (!key) throw new Error('ELEVENLABS_API_KEY is not set')
 
   let done = 0
+  const redone: string[] = []
   try {
     for (const l of todo) {
       const mp3 = await record(l)
       mkdirSync(join(audioDir, l.voice), { recursive: true })
-      writeFileSync(join(audioDir, l.voice, `${clipHash(l.voice, l.text)}.mp3`), mp3)
+      const out = join(audioDir, l.voice, `${clipHash(l.voice, l.text)}.mp3`)
+      if (existsSync(out)) redone.push(`${l.voice}/${clipHash(l.voice, l.text)}`)
+      writeFileSync(out, mp3)
       done++
       if (done % 50 === 0) console.log(`${done}/${todo.length}`)
     }
   } finally {
-    const v = writeManifest()
+    const v = writeManifest(redone)
     console.log(`Recorded ${done} clips. Manifest now has`, Object.fromEntries(Object.entries(v).map(([k, h]) => [k, h.length])))
   }
 }

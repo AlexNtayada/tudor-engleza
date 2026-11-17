@@ -14,7 +14,6 @@ import { BOSS_HP } from '../lessons'
 import { Boss, bossFor, type BossMood } from '../components/Boss'
 import { WorldBackdrop } from '../components/WorldBackdrop'
 
-const PRAISE = ['Great job!', 'Yes!', 'Awesome!', 'Super!', 'Well done!']
 const cap = (s: string) => s.charAt(0).toUpperCase() + s.slice(1)
 
 function introParts(mode: Settings['instructions'], w: Word): Part[] {
@@ -164,10 +163,8 @@ export function LessonScreen({
         setTimeout(() => sfx.fanfare(), 250)
       }
     }
-    void speak([
-      { text: praise ?? PRAISE[Math.floor(Math.random() * PRAISE.length)], lang: 'en' },
-      { text: isCombo ? 'Super combo!' : w.say, lang: 'en' },
-    ])
+    // Just the word again (or the game's own short line first). No cheer: the parent found it too loud.
+    void speak([...(praise ? [{ text: praise, lang: 'en' as const }] : []), { text: w.say, lang: 'en' }])
     setTimeout(next, isCombo ? 2300 : 1700)
   }
 

@@ -13,7 +13,6 @@ import { PACKS, type Pack, type Sentence, type Thing } from './data'
 import { splitAtKey, type SentenceStep } from './lessons'
 import './propozitii.css'
 
-const PRAISE = ['Great job!', 'Yes!', 'Awesome!', 'Super!', 'Well done!']
 
 /** English part for the voice. */
 const sayEn = (text: string): Part => ({ text, lang: 'en' })
@@ -192,7 +191,7 @@ export function SentenceLesson({
   const onCorrect = (lead?: string) => {
     sfx.correct()
     setMood('happy')
-    void speak([sayEn(lead ?? PRAISE[Math.floor(Math.random() * PRAISE.length)]), sayEn(step.sentence.text)])
+    void speak([...(lead ? [sayEn(lead)] : []), sayEn(step.sentence.text)])
     setTimeout(next, 2400)
   }
 

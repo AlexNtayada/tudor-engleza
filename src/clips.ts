@@ -9,6 +9,8 @@ export type VoiceId = string
 
 export interface Manifest {
   voices: Record<VoiceId, string[]>
+  /** Clips recorded again get a new version, so phones that cached the old file fetch the new one. */
+  v?: Record<string, number>
 }
 
 /** Same text, same clip: trims and collapses spaces so small formatting changes don't miss a clip. */
@@ -33,6 +35,13 @@ export function clipHash(voice: VoiceId, text: string): string {
 
 export function clipPath(voice: VoiceId, text: string): string {
   return `audio/${voice}/${clipHash(voice, text)}.mp3`
+}
+
+/** URL of a clip, with its version when it was recorded again. */
+export function clipUrl(voice: VoiceId, text: string): string {
+  const hash = clipHash(voice, text)
+  const v = (manifest as Manifest).v?.[`${voice}/${hash}`]
+  return `audio/${voice}/${hash}.mp3${v ? `?v=${v}` : ''}`
 }
 
 const sets: Record<VoiceId, Set<string>> = {}
