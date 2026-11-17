@@ -62,10 +62,11 @@ let token = 0
 let current: HTMLAudioElement | undefined
 let stopCurrent: (() => void) | undefined
 
-function playClip(src: string, rate: number): Promise<boolean> {
+function playClip(src: string, rate: number, volume = 1): Promise<boolean> {
   return new Promise((resolve) => {
     const a = new Audio(src)
     a.playbackRate = rate
+    a.volume = volume
     a.preservesPitch = true
     current = a
     let settled = false
@@ -88,7 +89,7 @@ function playClip(src: string, rate: number): Promise<boolean> {
   })
 }
 
-function sayWithBrowser(part: Part, rate: number): Promise<void> {
+function sayWithBrowser(part: Part, rate: number, volume = 1): Promise<void> {
   if (!synth) return Promise.resolve()
   const voice = pickVoice(part.lang)
   if (part.lang === 'ro' && !voice) return Promise.resolve()
@@ -98,6 +99,7 @@ function sayWithBrowser(part: Part, rate: number): Promise<void> {
     u.lang = part.lang === 'en' ? 'en-US' : 'ro-RO'
     u.rate = rate
     u.pitch = 1.1
+    u.volume = volume
     let settled = false
     const finish = () => {
       if (settled) return
@@ -127,10 +129,11 @@ function halt() {
 /**
  * Speak parts in order, cancelling anything still playing. Resolves when done (or interrupted).
  * `friend` makes another friend talk (the picker lets each one introduce itself).
+ * `volume` (0-1) plays it softer, e.g. the greeting when the app opens.
  */
 export async function speak(
   parts: Part[],
-  opts: { slow?: boolean; roRate?: number; friend?: VoiceId } = {},
+  opts: { slow?: boolean; roRate?: number; friend?: VoiceId; volume?: number } = {},
 ): Promise<void> {
   halt()
   refreshVoices()
@@ -143,11 +146,11 @@ export async function speak(
     if (voice) {
       // Clips are recorded at a natural pace; slow mode just plays them slower.
       const rate = part.lang === 'en' ? (s ? 0.7 : 1) : opts.roRate !== undefined && opts.roRate < 0.8 ? 0.75 : 1
-      const ok = await playClip(`${import.meta.env.BASE_URL}${clipPath(voice, part.text)}`, rate)
+      const ok = await playClip(`${import.meta.env.BASE_URL}${clipPath(voice, part.text)}`, rate, opts.volume)
       if (ok) continue
       if (my !== token) return
     }
-    await sayWithBrowser(part, part.lang === 'en' ? (s ? 0.5 : 0.8) : (opts.roRate ?? 0.95))
+    await sayWithBrowser(part, part.lang === 'en' ? (s ? 0.5 : 0.8) : (opts.roRate ?? 0.95), opts.volume)
   }
 }
 
