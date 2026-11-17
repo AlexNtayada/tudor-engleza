@@ -4979,3 +4979,73 @@ button.avatar:active {
     font-size: 13px;
   }
 }
+
+/* ======================================================
+   Sky and grass: the home band matches the tudoo.ro homepage
+   (light sky, a strip of green grass, green for what is active).
+   ====================================================== */
+
+.hero-band {
+  background: linear-gradient(180deg, #cfeeff 0%, #e6f6ff 62%, #f1faff 100%);
+  box-shadow: none;
+}
+
+/* the grass hill along the bottom of the band */
+.hero-band::after {
+  content: '';
+  position: absolute;
+  left: -10%;
+  right: -10%;
+  bottom: -62px;
+  height: 124px;
+  border-radius: 50% 50% 0 0;
+  background: #6cc551;
+  box-shadow: inset 0 10px 0 #84d36a;
+  pointer-events: none;
+}
+
+/* soft clouds instead of the sun rings */
+.hero-band .hero-sun {
+  background:
+    radial-gradient(ellipse 70px 26px at 12% 30%, rgba(255, 255, 255, 0.9) 98%, transparent),
+    radial-gradient(ellipse 46px 20px at 16% 24%, rgba(255, 255, 255, 0.9) 98%, transparent),
+    radial-gradient(ellipse 80px 28px at 88% 22%, rgba(255, 255, 255, 0.85) 98%, transparent),
+    radial-gradient(ellipse 50px 22px at 84% 16%, rgba(255, 255, 255, 0.85) 98%, transparent);
+}
+
+.hero-band .hero-hello {
+  color: #1f6b4f;
+}
+
+.hero-band .level-card {
+  box-shadow: 0 10px 24px rgba(30, 90, 60, 0.16);
+}
+
+.appbar-hero .nav-link {
+  color: #5a4a33;
+  background: #fff;
+  box-shadow: 0 3px 0 #d3e7f1;
+}
+
+.appbar-hero .nav-link:hover {
+  background: #fff;
+  color: #3d2f22;
+}
+
+.appbar-hero .nav-link.on,
+.appbar .nav-link.on {
+  background: var(--green);
+  color: #fff;
+  box-shadow: 0 4px 0 var(--green-dark);
+}
+
+.appbar-hero .profile-stars {
+  background: #fff;
+}
+
+@media (max-width: 900px) {
+  .tabbar .nav-link.on {
+    background: #e3f7ec;
+    color: var(--green-dark);
+  }
+}

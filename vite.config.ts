@@ -17,7 +17,7 @@ export default defineConfig({
         short_name: 'Tudoo!',
         description: 'Engleză pentru Tudor, cu prietenii lui',
         lang: 'ro',
-        theme_color: '#ffc21a',
+        theme_color: '#cfeeff',
         background_color: '#ffc21a',
         display: 'standalone',
         orientation: 'any',
