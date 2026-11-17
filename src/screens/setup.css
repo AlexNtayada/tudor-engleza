@@ -975,8 +975,16 @@
 }
 
 /* Settings → Copii: the active child's badge and hover tips on the other children and the × */
+.set-kid-pick {
+  position: relative;
+}
+
+/* sits on top of the avatar, so every child's name stays on the same line */
 .set-kid-badge {
-  margin-top: -14px;
+  position: absolute;
+  top: -9px;
+  left: 50%;
+  transform: translateX(-50%);
   z-index: 1;
   padding: 2px 9px;
   border-radius: 999px;
