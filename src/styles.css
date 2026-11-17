@@ -4176,13 +4176,12 @@ button.avatar:active {
 
 .bm-stars {
   position: absolute;
-  top: -66px;
-  left: -48px;
-  width: 96px;
-  height: 40px;
+  top: -76px;
+  left: -60px;
+  width: 120px;
+  height: 54px;
   overflow: visible;
   pointer-events: none;
-  filter: drop-shadow(0 2px 0 rgba(0, 0, 0, 0.12));
 }
 
 .bm-boss .bm-stone {
@@ -4201,7 +4200,7 @@ button.avatar:active {
 }
 
 .bm-boss .bm-stars {
-  top: -130px;
+  top: -140px;
 }
 
 .bm-boss-label {

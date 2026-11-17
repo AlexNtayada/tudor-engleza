@@ -31,22 +31,27 @@ function starPoints(cx: number, cy: number, r: number) {
   }).join(' ')
 }
 
-/** Three stars in an arc above a finished stone: gold if earned, dark if not. */
+/** Three chunky stars with rounded corners in an arc above a finished stone: gold if earned, empty if not. */
 function Stars({ count }: { count: number }) {
   const spots = [
-    [-30, 12, 13],
-    [0, 4, 15],
-    [30, 12, 13],
+    [-33, 12, 13],
+    [0, 3, 16],
+    [33, 12, 13],
   ]
+  const round = { strokeLinejoin: 'round' as const }
   return (
-    <svg className="bm-stars" viewBox="-50 -14 100 42" aria-label={`${count} din 3 stele`}>
+    <svg className="bm-stars" viewBox="-56 -18 112 50" aria-label={`${count} din 3 stele`}>
       {spots.map(([x, y, r], i) => {
         const on = i < count
+        const pts = starPoints(x, y, r)
         return (
           <g key={i}>
-            <polygon points={starPoints(x, y + 2, r)} fill={on ? '#e2a400' : 'rgba(60,40,20,0.25)'} />
-            <polygon points={starPoints(x, y, r)} fill={on ? '#ffcf33' : '#7a5f45'} opacity={on ? 1 : 0.6} />
-            {on && <circle cx={x - r * 0.25} cy={y - r * 0.3} r={r * 0.18} fill="#fff6c8" />}
+            {/* soft drop + dark rim, then the face; thick round-joined strokes round off every corner */}
+            <polygon points={starPoints(x, y + 3, r)} fill="rgba(40,25,5,0.28)" stroke="rgba(40,25,5,0.28)" strokeWidth={r * 0.7} {...round} />
+            <polygon points={pts} fill={on ? '#c98500' : '#8a7560'} stroke={on ? '#c98500' : '#8a7560'} strokeWidth={r * 0.7} {...round} />
+            <polygon points={pts} fill={on ? '#ffc61a' : '#efe6d6'} stroke={on ? '#ffc61a' : '#efe6d6'} strokeWidth={r * 0.36} {...round} />
+            {on && <polygon points={starPoints(x - r * 0.08, y - r * 0.12, r * 0.55)} fill="#ffe27a" stroke="#ffe27a" strokeWidth={r * 0.2} {...round} />}
+            {on && <ellipse cx={x - r * 0.32} cy={y - r * 0.38} rx={r * 0.2} ry={r * 0.13} fill="#fffbe6" transform={`rotate(-30 ${x - r * 0.32} ${y - r * 0.38})`} />}
           </g>
         )
       })}
