@@ -621,9 +621,18 @@ body.meadow {
 
 .facts b {
   display: block;
+  font-variant-numeric: tabular-nums;
   font-size: 44px;
   line-height: 1;
   color: var(--grass-dark);
+}
+
+.facts b.counted {
+  animation: count-pop 0.35s ease-out;
+}
+
+@keyframes count-pop {
+  50% { transform: scale(1.15); }
 }
 
 .facts span {
