@@ -15,9 +15,10 @@
 // voices.json "spoken" can give a line a different text to send to ElevenLabs (same clip key), e.g.
 // "Hat." for "hat" when the bare word comes out with an extra vowel.
 
-import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from 'node:fs'
+import { existsSync, mkdirSync, readdirSync, readFileSync, renameSync, writeFileSync } from 'node:fs'
 import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
+import { execFileSync } from 'node:child_process'
 import { clipHash } from '../../src/clips'
 import { collectLines, type Line } from './lines'
 
@@ -80,6 +81,17 @@ async function record(line: Line): Promise<Buffer> {
   }
 }
 
+/** Some voices come out much louder than others; bring every clip to the same loudness (needs ffmpeg). */
+function evenLoudness(file: string) {
+  const tmp = `${file}.tmp.mp3`
+  try {
+    execFileSync('ffmpeg', ['-loglevel', 'error', '-y', '-i', file, '-af', 'loudnorm=I=-16:TP=-2:LRA=11', '-ar', '44100', '-b:a', '64k', tmp])
+    renameSync(tmp, file)
+  } catch {
+    // No ffmpeg: keep the clip as ElevenLabs made it.
+  }
+}
+
 function writeManifest(redone: string[] = []) {
   const voices: Record<string, string[]> = {}
   const file = join(audioDir, 'manifest.json')
@@ -139,6 +151,7 @@ async function main() {
       const out = join(audioDir, l.voice, `${clipHash(l.voice, l.text)}.mp3`)
       if (existsSync(out)) redone.push(`${l.voice}/${clipHash(l.voice, l.text)}`)
       writeFileSync(out, mp3)
+      evenLoudness(out)
       done++
       if (done % 50 === 0) console.log(`${done}/${todo.length}`)
     }
