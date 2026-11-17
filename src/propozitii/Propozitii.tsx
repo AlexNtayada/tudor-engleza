@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import type React from 'react'
 import type { Word } from '../content'
-import { Ninja, type Mood } from '../components/Ninja'
+import { Mascot, type Mood } from '../components/Mascot'
 import { Picture } from '../components/Picture'
 import { MicButton, micFeedback, type MicResult } from '../components/MicButton'
 import { WorldBackdrop } from '../components/WorldBackdrop'
@@ -224,7 +224,7 @@ export function SentenceLesson({
         </header>
 
         <div className="lesson-guide">
-          <Ninja mood={mood} size={130} />
+          <Mascot mood={mood} size={130} />
           <div className="bubble">
             <span className="bubble-text">{bubbleText(step)}</span>
             <span className="speak-btns">
@@ -515,7 +515,7 @@ export function Propozitii({ progress, onStart }: { progress: Progress; onStart:
     <div className="page page-white pz-page">
       <h2 className="page-title">Propoziții</h2>
       <div className="play-hello">
-        <Ninja mood="talk" size={110} />
+        <Mascot mood="talk" size={110} />
         <span className="bubble">Alege un joc și spunem propoziții întregi!</span>
       </div>
       <div className="pz-grid">

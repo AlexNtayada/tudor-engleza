@@ -1,5 +1,6 @@
 import { ALL_LESSONS, UNITS } from './content'
 import type { Slot } from './gamify'
+import type { MascotId } from './mascots'
 
 export interface Settings {
   childName: string
@@ -21,15 +22,15 @@ export interface Progress {
   /** Seconds played per day, keyed YYYY-MM-DD. */
   playSeconds: Record<string, number>
   settings: Settings
-  /** Stars Tudor can spend in Ninja's wardrobe. */
+  /** Stars Tudor can spend in the friend's wardrobe. */
   wallet: number
-  /** All stars ever earned (drives Ninja's level). */
+  /** All stars ever earned (drives the friend's level). */
   earned: number
   /** Days (YYYY-MM-DD) with at least one finished lesson. */
   daysPlayed: string[]
   /** Last day the daily chest was opened. */
   lastChest: string
-  /** Wardrobe items bought, and what Ninja wears per slot. */
+  /** Wardrobe items bought, and what the friend wears per slot. */
   owned: string[]
   outfit: Partial<Record<Slot, string>>
   /** Boss tests per unit id: best score (0..1), tries, and whether the boss was beaten. */
@@ -38,6 +39,8 @@ export interface Progress {
   speechLog: Record<string, string[]>
   /** Sentence packs: best stars per pack id. */
   sentences: Record<string, number>
+  /** The friend picked in the intro; unset until the child picks one. */
+  mascot?: MascotId
 }
 
 export interface BossRecord {

@@ -1,3 +1,4 @@
+import { mascot } from '../mascots'
 // Speech-therapy content (in Romanian) for the sounds R and L.
 // Playful practice at home; it complements, never replaces, a speech therapist.
 
@@ -222,11 +223,11 @@ export const POSITIONS: { id: Position; label: string; mark: (l: string) => stri
 ]
 
 export const ACTIVITIES: { id: ActivityId; name: string; emoji: (s: SoundInfo) => string; hint: string }[] = [
-  { id: 'warmup', name: 'Gimnastica limbii', emoji: () => '👅', hint: 'Imită gura lui Ninja' },
+  { id: 'warmup', name: 'Gimnastica limbii', emoji: () => '👅', get hint() { return `Imită gura lui ${mascot().name}` } },
   { id: 'sound', name: 'Sunetul', emoji: (s) => s.vehicle, hint: 'Ține sunetul lung' },
   { id: 'syllables', name: 'Trenul silabelor', emoji: () => '🚂', hint: 'ra, re, ri…' },
   { id: 'words', name: 'Cuvinte', emoji: () => '🖼️', hint: 'La început, mijloc, sfârșit' },
-  { id: 'listen', name: 'Urechiușa', emoji: () => '👂', hint: 'A greșit Ninja?' },
+  { id: 'listen', name: 'Urechiușa', emoji: () => '👂', get hint() { return `A greșit ${mascot().name}?` } },
 ]
 
 /** The way Tudor sometimes says it: the sound replaced by "i" (rață → iață). */

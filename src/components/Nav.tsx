@@ -1,5 +1,6 @@
+import { mascot } from '../mascots'
 import { useEffect, useRef, useState } from 'react'
-import { Ninja } from './Ninja'
+import { Mascot } from './Mascot'
 import { levelFor } from '../gamify'
 import type { Progress } from '../progress'
 
@@ -17,7 +18,7 @@ const TABS: { id: Tab; icon: string; label: string }[] = [
 function Logo() {
   return (
     <span className="logo">
-      <Ninja size={52} mood="idle" />
+      <Mascot size={52} mood="idle" />
       <span className="logo-text">
         Ninja <b>English</b>
       </span>
@@ -64,14 +65,14 @@ export function Nav({ tab, progress, onTab }: { tab: Tab; progress: Progress; on
           <Logo />
         </button>
         <nav className="appbar-links">{links}</nav>
-        <div className="profile" aria-label={`Ninja, nivelul ${levelFor(progress.earned)}, ${progress.wallet} stele`}>
+        <div className="profile" aria-label={`${mascot().name}, nivelul ${levelFor(progress.earned)}, ${progress.wallet} stele`}>
           <span className="profile-stars">
             <span className="profile-star">⭐</span>
             <b>{progress.wallet}</b>
           </span>
-          <button className={`avatar ${tab === 'dino' ? 'avatar-on' : ''}`} onClick={() => onTab('dino')} aria-label="Pagina lui Ninja" title="Pagina lui Ninja">
+          <button className={`avatar ${tab === 'dino' ? 'avatar-on' : ''}`} onClick={() => onTab('dino')} aria-label={`Pagina lui ${mascot().name}`} title={`Pagina lui ${mascot().name}`}>
             <span className="avatar-face">
-              <Ninja size={92} mood="idle" />
+              <Mascot size={92} mood="idle" />
             </span>
             <span className="avatar-level">{levelFor(progress.earned)}</span>
           </button>

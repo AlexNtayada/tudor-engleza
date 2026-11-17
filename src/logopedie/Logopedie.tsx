@@ -1,6 +1,7 @@
+import { mascot } from '../mascots'
 import { useEffect, useState } from 'react'
 import type React from 'react'
-import { Ninja } from '../components/Ninja'
+import { Mascot } from '../components/Mascot'
 import { micSupported } from '../recorder'
 import { hasRomanianVoice, speakRo, stopSpeaking } from '../speech'
 import { sfx } from '../sfx'
@@ -85,7 +86,7 @@ export function Logopedie({
             <i key={i} style={{ left: `${(i * 37) % 100}%`, animationDelay: `${(i % 8) * 0.15}s` }} />
           ))}
         </div>
-        <Ninja mood="dance" size={200} />
+        <Mascot mood="dance" size={200} />
         <div className="finish-gains">
           <span className="gain">+{SPEECH_STARS} ⭐</span>
         </div>
@@ -170,7 +171,7 @@ export function Logopedie({
     <div className="page page-white lp-page">
       <h2 className="page-title">Sunetele vesele</h2>
       <div className="play-hello">
-        <Ninja mood="talk" size={110} />
+        <Mascot mood="talk" size={110} />
         <span className="bubble">Cu ce sunet ne jucăm azi?</span>
       </div>
       <div className="lp-sounds">
@@ -193,7 +194,7 @@ export function Logopedie({
       </div>
       {!hasRo && (
         <p className="note warn lp-note">
-          Pentru părinți: pe acest dispozitiv nu există o voce românească, așa că Ninja nu poate rosti exercițiile. Citiți
+          Pentru părinți: pe acest dispozitiv nu există o voce românească, așa că {mascot().name} nu poate rosti exercițiile. Citiți
           voi textul din bulă. Cea mai simplă soluție pe PC: deschideți aplicația în <b>Microsoft Edge</b>, care are voci
           românești incluse.
         </p>
