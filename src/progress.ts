@@ -9,6 +9,8 @@ export interface Settings {
   mic: boolean
   /** Use the browser's speech recognition to check the word (audio goes to the browser's speech service). */
   micCheck: boolean
+  /** Keep speech-therapy recordings on this device so a parent can listen later. */
+  speechSave: boolean
 }
 
 export interface Progress {
@@ -29,6 +31,8 @@ export interface Progress {
   /** Wardrobe items bought, and what Ninja wears per slot. */
   owned: string[]
   outfit: Partial<Record<'head' | 'face' | 'neck', string>>
+  /** Speech-therapy practice: per day, the activities finished (e.g. "r:words"). */
+  speechLog: Record<string, string[]>
 }
 
 const KEY = 'dino-english-progress-v1'
@@ -43,7 +47,8 @@ export const DEFAULT_PROGRESS: Progress = {
   lastChest: '',
   owned: [],
   outfit: {},
-  settings: { childName: 'Tudor', instructions: 'ro', slowVoice: false, mic: true, micCheck: true },
+  speechLog: {},
+  settings: { childName: 'Tudor', instructions: 'ro', slowVoice: false, mic: true, micCheck: true, speechSave: true },
 }
 
 export function loadProgress(): Progress {
