@@ -6,7 +6,7 @@ import { currentLessonIndex, learnedWordIds, today, type Progress } from '../pro
 import { levelFor, levelProgress, STARS_PER_LEVEL, streakDays } from '../gamify'
 import type { Tab } from '../components/Nav'
 import { WorldBackdrop } from '../components/WorldBackdrop'
-import { Boss, BOSS_NAME } from '../components/Boss'
+import { Boss, bossFor } from '../components/Boss'
 import { instruction, speak } from '../speech'
 import { sfx } from '../sfx'
 
@@ -77,12 +77,12 @@ export function Home({
                         sfx.tap()
                         onStart(g)
                       }}
-                      aria-label={isBoss ? `${unit.title}: ${BOSS_NAME}, testul temei` : `${unit.title} lecția ${i + 1}`}
+                      aria-label={isBoss ? `${unit.title}: ${bossFor(unit.id).name}, testul temei` : `${unit.title} lecția ${i + 1}`}
                     >
                       {isBoss ? (
                         <Boss
-                          color={state === 'locked' ? '#cfc6b6' : unit.color}
-                          dark={state === 'locked' ? '#b3a994' : unit.colorDark}
+                          unitId={unit.id}
+                          locked={state === 'locked'}
                           mood={state === 'done' ? 'down' : 'idle'}
                           size={92}
                         />
@@ -94,7 +94,7 @@ export function Home({
                         '▶'
                       )}
                     </button>
-                    {isBoss && <span className="node-boss-label">{state === 'done' ? '🏆 Învins!' : '⚔️ BOSS'}</span>}
+                    {isBoss && <span className="node-boss-label">{state === 'done' ? '🏆 Învins!' : `⚔️ ${bossFor(unit.id).name}`}</span>}
                     {state === 'done' && (
                       <div className="node-stars">
                         {[1, 2, 3].map((s) => (
@@ -229,7 +229,7 @@ function DailyChallenges({
       color: next.unit.color,
       title: 'O lecție pe hartă',
       sub: next.lesson.boss
-        ? `Urmează: testul temei ${next.unit.title}`
+        ? `Urmează: ${bossFor(next.unit.id).name}, testul temei ${next.unit.title}`
         : `Urmează: ${next.unit.title}, lecția ${next.unit.lessons.indexOf(next.lesson) + 1}`,
       badge: '3 ⭐',
       done: progress.daysPlayed.includes(day),

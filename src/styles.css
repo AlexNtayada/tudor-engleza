@@ -4021,3 +4021,50 @@ button.avatar:hover {
 button.avatar:active {
   transform: scale(0.94);
 }
+
+/* one boss per unit */
+.boss-locked svg {
+  filter: grayscale(1) brightness(1.15) contrast(0.7);
+  opacity: 0.7;
+}
+
+.boss-locked .boss-body {
+  animation: none;
+}
+
+.boss-info .boss-title {
+  margin-top: -4px;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--muted);
+}
+
+.boss-table-name {
+  color: var(--muted);
+  font-weight: 600;
+}
+
+.boss-blink {
+  animation: bossBlink 1.2s steps(2, jump-none) infinite;
+}
+
+@keyframes bossBlink {
+  50% {
+    fill: #ffd23f;
+  }
+}
+
+.boss-rain {
+  animation: bossRain 0.9s linear infinite;
+}
+
+@keyframes bossRain {
+  from {
+    transform: translateY(-6px);
+    opacity: 0.4;
+  }
+  to {
+    transform: translateY(6px);
+    opacity: 1;
+  }
+}

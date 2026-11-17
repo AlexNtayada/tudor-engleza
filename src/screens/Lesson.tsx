@@ -10,7 +10,7 @@ import { MicButton, micFeedback, type MicResult } from '../components/MicButton'
 import { micSupported } from '../recorder'
 import { COMBO_EVERY } from '../gamify'
 import { BOSS_HP } from '../lessons'
-import { Boss, BOSS_NAME, type BossMood } from '../components/Boss'
+import { Boss, bossFor, type BossMood } from '../components/Boss'
 import { WorldBackdrop } from '../components/WorldBackdrop'
 
 const PRAISE = ['Great job!', 'Yes!', 'Awesome!', 'Super!', 'Well done!']
@@ -74,13 +74,14 @@ export function LessonScreen({
   steps: Step[]
   settings: Settings
   world?: World
-  /** Boss stage colors; when set, first-try answers knock the boss out. */
-  boss?: { color: string; dark: string }
+  /** Unit whose boss guards this stage; when set, first-try answers knock the boss out. */
+  boss?: string
   onFinish: (mistakes: number, combos: number, boss?: BossResult) => void
   onExit: () => void
 }) {
   const [bossHp, setBossHp] = useState(BOSS_HP)
   const [bossMood, setBossMood] = useState<BossMood>('idle')
+  const bossInfo = bossFor(boss)
   const [throwKey, setThrowKey] = useState(0)
   const bossCorrect = useRef(0)
   const bossAnswered = useRef(0)
@@ -103,8 +104,8 @@ export function LessonScreen({
       boss && index === 0 && !slow
         ? instruction(
             settings.instructions,
-            `A venit ${BOSS_NAME}! Răspunde bine din prima ca să-l învingi!`,
-            `Here comes ${BOSS_NAME}! Answer right the first time to beat him!`,
+            `A venit ${bossInfo.name}, ${bossInfo.title}! ${bossInfo.taunt} Răspunde bine din prima ca să-l învingi!`,
+            `Here comes ${bossInfo.name}! Answer right the first time to win!`,
           )
         : []
     void speak([...intro, ...promptParts(settings.instructions, step)], { slow }).then(() =>
@@ -144,7 +145,7 @@ export function LessonScreen({
           setTimeout(() => sfx.fanfare(), 600)
           void speak([
             { text: 'Hooray! You beat the boss!', lang: 'en' },
-            ...instruction(settings.instructions, `L-ai învins pe ${BOSS_NAME}!`, ''),
+            ...instruction(settings.instructions, `L-ai învins pe ${bossInfo.name}!`, ''),
           ])
           setTimeout(() => onFinish(mistakes.current, combos.current, bossResult()), 2600)
           return
@@ -208,7 +209,8 @@ export function LessonScreen({
       {boss && (
         <div className="boss-bar">
           <div className="boss-info">
-            <b>{BOSS_NAME}</b>
+            <b>{bossInfo.name}</b>
+            <small className="boss-title">{bossInfo.title}</small>
             <span className="boss-hp" aria-label={`Viață: ${bossHp}`}>
               {Array.from({ length: BOSS_HP }, (_, i) => (
                 <span key={i} className={i < bossHp ? 'on' : ''}>
@@ -223,7 +225,7 @@ export function LessonScreen({
                 ⭐
               </span>
             )}
-            <Boss color={boss.color} dark={boss.dark} mood={bossMood} size={130} />
+            <Boss unitId={boss} mood={bossMood} size={130} />
           </div>
         </div>
       )}

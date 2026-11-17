@@ -22,7 +22,7 @@ type Screen =
       lessonIndex: number | null
       world: World
       id: number
-      boss?: { color: string; dark: string }
+      boss?: string
     }
   | {
       name: 'finish'
@@ -83,7 +83,7 @@ export default function App() {
       lessonIndex: globalIndex,
       world: unit.world,
       id: Date.now(),
-      boss: lesson.boss ? { color: unit.color, dark: unit.colorDark } : undefined,
+      boss: lesson.boss ? unit.id : undefined,
     })
   }
 

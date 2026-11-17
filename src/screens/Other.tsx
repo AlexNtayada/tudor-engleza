@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { ALL_LESSONS, UNITS } from '../content'
 import { BOSS_BONUS, CHEST_STARS, levelFor, setProgress, itemById, STARS_PER_LEVEL, type Item } from '../gamify'
-import { BOSS_NAME, Boss } from '../components/Boss'
+import { Boss, bossFor } from '../components/Boss'
 import type { BossResult } from './Lesson'
 import { BOSS_HP, BOSS_QUESTIONS } from '../lessons'
 import { Ninja } from '../components/Ninja'
@@ -80,6 +80,8 @@ export function FinishScreen({
 }) {
   const [chestOpen, setChestOpen] = useState(false)
   const lost = !!boss && !boss.defeated
+  const bossUnit = lessonIndex !== null ? ALL_LESSONS[lessonIndex]?.unit.id : undefined
+  const bossName = bossFor(bossUnit).name
   useEffect(() => {
     sfx.fanfare()
     const t = setTimeout(() => {
@@ -88,15 +90,15 @@ export function FinishScreen({
           { text: `Good try, ${name}!`, lang: 'en' },
           ...instruction(
             mode,
-            `${BOSS_NAME} a scăpat de data asta. Mai exersăm puțin și îl prindem!`,
-            `${BOSS_NAME} got away this time. Let's practice and try again!`,
+            `${bossName} a scăpat de data asta. Mai exersăm puțin și îl prindem!`,
+            `${bossName} got away this time. Let's practice and try again!`,
           ),
         ])
         return
       }
       void speak([
         { text: `Great job, ${name}!`, lang: 'en' },
-        ...(boss ? instruction(mode, `Ai trecut testul! ${BOSS_NAME} a fost învins!`, 'You passed the test!') : []),
+        ...(boss ? instruction(mode, `Ai trecut testul! ${bossName} a fost învins!`, 'You passed the test!') : []),
         ...(gifts.length ? instruction(mode, 'Album complet! Ai primit un cadou pentru Ninja!', 'Album complete! A present for Ninja!') : []),
         ...(levelUp ? instruction(mode, `Ura! Ninja a crescut! Nivelul ${levelUp}!`, `Hooray! Ninja is now level ${levelUp}!`) : []),
         ...(sticker ? instruction(mode, 'Bravo! Ai câștigat un abțibild nou!', 'You got a new sticker!') : []),
@@ -110,14 +112,13 @@ export function FinishScreen({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
   if (lost && boss) {
-    const unitColor = lessonIndex !== null ? ALL_LESSONS[lessonIndex]?.unit : undefined
     return (
       <div className="center-screen finish finish-boss-lost">
         <div className="boss-duel">
           <Ninja mood="oops" size={150} />
-          <Boss color={unitColor?.color ?? '#9b6bff'} dark={unitColor?.colorDark ?? '#7a49e0'} mood="laugh" size={150} />
+          <Boss unitId={bossUnit} mood="laugh" size={150} />
         </div>
-        <h2 className="finish-title">{BOSS_NAME} a scăpat de data asta!</h2>
+        <h2 className="finish-title">{bossName} a scăpat de data asta!</h2>
         <p className="finish-sub">
           Din prima: {boss.correct} din {boss.total}. Mai exersăm și îl prindem!
         </p>
@@ -186,7 +187,7 @@ export function FinishScreen({
           </div>
         </div>
 
-        {boss && <p className="finish-sub finish-boss-won">🏆 {BOSS_NAME} a fost învins!</p>}
+        {boss && <p className="finish-sub finish-boss-won">🏆 {bossName} a fost învins!</p>}
         {sticker && <p className="finish-sub">Abțibild nou în album!</p>}
 
         <div className="finish-level">
@@ -460,7 +461,7 @@ export function Parents({
       <section className="panel">
         <h3>Teste (boss)</h3>
         <p className="note">
-          La finalul fiecărei teme, {BOSS_NAME} pune {BOSS_QUESTIONS} întrebări din toate cuvintele temei. Testul e trecut
+          La finalul fiecărei teme, un boss pune {BOSS_QUESTIONS} întrebări din toate cuvintele temei. Testul e trecut
           cu {BOSS_HP} răspunsuri corecte din prima; abia apoi se deschide tema următoare.
         </p>
         <table className="boss-table">
@@ -478,7 +479,7 @@ export function Parents({
               return (
                 <tr key={u.id}>
                   <td>
-                    {u.world.icon} {u.title}
+                    {u.world.icon} {u.title} <small className="boss-table-name">({bossFor(u.id).name})</small>
                   </td>
                   <td>{!r ? '—' : r.beaten ? '✅ trecut' : '⏳ încă nu'}</td>
                   <td>{r ? `${Math.round(r.best * 100)}%` : '—'}</td>
