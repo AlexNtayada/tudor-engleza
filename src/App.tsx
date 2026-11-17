@@ -11,6 +11,7 @@ import { Nav, type Tab } from './components/Nav'
 import { OutfitContext } from './components/Outfit'
 import { instruction, setSlowVoice, speak } from './speech'
 import { micSupported } from './recorder'
+import { Logopedie } from './logopedie/Logopedie'
 
 type Screen =
   | { name: 'start' }
@@ -29,7 +30,7 @@ type Screen =
   | { name: 'break' }
 
 const BREAK_AFTER_SECONDS = 15 * 60
-const TABS: string[] = ['home', 'play', 'album', 'dino', 'parents']
+const TABS: string[] = ['home', 'play', 'speech', 'album', 'dino', 'parents']
 
 export default function App() {
   const [progress, setProgress] = useState<Progress>(loadProgress)
@@ -113,6 +114,18 @@ export default function App() {
 
   const name = progress.settings.childName || 'Tudor'
 
+  const earnSpeech = (key: string, stars: number) =>
+    setProgress((p) => {
+      const d = today()
+      const log = p.speechLog[d] ?? []
+      return {
+        ...p,
+        wallet: p.wallet + stars,
+        earned: p.earned + stars,
+        speechLog: { ...p.speechLog, [d]: log.includes(key) ? log : [...log, key] },
+      }
+    })
+
   const goTab = (t: Tab) => setScreen(t === 'parents' ? { name: 'gate' } : { name: t })
 
   const page = () => {
@@ -134,6 +147,8 @@ export default function App() {
         return <Home progress={progress} onStart={startLesson} />
       case 'play':
         return <Playground progress={progress} onPlay={startFreePlay} />
+      case 'speech':
+        return <Logopedie progress={progress} onEarn={earnSpeech} onParents={() => setScreen({ name: 'gate' })} />
       case 'dino':
         return <NinjaRoom progress={progress} onChange={setProgress} />
       case 'lesson':

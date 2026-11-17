@@ -59,7 +59,12 @@ export interface Recording {
   done: Promise<Take>
 }
 
-export async function startRecording(opts: { maxMs?: number; recognize: boolean }): Promise<Recording | undefined> {
+export async function startRecording(opts: {
+  maxMs?: number
+  recognize: boolean
+  /** Called about 60 times a second with the loudness (0..1) while recording. */
+  onLevel?: (level: number) => void
+}): Promise<Recording | undefined> {
   const s = await getStream()
   if (!s) return undefined
   const maxMs = opts.maxMs ?? 3000
@@ -103,10 +108,12 @@ export async function startRecording(opts: { maxMs?: number; recognize: boolean 
   }
 
   rec.start()
+  const stopMeter = opts.onLevel ? meter(s, opts.onLevel) : () => {}
   let stopped = false
   const stop = () => {
     if (stopped) return
     stopped = true
+    stopMeter()
     if (rec.state !== 'inactive') rec.stop()
     try {
       recognizer?.stop()
@@ -122,6 +129,45 @@ export async function startRecording(opts: { maxMs?: number; recognize: boolean 
   }
 }
 
+let meterCtx: AudioContext | undefined
+
+/** Loudness meter on the microphone stream (only reads volume, never what was said). */
+function meter(s: MediaStream, onLevel: (level: number) => void): () => void {
+  try {
+    meterCtx ??= new AudioContext()
+    if (meterCtx.state === 'suspended') void meterCtx.resume()
+    const src = meterCtx.createMediaStreamSource(s)
+    const an = meterCtx.createAnalyser()
+    an.fftSize = 1024
+    src.connect(an)
+    const buf = new Float32Array(an.fftSize)
+    let raf = 0
+    const tick = () => {
+      an.getFloatTimeDomainData(buf)
+      let sum = 0
+      for (let i = 0; i < buf.length; i++) sum += buf[i] * buf[i]
+      onLevel(Math.min(1, Math.sqrt(sum / buf.length) * 4))
+      raf = requestAnimationFrame(tick)
+    }
+    tick()
+    return () => {
+      cancelAnimationFrame(raf)
+      src.disconnect()
+    }
+  } catch {
+    return () => {}
+  }
+}
+
+/** Video stream for the "mirror" during mouth exercises. */
+export async function getCamera(): Promise<MediaStream | undefined> {
+  try {
+    return await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' }, audio: false })
+  } catch {
+    return undefined
+  }
+}
+
 export function playBlob(blob: Blob): Promise<void> {
   return new Promise((resolve) => {
     const url = URL.createObjectURL(blob)
@@ -133,7 +179,7 @@ export function playBlob(blob: Blob): Promise<void> {
     a.onended = end
     a.onerror = end
     a.play().catch(end)
-    setTimeout(end, 6000)
+    setTimeout(end, 9000)
   })
 }
 

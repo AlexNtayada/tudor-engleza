@@ -1,0 +1,922 @@
+/* ======================================================
+   Logopedie (R and L): same sunny cartoon look
+   ====================================================== */
+
+.lp-page {
+  padding-bottom: 40px;
+}
+
+/* hub: the two sounds */
+.lp-sounds {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin-bottom: 24px;
+}
+
+.lp-sound {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 22px 12px 18px;
+  border-radius: 32px;
+  background: var(--c);
+  color: #fff;
+  border: 4px solid var(--outline);
+  box-shadow: 0 7px 0 var(--outline);
+  transition: transform 0.08s;
+}
+
+.lp-sound:active {
+  transform: translateY(5px);
+  box-shadow: 0 2px 0 var(--outline);
+}
+
+.lp-letter {
+  width: 110px;
+  height: 110px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: #fff;
+  color: var(--c);
+  font-size: 76px;
+  font-weight: 800;
+  line-height: 1;
+  border: 4px solid var(--outline);
+}
+
+.lp-sound-emoji {
+  font-size: 46px;
+  line-height: 1.1;
+}
+
+.lp-sound-title {
+  font-size: 28px;
+  font-weight: 800;
+  -webkit-text-stroke: 1.5px var(--outline);
+  paint-order: stroke fill;
+}
+
+.lp-letter-sm {
+  display: inline-grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  color: #fff;
+  border: 3px solid var(--outline);
+  vertical-align: middle;
+}
+
+/* sound page: the five stations */
+.lp-path {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin: 20px 0 24px;
+}
+
+.lp-station {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 18px;
+  border-radius: 26px;
+  background: #fff;
+  border: 3px solid var(--outline);
+  box-shadow: 0 6px 0 var(--outline);
+  text-align: left;
+}
+
+.lp-station:nth-child(even) {
+  margin-left: 36px;
+}
+
+.lp-station:active {
+  transform: translateY(4px);
+  box-shadow: 0 2px 0 var(--outline);
+}
+
+.lp-station.done {
+  background: var(--teal-soft);
+}
+
+.lp-step {
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--c);
+  color: #fff;
+  font-weight: 800;
+  font-size: 22px;
+  border: 3px solid var(--outline);
+}
+
+.lp-station-emoji {
+  font-size: 44px;
+  line-height: 1;
+}
+
+.lp-station-text {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.lp-station-text b {
+  font-size: 26px;
+  line-height: 1.1;
+}
+
+.lp-station-text small {
+  font-size: 17px;
+  color: var(--muted);
+  font-weight: 700;
+}
+
+.lp-check {
+  font-size: 30px;
+  font-weight: 800;
+  color: var(--green-dark);
+}
+
+/* parents box */
+.lp-parents summary {
+  cursor: pointer;
+  font-size: 20px;
+  font-weight: 800;
+}
+
+.lp-tips {
+  margin: 12px 0 0;
+  padding-left: 22px;
+  font-size: 16px;
+  line-height: 1.45;
+  color: #5e554b;
+}
+
+.lp-tips li + li {
+  margin-top: 6px;
+}
+
+.lp-disclaimer {
+  background: var(--teal-soft);
+  color: #20564f;
+  padding: 12px 14px;
+  border-radius: 14px;
+}
+
+.lp-note {
+  margin: 0 0 20px;
+}
+
+/* activity layout */
+.lp-activity {
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 16px 16px 40px;
+  display: flex;
+  flex-direction: column;
+  min-height: calc(100dvh - 90px);
+}
+
+.lp-top {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.lp-top h2 {
+  margin: 0;
+  font-size: 28px;
+  white-space: nowrap;
+}
+
+.lp-guide .bubble {
+  flex: 1;
+}
+
+.lp-stage {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 22px;
+  padding: 8px 0 24px;
+}
+
+.lp-actions {
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  flex-wrap: wrap;
+  min-height: 130px;
+  padding-bottom: 30px;
+}
+
+.lp-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+  margin: 6px 0 4px;
+}
+
+.lp-tabs button {
+  padding: 8px 16px;
+  border-radius: 999px;
+  border: 3px solid var(--outline);
+  background: #fff;
+  font-size: 18px;
+  font-weight: 800;
+}
+
+.lp-tabs button.on {
+  background: var(--yellow);
+  box-shadow: 0 3px 0 var(--outline);
+}
+
+.lp-mark {
+  font-family: ui-monospace, Menlo, Consolas, monospace;
+  letter-spacing: 1px;
+}
+
+.lp-thumb {
+  font-size: 50px;
+}
+
+/* the highlighted sound inside a word */
+.lp-word {
+  font-size: 54px;
+  font-weight: 800;
+  letter-spacing: 1px;
+}
+
+.lp-hl {
+  color: #ff5a1f;
+  text-decoration: underline wavy #ffc21a;
+  text-underline-offset: 8px;
+}
+
+/* ---------- warm-up mouth ---------- */
+
+.lp-mouth-wrap {
+  position: relative;
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.mouth {
+  max-width: 82vw;
+  height: auto;
+  overflow: visible;
+}
+
+.mouth .m-mouth,
+.mouth .m-tin,
+.mouth .m-tout,
+.mouth .m-tip {
+  transform-box: view-box;
+}
+
+.mouth .m-mouth {
+  transform-origin: 150px 125px;
+}
+
+.mouth .m-tin {
+  transform-origin: 150px 150px;
+}
+
+.mouth .m-tout {
+  display: none;
+  transform-origin: 150px 140px;
+}
+
+.mouth .m-tip {
+  display: none;
+}
+
+.anim-smile-kiss .m-mouth {
+  animation: m-smile-kiss 1.8s ease-in-out infinite;
+}
+
+@keyframes m-smile-kiss {
+  0%,
+  100% {
+    transform: scale(1.12, 0.62);
+  }
+  50% {
+    transform: scale(0.42, 0.62);
+  }
+}
+
+.anim-lick .m-tout,
+.anim-clock .m-tout {
+  display: block;
+}
+
+.anim-lick .m-tin,
+.anim-clock .m-tin,
+.anim-lips .m-tin {
+  opacity: 0;
+}
+
+.anim-lick .m-tout {
+  animation: m-lick 1.4s ease-in-out infinite;
+}
+
+@keyframes m-lick {
+  0%,
+  100% {
+    transform: translateY(-46px) scaleY(0.7);
+  }
+  50% {
+    transform: translateY(6px) scaleY(1.05);
+  }
+}
+
+.anim-clock .m-tout {
+  animation: m-clock 1.2s ease-in-out infinite;
+}
+
+@keyframes m-clock {
+  0%,
+  100% {
+    transform: rotate(-42deg) scaleY(0.9);
+  }
+  50% {
+    transform: rotate(42deg) scaleY(0.9);
+  }
+}
+
+.anim-lips .m-tip {
+  display: block;
+  animation: m-lips 2.4s linear infinite;
+}
+
+@keyframes m-lips {
+  0%,
+  100% {
+    transform: translate(0, 58px);
+  }
+  12.5% {
+    transform: translate(68px, 42px);
+  }
+  25% {
+    transform: translate(98px, 0);
+  }
+  37.5% {
+    transform: translate(68px, -42px);
+  }
+  50% {
+    transform: translate(0, -58px);
+  }
+  62.5% {
+    transform: translate(-68px, -42px);
+  }
+  75% {
+    transform: translate(-98px, 0);
+  }
+  87.5% {
+    transform: translate(-68px, 42px);
+  }
+}
+
+.anim-horse .m-tin {
+  animation: m-horse 1.1s ease-in infinite;
+}
+
+@keyframes m-horse {
+  0%,
+  30% {
+    transform: translateY(0);
+  }
+  50%,
+  78% {
+    transform: translateY(-50px) scaleX(0.9);
+  }
+  86% {
+    transform: translateY(6px);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+.anim-woodpecker .m-tin {
+  animation: m-woodpecker 0.28s ease-in-out infinite;
+}
+
+@keyframes m-woodpecker {
+  0%,
+  100% {
+    transform: translateY(-36px) scaleX(0.75);
+  }
+  50% {
+    transform: translateY(-52px) scaleX(0.75);
+  }
+}
+
+.anim-painter .m-tin {
+  animation: m-painter 2.2s ease-in-out infinite;
+}
+
+@keyframes m-painter {
+  0%,
+  100% {
+    transform: translateY(-52px) scaleX(0.7);
+  }
+  50% {
+    transform: translateY(-26px) scaleX(0.95);
+  }
+}
+
+.anim-swing .m-tin {
+  animation: m-swing 1.6s ease-in-out infinite;
+}
+
+@keyframes m-swing {
+  0%,
+  100% {
+    transform: translateY(-54px) scaleX(0.75);
+  }
+  50% {
+    transform: translateY(4px) scaleX(0.85);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mouth * {
+    animation-duration: 3s !important;
+  }
+}
+
+.lp-count {
+  display: flex;
+  gap: 10px;
+}
+
+.lp-count span {
+  width: 46px;
+  height: 46px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  border: 3px solid var(--outline);
+  background: #fff;
+  font-size: 24px;
+  font-weight: 800;
+  transition: background 0.2s, transform 0.2s;
+}
+
+.lp-count span.on {
+  background: var(--yellow);
+  transform: scale(1.12);
+}
+
+.lp-counting {
+  font-size: 48px;
+  font-weight: 800;
+  color: var(--green-dark);
+  min-width: 140px;
+  text-align: center;
+}
+
+.lp-mirror {
+  position: relative;
+  width: 240px;
+  height: 240px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 6px solid var(--yellow);
+  outline: 4px solid var(--outline);
+  background: #f6f1e7;
+  display: grid;
+  place-items: center;
+  text-align: center;
+  font-weight: 700;
+  padding: 0;
+}
+
+.lp-mirror video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: scaleX(-1);
+}
+
+.lp-mirror p {
+  padding: 24px;
+  font-size: 17px;
+}
+
+.lp-mirror-close {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  width: 44px;
+  height: 44px;
+  font-size: 20px;
+}
+
+.lp-mirror-btn,
+.lp-hold {
+  border: 3px solid var(--outline);
+  box-shadow: 0 4px 0 var(--outline);
+}
+
+.lp-mirror-btn {
+  font-size: 22px;
+}
+
+/* ---------- long sound race ---------- */
+
+.lp-track {
+  position: relative;
+  width: min(760px, 92vw);
+  height: 150px;
+  border-radius: 28px;
+  border: 4px solid var(--outline);
+  box-shadow: 0 6px 0 var(--outline);
+  overflow: hidden;
+  background: linear-gradient(#bfeaff 0 58%, #8fd47a 58% 100%);
+}
+
+.lp-track-r::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 26px;
+  height: 0;
+  border-top: 5px dashed #fff;
+}
+
+.lp-goal {
+  position: absolute;
+  right: 12px;
+  bottom: 24px;
+  font-size: 64px;
+  line-height: 1;
+}
+
+.lp-vehicle {
+  position: absolute;
+  bottom: 20px;
+  font-size: 72px;
+  line-height: 1;
+  transition: left 0.08s linear;
+}
+
+.lp-track-l .lp-vehicle {
+  bottom: 50px;
+}
+
+.lp-flip {
+  display: inline-block;
+  transform: scaleX(-1);
+}
+
+.lp-vehicle.moving .lp-flip {
+  animation: lp-bump 0.18s ease-in-out infinite;
+}
+
+@keyframes lp-bump {
+  50% {
+    transform: scaleX(-1) translateY(-4px) rotate(3deg);
+  }
+}
+
+.lp-puff {
+  position: absolute;
+  left: -70px;
+  top: 4px;
+  font-size: 22px;
+  font-weight: 800;
+  color: #fff;
+  -webkit-text-stroke: 1px var(--outline);
+  paint-order: stroke fill;
+  animation: lp-puff 0.5s ease-out infinite;
+}
+
+@keyframes lp-puff {
+  from {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+}
+
+.lp-big-letter {
+  margin: 0;
+  font-size: 64px;
+  font-weight: 800;
+  letter-spacing: 4px;
+  -webkit-text-stroke: 2px var(--outline);
+  paint-order: stroke fill;
+}
+
+.lp-hold {
+  font-size: 20px;
+  height: 64px;
+  touch-action: none;
+}
+
+.lp-hold:active {
+  background: var(--yellow);
+}
+
+/* ---------- syllable train ---------- */
+
+.lp-train {
+  display: flex;
+  flex-wrap: wrap;
+  row-gap: 30px;
+  justify-content: center;
+  align-items: flex-end;
+  gap: 10px;
+  transition: transform 1.6s ease-in;
+}
+
+.lp-train.leaving {
+  transform: translateX(120vw);
+}
+
+.lp-engine {
+  font-size: 92px;
+  line-height: 1;
+}
+
+.lp-wagon {
+  position: relative;
+  min-width: 108px;
+  height: 96px;
+  padding: 0 12px;
+  border-radius: 18px 18px 10px 10px;
+  background: #fff;
+  border: 4px solid var(--outline);
+  box-shadow: 0 6px 0 var(--outline);
+  font-size: 38px;
+  font-weight: 800;
+}
+
+.lp-wagon::before,
+.lp-wagon::after {
+  content: '';
+  position: absolute;
+  bottom: -18px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--outline);
+}
+
+.lp-wagon::before {
+  left: 14px;
+}
+
+.lp-wagon::after {
+  right: 14px;
+}
+
+.lp-wagon.sel {
+  background: var(--yellow);
+  transform: translateY(-6px);
+}
+
+.lp-wagon.done {
+  background: var(--c);
+  color: #fff;
+}
+
+.lp-wagon.done.sel {
+  background: var(--yellow);
+  color: var(--ink);
+}
+
+.lp-wagon i {
+  position: absolute;
+  top: -16px;
+  right: -10px;
+  font-style: normal;
+  font-size: 26px;
+}
+
+/* ---------- words ---------- */
+
+.lp-word-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  cursor: default;
+}
+
+.lp-emoji {
+  font-size: 120px;
+  line-height: 1.1;
+}
+
+.lp-syl {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--muted);
+  letter-spacing: 2px;
+}
+
+/* ---------- listening ---------- */
+
+.lp-choice {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  min-width: 170px;
+  padding: 12px 18px;
+  border-radius: 26px;
+  border: 4px solid var(--outline);
+  box-shadow: 0 6px 0 var(--outline);
+  font-size: 22px;
+  font-weight: 800;
+}
+
+.lp-choice span {
+  font-size: 60px;
+  line-height: 1.1;
+}
+
+.lp-choice:active {
+  transform: translateY(4px);
+  box-shadow: 0 2px 0 var(--outline);
+}
+
+.lp-choice-ok {
+  background: var(--teal-soft);
+}
+
+.lp-choice-silly {
+  background: #ffe8a3;
+}
+
+/* ---------- parents: recordings ---------- */
+
+.lp-filter {
+  margin: 14px 0 6px;
+}
+
+.lp-rec-day h4 {
+  margin: 16px 0 6px;
+  font-size: 18px;
+}
+
+.lp-rec-day h4::first-letter {
+  text-transform: uppercase;
+}
+
+.lp-rec {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 6px 0;
+  border-bottom: 2px solid var(--line);
+}
+
+.lp-rec .speak-btn {
+  width: 48px;
+  height: 48px;
+  font-size: 22px;
+  flex-shrink: 0;
+}
+
+.lp-rec .link-btn {
+  margin: 0;
+  font-size: 22px;
+}
+
+.lp-rec-label {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.lp-rec-label b {
+  font-size: 20px;
+}
+
+.lp-rec-label small {
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.lp-playing {
+  background: var(--yellow) !important;
+}
+
+.lp-rec-panel .stats {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+/* ---------- phone ---------- */
+
+@media (max-width: 640px) {
+  .lp-sounds {
+    gap: 12px;
+  }
+  .lp-letter {
+    width: 84px;
+    height: 84px;
+    font-size: 58px;
+  }
+  .lp-sound-title {
+    font-size: 22px;
+  }
+  .lp-station:nth-child(even) {
+    margin-left: 18px;
+  }
+  .lp-station-text b {
+    font-size: 21px;
+  }
+  .lp-station-text small {
+    font-size: 15px;
+  }
+  .lp-top h2 {
+    font-size: 21px;
+  }
+  .lp-word {
+    font-size: 42px;
+  }
+  .lp-emoji {
+    font-size: 96px;
+  }
+  .lp-wagon {
+    min-width: 78px;
+    height: 74px;
+    font-size: 28px;
+  }
+  .lp-engine {
+    font-size: 66px;
+  }
+  .lp-track {
+    height: 120px;
+  }
+  .lp-vehicle {
+    font-size: 56px;
+  }
+  .lp-goal {
+    font-size: 48px;
+  }
+  .lp-choice {
+    min-width: 140px;
+    font-size: 19px;
+  }
+  .lp-count span {
+    width: 38px;
+    height: 38px;
+    font-size: 20px;
+  }
+  .lp-mirror {
+    width: 180px;
+    height: 180px;
+  }
+}
+
+/* six links in the top bar: tighten them on mid-size screens */
+@media (max-width: 1400px) {
+  .appbar-links .nav-link {
+    padding: 0 10px;
+    gap: 6px;
+    font-size: 18px;
+  }
+}
+
+@media (max-width: 1180px) {
+  .appbar-links .nav-label {
+    display: none;
+  }
+  .appbar-links .nav-link.on .nav-label {
+    display: inline;
+  }
+}
+
+@media (max-width: 900px) {
+  .tabbar .nav-link {
+    min-width: 52px;
+    padding: 0 3px;
+  }
+}

@@ -44,7 +44,7 @@ export function setSlowVoice(v: boolean) {
 let token = 0
 
 /** Speak parts in order, cancelling anything still playing. Resolves when done (or interrupted). */
-export function speak(parts: Part[], opts: { slow?: boolean } = {}): Promise<void> {
+export function speak(parts: Part[], opts: { slow?: boolean; roRate?: number } = {}): Promise<void> {
   if (!synth) return Promise.resolve()
   refreshVoices()
   synth.cancel()
@@ -63,7 +63,7 @@ export function speak(parts: Part[], opts: { slow?: boolean } = {}): Promise<voi
       if (voice) u.voice = voice
       u.lang = part.lang === 'en' ? 'en-US' : 'ro-RO'
       const s = opts.slow ?? slow
-      u.rate = part.lang === 'en' ? (s ? 0.5 : 0.8) : 0.95
+      u.rate = part.lang === 'en' ? (s ? 0.5 : 0.8) : (opts.roRate ?? 0.95)
       u.pitch = 1.1
       u.onend = done
       u.onerror = done
@@ -93,4 +93,10 @@ export function instruction(
     return englishWord ? [{ text: ro, lang: 'ro' }, { text: englishWord, lang: 'en' }] : [{ text: ro, lang: 'ro' }]
   }
   return [{ text: en, lang: 'en' }]
+}
+
+/** Speak Romanian text (speech-therapy module). Silent when the device has no Romanian voice. */
+export function speakRo(text: string | string[], opts: { slow?: boolean } = {}): Promise<void> {
+  const parts = (Array.isArray(text) ? text : [text]).map((t) => ({ text: t, lang: 'ro' as const }))
+  return speak(parts, { roRate: opts.slow ? 0.6 : 0.85 })
 }
