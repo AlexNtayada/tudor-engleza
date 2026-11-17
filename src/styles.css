@@ -5172,3 +5172,9 @@ button.avatar:active {
     box-shadow: 0 3px 0 var(--green-dark);
   }
 }
+
+/* Level card: the "Nv" pill makes the bar narrower than the card, so a label
+   centred in the bar looks left of centre. Shift it to the card's centre. */
+.level-card .meter-text {
+  padding-left: 72px;
+}
