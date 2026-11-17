@@ -5065,3 +5065,10 @@ button.avatar:active {
     mask-size: 100% calc(100% - 25px), 340px 26px;
   }
 }
+
+/* the stars pill keeps the same size on the hero and once the bar turns solid, so nothing jumps on scroll */
+.profile-stars {
+  padding: 4px 12px 4px 8px;
+  border-radius: 999px;
+  background: #fff;
+}
