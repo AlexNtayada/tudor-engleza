@@ -140,10 +140,10 @@ export function FinishScreen({
     sfx.fanfare()
     const t = setTimeout(() => {
       if (boss && !boss.defeated) {
-        void speak([{ text: 'Good try!', lang: 'en' }, ...instruction(mode, 'Mai încercăm!', "Let's try again!")])
+        void speak(instruction(mode, 'Mai încercăm!', "Let's try again!"))
         return
       }
-      // One short cheer and only the most important news, so the friend doesn't talk too long.
+      // Only the most important news, nothing before it (the parent asked for no cheer here).
       const news: [string, string] | undefined = boss
         ? ['Ai câștigat!', 'You won!']
         : gifts.length
@@ -157,7 +157,7 @@ export function FinishScreen({
                 : suggestBreak
                   ? ['Facem o pauză?', 'A little break?']
                   : undefined
-      void speak([{ text: 'Great job!', lang: 'en' }, ...(news ? instruction(mode, news[0], news[1]) : [])])
+      if (news) void speak(instruction(mode, news[0], news[1]))
     }, 700)
     return () => clearTimeout(t)
     // eslint-disable-next-line react-hooks/exhaustive-deps
