@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { ALL_LESSONS, UNITS } from '../content'
-import { BOSS_BONUS, CHEST_STARS, setProgress, itemById, type Item } from '../gamify'
+import { BOSS_BONUS, CHEST_STARS, levelFor, setProgress, itemById, STARS_PER_LEVEL, type Item } from '../gamify'
 import { BOSS_NAME, Boss } from '../components/Boss'
 import type { BossResult } from './Lesson'
 import { BOSS_HP, BOSS_QUESTIONS } from '../lessons'
@@ -56,6 +56,8 @@ export function FinishScreen({
   gifts = [],
   onRetry,
   lessonIndex = null,
+  earned = 0,
+  streak = 0,
 }: {
   lessonIndex?: number | null
   boss?: BossResult
@@ -73,6 +75,8 @@ export function FinishScreen({
   onOpenChest: () => void
   onContinue: () => void
   onBreak: () => void
+  earned?: number
+  streak?: number
 }) {
   const [chestOpen, setChestOpen] = useState(false)
   const lost = !!boss && !boss.defeated
@@ -134,65 +138,139 @@ export function FinishScreen({
     )
   }
 
+  const level = levelFor(earned)
+  const inLevel = earned % STARS_PER_LEVEL
   return (
-    <div className="center-screen finish">
+    <div className="finish-screen">
+      <div className="sunburst" aria-hidden />
       <div className="confetti" aria-hidden>
-        {Array.from({ length: 24 }, (_, i) => (
-          <i key={i} style={{ left: `${(i * 37) % 100}%`, animationDelay: `${(i % 8) * 0.15}s` }} />
+        {Array.from({ length: 36 }, (_, i) => (
+          <i
+            key={i}
+            style={{ left: `${(i * 37) % 100}%`, animationDelay: `${(i % 9) * 0.18}s`, animationDuration: `${2.4 + (i % 5) * 0.4}s` }}
+          />
         ))}
       </div>
-      <div className="finish-stars">
-        {[1, 2, 3].map((s) => (
-          <span key={s} className={s <= stars ? 'on' : ''} style={{ animationDelay: `${0.3 + s * 0.25}s` }}>
-            ★
-          </span>
-        ))}
-      </div>
-      <Ninja mood="dance" size={200} />
-      {boss && <h2 className="finish-title">🏆 Test trecut! {BOSS_NAME} a fost învins!</h2>}
-      <div className="finish-gains">
-        <span className="gain">+{gained} ⭐</span>
-        {boss && <span className="gain gain-level">⚔️ +{BOSS_BONUS} ⭐ boss</span>}
-        {combos > 0 && <span className="gain gain-combo">🔥 × {combos}</span>}
-        {levelUp && <span className="gain gain-level">🥷 Nivelul {levelUp}!</span>}
-      </div>
-      {chest && (
-        <button
-          className={`chest ${chestOpen ? 'chest-open' : ''}`}
-          onClick={() => {
-            if (chestOpen) return
-            setChestOpen(true)
-            sfx.fanfare()
-            onOpenChest()
-          }}
-          aria-label="Cufărul zilei"
-        >
-          <span className="chest-icon">{chestOpen ? '✨' : '🎁'}</span>
-          <span>{chestOpen ? `+${CHEST_STARS} ⭐` : 'Cufărul zilei'}</span>
+      <header className="finish-head">
+        <button className="soft-btn" onClick={onContinue} aria-label="Înapoi la hartă">
+          ←
         </button>
-      )}
-      {sticker && (
-        <div className="sticker-won">
-          <span className="sticker">{sticker}</span>
-          <span>Abțibild nou!</span>
+        <h2>{boss ? 'Test trecut!' : 'Lecție terminată!'}</h2>
+        {onRetry ? (
+          <button className="soft-btn" onClick={onRetry} aria-label="Încă o dată">
+            ↻
+          </button>
+        ) : (
+          <span className="soft-btn-space" />
+        )}
+      </header>
+
+      <div className="finish-card">
+        <div className="trophy">
+          <div className="trophy-frame">
+            {sticker ? (
+              <span className="sticker">{sticker}</span>
+            ) : boss ? (
+              <span className="sticker">🏆</span>
+            ) : (
+              <Ninja mood="dance" size={120} />
+            )}
+            <span className="trophy-clip" aria-hidden />
+          </div>
+          <div className="finish-stars">
+            {[1, 2, 3].map((s) => (
+              <span key={s} className={s <= stars ? 'on' : ''} style={{ animationDelay: `${0.3 + s * 0.25}s` }}>
+                ★
+              </span>
+            ))}
+          </div>
         </div>
-      )}
-      {gifts.map((g) => (
-        <div key={g.id} className="gift-won">
-          <Ninja size={90} outfit={{ [g.slot]: g.id }} />
-          <span>
-            Album complet! Cadou: <b>{g.name}</b>
+
+        {boss && <p className="finish-sub finish-boss-won">🏆 {BOSS_NAME} a fost învins!</p>}
+        {sticker && <p className="finish-sub">Abțibild nou în album!</p>}
+
+        <div className="finish-level">
+          <b>Ninja isteț 🏅</b>
+          <div className="finish-level-row">
+            <span className="lv-chip">Nv {level}</span>
+            <span className="meter">
+              <span className="meter-fill" style={{ width: `${Math.max((inLevel / STARS_PER_LEVEL) * 100, 6)}%` }} />
+            </span>
+            <span className="lv-chip lv-chip-next">Nv {level + 1}</span>
+          </div>
+          <span className="finish-level-text">
+            {inLevel}/{STARS_PER_LEVEL} ⭐ <b>+{gained}</b>
           </span>
         </div>
-      ))}
+
+        <div className="stat-tiles">
+          <div className="stat-tile">
+            {levelUp && <span className="stat-flag">Nivel nou!</span>}
+            <span className="stat-icon">⭐</span>
+            <span>
+              <b>+{gained}</b>
+              <small>stele{boss ? ` (+${BOSS_BONUS} boss)` : ''}</small>
+            </span>
+          </div>
+          <div className="stat-tile">
+            <span className="stat-icon">🔥</span>
+            <span>
+              <b>× {combos}</b>
+              <small>serii la rând</small>
+            </span>
+          </div>
+          <div className="stat-tile stat-wide">
+            <span className="stat-icon stat-icon-sun">☀️</span>
+            <span>
+              <b className="stat-orange">
+                {streak} {streak === 1 ? 'zi' : 'zile'} cu soare
+              </b>
+              <small>la rând</small>
+            </span>
+            {levelUp && <span className="stat-level">🥷 Nivelul {levelUp}!</span>}
+          </div>
+        </div>
+
+        {gifts.map((g) => (
+          <div key={g.id} className="gift-won">
+            <Ninja size={90} outfit={{ [g.slot]: g.id }} />
+            <span>
+              Album complet! Cadou: <b>{g.name}</b>
+            </span>
+          </div>
+        ))}
+
+        <div className="finish-bottom">
+          {chest && (
+            <button
+              className={`chest ${chestOpen ? 'chest-open' : ''}`}
+              onClick={() => {
+                if (chestOpen) return
+                setChestOpen(true)
+                sfx.fanfare()
+                onOpenChest()
+              }}
+              aria-label="Cufărul zilei"
+            >
+              <span className="chest-icon">{chestOpen ? '✨' : '🎁'}</span>
+              <span>{chestOpen ? `+${CHEST_STARS} ⭐` : 'Cufărul zilei'}</span>
+            </button>
+          )}
+          <div className="finish-cheer">
+            <span className="hero-bubble">Bravo, {name}!</span>
+            <Ninja mood="dance" size={96} />
+          </div>
+        </div>
+      </div>
+
       <div className="finish-actions">
         {suggestBreak && (
           <button className="big-btn big-btn-soft" onClick={onBreak}>
             😴 Pauză
           </button>
         )}
-        <button className="big-btn" onClick={onContinue}>
-          ➜
+        <button className="big-btn big-btn-dark" onClick={onContinue}>
+          Mai departe ➜
         </button>
       </div>
     </div>

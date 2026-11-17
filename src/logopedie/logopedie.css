@@ -23,14 +23,14 @@
   border-radius: 32px;
   background: var(--c);
   color: #fff;
-  border: 4px solid var(--outline);
-  box-shadow: 0 7px 0 var(--outline);
+  border: 2px solid var(--edge);
+  box-shadow: 0 7px 0 var(--lift), var(--soft);
   transition: transform 0.08s;
 }
 
 .lp-sound:active {
   transform: translateY(5px);
-  box-shadow: 0 2px 0 var(--outline);
+  box-shadow: 0 2px 0 var(--lift), var(--soft);
 }
 
 .lp-letter {
@@ -44,7 +44,7 @@
   font-size: 76px;
   font-weight: 800;
   line-height: 1;
-  border: 4px solid var(--outline);
+  border: 2px solid var(--edge);
 }
 
 .lp-sound-emoji {
@@ -66,7 +66,7 @@
   height: 48px;
   border-radius: 50%;
   color: #fff;
-  border: 3px solid var(--outline);
+  border: 2px solid var(--edge);
   vertical-align: middle;
 }
 
@@ -86,8 +86,8 @@
   padding: 14px 18px;
   border-radius: 26px;
   background: #fff;
-  border: 3px solid var(--outline);
-  box-shadow: 0 6px 0 var(--outline);
+  border: 2px solid var(--edge);
+  box-shadow: 0 6px 0 var(--lift), var(--soft);
   text-align: left;
 }
 
@@ -97,7 +97,7 @@
 
 .lp-station:active {
   transform: translateY(4px);
-  box-shadow: 0 2px 0 var(--outline);
+  box-shadow: 0 2px 0 var(--lift), var(--soft);
 }
 
 .lp-station.done {
@@ -115,7 +115,7 @@
   color: #fff;
   font-weight: 800;
   font-size: 22px;
-  border: 3px solid var(--outline);
+  border: 2px solid var(--edge);
 }
 
 .lp-station-emoji {
@@ -234,7 +234,7 @@
 .lp-tabs button {
   padding: 8px 16px;
   border-radius: 999px;
-  border: 3px solid var(--outline);
+  border: 2px solid var(--edge);
   background: #fff;
   font-size: 18px;
   font-weight: 800;
@@ -242,7 +242,7 @@
 
 .lp-tabs button.on {
   background: var(--yellow);
-  box-shadow: 0 3px 0 var(--outline);
+  box-shadow: 0 3px 0 var(--lift), var(--soft);
 }
 
 .lp-mark {
@@ -474,7 +474,7 @@
   display: grid;
   place-items: center;
   border-radius: 50%;
-  border: 3px solid var(--outline);
+  border: 2px solid var(--edge);
   background: #fff;
   font-size: 24px;
   font-weight: 800;
@@ -533,8 +533,8 @@
 
 .lp-mirror-btn,
 .lp-hold {
-  border: 3px solid var(--outline);
-  box-shadow: 0 4px 0 var(--outline);
+  border: 2px solid var(--edge);
+  box-shadow: 0 4px 0 var(--lift), var(--soft);
 }
 
 .lp-mirror-btn {
@@ -548,8 +548,8 @@
   width: min(760px, 92vw);
   height: 150px;
   border-radius: 28px;
-  border: 4px solid var(--outline);
-  box-shadow: 0 6px 0 var(--outline);
+  border: 2px solid var(--edge);
+  box-shadow: 0 6px 0 var(--lift), var(--soft);
   overflow: hidden;
   background: linear-gradient(#bfeaff 0 58%, #8fd47a 58% 100%);
 }
@@ -669,8 +669,8 @@
   padding: 0 12px;
   border-radius: 18px 18px 10px 10px;
   background: #fff;
-  border: 4px solid var(--outline);
-  box-shadow: 0 6px 0 var(--outline);
+  border: 2px solid var(--edge);
+  box-shadow: 0 6px 0 var(--lift), var(--soft);
   font-size: 38px;
   font-weight: 800;
 }
@@ -749,8 +749,8 @@
   min-width: 170px;
   padding: 12px 18px;
   border-radius: 26px;
-  border: 4px solid var(--outline);
-  box-shadow: 0 6px 0 var(--outline);
+  border: 2px solid var(--edge);
+  box-shadow: 0 6px 0 var(--lift), var(--soft);
   font-size: 22px;
   font-weight: 800;
 }
@@ -762,7 +762,7 @@
 
 .lp-choice:active {
   transform: translateY(4px);
-  box-shadow: 0 2px 0 var(--outline);
+  box-shadow: 0 2px 0 var(--lift), var(--soft);
 }
 
 .lp-choice-ok {

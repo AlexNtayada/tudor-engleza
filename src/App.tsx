@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { ALL_LESSONS, PLAYGROUND, UNITS, type World } from './content'
 import { buildFreePlay, buildLesson, starsFor, type Step } from './lessons'
 import { learnedWordIds, loadProgress, saveProgress, today, type Progress } from './progress'
-import { BOSS_BONUS, chestAvailable, CHEST_STARS, claimSetRewards, levelFor, type Item } from './gamify'
+import { BOSS_BONUS, chestAvailable, CHEST_STARS, claimSetRewards, levelFor, streakDays, type Item } from './gamify'
 import { Home } from './screens/Home'
 import { LessonScreen, type BossResult } from './screens/Lesson'
 import { Album, BreakScreen, FinishScreen, ParentGate, Parents, StartScreen } from './screens/Other'
@@ -186,7 +186,7 @@ export default function App() {
           />
         )
       case 'home':
-        return <Home progress={progress} onStart={startLesson} />
+        return <Home progress={progress} onStart={startLesson} onFreePlay={() => startFreePlay()} onTab={goTab} />
       case 'play':
         return <Playground progress={progress} onPlay={startFreePlay} />
       case 'speech':
@@ -210,6 +210,8 @@ export default function App() {
           <FinishScreen
             {...screen}
             name={name}
+            earned={progress.earned}
+            streak={streakDays(progress.daysPlayed)}
             mode={progress.settings.instructions}
             suggestBreak={sinceBreak.current >= BREAK_AFTER_SECONDS}
             onOpenChest={openChest}
