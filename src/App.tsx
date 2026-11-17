@@ -220,16 +220,15 @@ export default function App() {
         return (
           <StartScreen
             name={name}
-            chosen={!!progress.mascot}
-            onGo={() => {
-              if (!progress.mascot) {
-                void speak([
-                  { text: `Hello, ${name}!`, lang: 'en' },
-                  ...instruction(progress.settings.instructions, 'Alege-ți un prieten!', 'Pick a friend!'),
-                ])
-                setScreen({ name: 'pick', back: 'start' })
-                return
-              }
+            chosen={progress.mascot}
+            onPick={() => {
+              void speak([
+                { text: `Hello, ${name}!`, lang: 'en' },
+                ...instruction(progress.settings.instructions, 'Alege-ți un prieten!', 'Pick a friend!'),
+              ])
+              setScreen({ name: 'pick', back: 'start' })
+            }}
+            onPlay={() => {
               void speak([
                 { text: `Hello, ${name}!`, lang: 'en' },
                 ...instruction(progress.settings.instructions, `Eu sunt ${mascot().title}. Hai să învățăm engleză!`, `I'm ${mascot().name}. Let's learn English!`),
@@ -267,7 +266,7 @@ export default function App() {
             current={progress.mascot}
             name={name}
             mode={progress.settings.instructions}
-            onBack={screen.back === 'start' ? undefined : () => setScreen({ name: screen.back as Tab })}
+            onBack={() => setScreen(screen.back === 'start' ? { name: 'start' } : { name: screen.back as Tab })}
             onPick={(id: MascotId) => {
               const m = mascotById(id)
               setProgress((p) => ({ ...p, mascot: id }))

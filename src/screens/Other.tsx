@@ -1,4 +1,5 @@
-import { mascot, g, MASCOTS } from '../mascots'
+import { mascot, g, MASCOTS, mascotById, type MascotId } from '../mascots'
+import { TudooLogo } from '../components/TudooLogo'
 import { useEffect, useMemo, useState } from 'react'
 import { ALL_LESSONS, UNITS } from '../content'
 import { BOSS_BONUS, CHEST_STARS, levelFor, setProgress, itemById, STARS_PER_LEVEL, type Item } from '../gamify'
@@ -21,29 +22,72 @@ import {
   type Settings,
 } from '../progress'
 
-export function StartScreen({ name, chosen, onGo }: { name: string; chosen: boolean; onGo: () => void }) {
+/** Intro: the app name, the whole crew of friends on a hill, and "pick your friend". */
+export function StartScreen({
+  name,
+  chosen,
+  onPick,
+  onPlay,
+}: {
+  name: string
+  chosen?: MascotId
+  onPick: () => void
+  onPlay: () => void
+}) {
+  const friend = chosen ? mascotById(chosen) : undefined
   return (
-    <div className="center-screen start">
-      <h1 className="title">Ninja English</h1>
-      {chosen ? (
-        <Mascot mood="happy" size={220} />
-      ) : (
-        <div className="start-crew">
-          {MASCOTS.map((m, i) => (
-            <Mascot key={m.id} kind={m.id} mood={i % 2 ? 'idle' : 'happy'} size={104} outfit={{}} />
-          ))}
-        </div>
-      )}
-      <button
-        className="big-btn"
-        onClick={() => {
-          sfx.unlock()
-          sfx.tap()
-          onGo()
-        }}
-      >
-        ▶ Hai, {name}!
-      </button>
+    <div className="center-screen intro">
+      <div className="intro-sky" aria-hidden>
+        <span className="intro-cloud intro-cloud-1" />
+        <span className="intro-cloud intro-cloud-2" />
+        <span className="intro-cloud intro-cloud-3" />
+        {['A', 'B', 'C', '1', '2', '3', '★', '♪'].map((t, i) => (
+          <span key={t} className={`intro-bubble intro-bubble-${i + 1}`}>
+            {t}
+          </span>
+        ))}
+        <svg className="intro-hills" viewBox="0 0 1200 260" preserveAspectRatio="none">
+          <path d="M0 120 Q 220 30 460 110 T 900 90 T 1200 100 L 1200 260 L 0 260 Z" fill="#9be08a" />
+          <path d="M0 170 Q 300 100 620 160 T 1200 150 L 1200 260 L 0 260 Z" fill="#6fcf72" />
+        </svg>
+      </div>
+      <div className="intro-head">
+        <h1 className="intro-title">
+          <TudooLogo />
+        </h1>
+        <p className="intro-sub">Salut, {name}! Învățăm engleză cu prietenii.</p>
+      </div>
+      <div className="intro-crew">
+        {MASCOTS.map((m, i) => (
+          <span key={m.id} className={`intro-friend ${chosen === m.id ? 'on' : ''}`} style={{ animationDelay: `${i * 0.25}s` }}>
+            <Mascot kind={m.id} mood={chosen === m.id || i % 2 === 0 ? 'happy' : 'idle'} size={chosen === m.id ? 132 : 112} outfit={chosen === m.id ? undefined : {}} />
+          </span>
+        ))}
+      </div>
+      <div className="intro-actions">
+        <button
+          className="big-btn intro-go"
+          onClick={() => {
+            sfx.unlock()
+            sfx.tap()
+            onPick()
+          }}
+        >
+          👆 Alege-ți prietenul!
+        </button>
+        {friend && (
+          <button
+            className="intro-play"
+            onClick={() => {
+              sfx.unlock()
+              sfx.tap()
+              onPlay()
+            }}
+          >
+            ▶ Joacă cu {friend.name}
+          </button>
+        )}
+      </div>
     </div>
   )
 }
