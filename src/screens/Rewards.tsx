@@ -30,7 +30,7 @@ export function Playground({
       () =>
         void speak(
           units.length === 0
-            ? instruction(mode, "Termină prima lecție de pe hartă și aici se deschid jocurile!", "Finish the first lesson on the map to open the games!")
+            ? instruction(mode, "Întâi o lecție pe hartă!", "First a lesson on the map!")
             : instruction(mode, "Alege un joc!", "Pick a game!"),
         ),
       300,
@@ -126,15 +126,14 @@ export function NinjaRoom({
       return;
     }
     if (item.setOf) {
-      const unit = UNITS.find((u) => u.id === item.setOf);
       sfx.wrong();
       setMood("oops");
       setTimeout(() => setMood("idle"), 1200);
       void speak(
         instruction(
           mode,
-          `Acesta e un cadou! Strânge toate abțibildurile de la ${unit?.title ?? ""}.`,
-          "This one is a present! Collect all the stickers.",
+          "E un cadou. Strânge abțibildurile!",
+          "It's a present. Collect the stickers!",
         ),
       );
       return;
@@ -143,7 +142,7 @@ export function NinjaRoom({
       sfx.fanfare();
       onChange(buy(progress, item));
       celebrate();
-      void speak([{ text: "Wow! Thank you!", lang: "en" }]);
+      void speak([{ text: "Thank you!", lang: "en" }]);
       return;
     }
     sfx.wrong();
@@ -152,7 +151,7 @@ export function NinjaRoom({
     void speak(
       instruction(
         mode,
-        `Mai adună ${item.price - progress.wallet} stele!`,
+        "Mai strânge stele!",
         "Collect more stars!",
       ),
     );

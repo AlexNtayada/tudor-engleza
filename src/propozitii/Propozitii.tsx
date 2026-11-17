@@ -123,17 +123,17 @@ function promptParts(mode: Settings['instructions'], step: SentenceStep): Part[]
   const s = step.sentence
   switch (step.type) {
     case 'intro':
-      return [...instruction(mode, `${s.ro} În engleză spunem:`, 'Listen!'), sayEn(s.text), ...instruction(mode, 'Spune și tu!', 'Now you say it!')]
+      return [...instruction(mode, `${s.ro} În engleză:`, 'Listen!'), sayEn(s.text), ...instruction(mode, 'Spune și tu!', 'Now you say it!')]
     case 'pick':
-      return [...instruction(mode, 'Ascultă și alege poza:', 'Listen and find the picture:'), sayEn(s.text)]
+      return [...instruction(mode, 'Alege poza:', 'Find the picture:'), sayEn(s.text)]
     case 'fill': {
       const { before, after } = splitAtKey(s)
-      return [...instruction(mode, 'Ce cuvânt lipsește?', 'What is missing?'), sayEn(`${before}... hmm?`), ...(after ? [sayEn(after)] : [])]
+      return [...instruction(mode, 'Ce lipsește?', 'What is missing?'), sayEn(`${before}... hmm?`), ...(after ? [sayEn(after)] : [])]
     }
     case 'truth':
-      return [...instruction(mode, 'Ascultă! Este adevărat?', 'Listen! Is it true?'), sayEn(step.said.text)]
+      return [...instruction(mode, 'E adevărat?', 'Is it true?'), sayEn(step.said.text)]
     case 'say':
-      return [...instruction(mode, 'Acum spune tu:', 'Now you say it:'), sayEn(s.text)]
+      return [...instruction(mode, 'Spune tu:', 'Your turn:'), sayEn(s.text)]
   }
 }
 
@@ -261,7 +261,7 @@ export function SentenceLesson({
           {step.type === 'truth' && (
             <TrueOrNot
               step={step}
-              onCorrect={(isTrue) => onCorrect(isTrue ? 'Yes! That is right!' : `No! It's not.`)}
+              onCorrect={(isTrue) => onCorrect(isTrue ? 'Yes!' : 'No!')}
               onWrong={(a) => onWrong(a, [sayEn(step.said.text)])}
             />
           )}
@@ -503,7 +503,7 @@ export function Propozitii({ progress, onStart }: { progress: Progress; onStart:
   const mode = progress.settings.instructions
   useEffect(() => {
     const t = setTimeout(
-      () => void speak(instruction(mode, 'Hai să spunem propoziții întregi, ca un ninja adevărat!', "Let's say whole sentences!")),
+      () => void speak(instruction(mode, 'Hai la propoziții!', "Let's make sentences!")),
       300,
     )
     return () => {

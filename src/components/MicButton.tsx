@@ -126,7 +126,7 @@ export function micFeedback(result: MicResult, word: Word, mode: 'ro' | 'en') {
   if (result === 'tried') {
     sfx.tap()
     return speak([
-      ...instruction(mode, 'Bravo! Încă o dată, cu mine:', 'Good try! Say it with me:'),
+      ...instruction(mode, 'Încă o dată:', 'Again:'),
       { text: word.say, lang: 'en' },
     ])
   }

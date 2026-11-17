@@ -332,7 +332,7 @@ export default function App() {
               if (progress.onboarded === false) return setScreen({ name: 'onboard', step: 'name' })
               void speak([
                 { text: 'Hello.', lang: 'en' },
-                ...instruction(progress.settings.instructions, 'Alege-ți un prieten!', 'Pick a friend!'),
+                ...instruction(progress.settings.instructions, 'Alege un prieten!', 'Pick a friend!'),
               ], { volume: GREETING_VOLUME })
               setScreen({ name: 'pick', back: 'start' })
             }}
@@ -497,7 +497,7 @@ export default function App() {
             onLogIn={() => setScreen({ name: 'account', back: 'onboard' })}
             onNext={(childName) => {
               setProgress((p) => ({ ...p, settings: { ...p.settings, childName } }))
-              void speak([{ text: 'Hello.', lang: 'en' }, ...instruction(progress.settings.instructions, 'Alege-ți un prieten!', 'Pick a friend!')])
+              void speak([{ text: 'Hello.', lang: 'en' }, ...instruction(progress.settings.instructions, 'Alege un prieten!', 'Pick a friend!')])
               setScreen({ name: 'pick', back: 'onboard' })
             }}
           />

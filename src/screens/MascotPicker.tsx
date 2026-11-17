@@ -28,7 +28,7 @@ export function MascotPicker({
     setChosen(id)
     void speak([
       { text: m.hello, lang: 'en' },
-      ...instruction(mode, `Eu sunt ${m.title}. ${m.blurb}!`, `Do you want to play with me?`),
+      ...instruction(mode, `Eu sunt ${m.title}!`, `I'm ${m.name}!`),
     ], { friend: id })
   }
 

@@ -63,7 +63,6 @@ export function Logopedie({
   const hasRo = hasRomanianVoice()
   const micOk = progress.settings.mic && micSupported()
   const doneToday = new Set(progress.speechLog[today()] ?? [])
-  const name = progress.settings.childName || 'Tudor'
 
   useEffect(() => {
     window.scrollTo(0, 0)
@@ -72,7 +71,7 @@ export function Logopedie({
 
   useEffect(() => {
     if (!sound && !activity) {
-      const t = setTimeout(() => void speakRo(`Salut, ${name}! Hai să ne jucăm cu sunetele!`), 300)
+      const t = setTimeout(() => void speakRo('Hai la sunete!'), 300)
       return () => clearTimeout(t)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -115,7 +114,7 @@ export function Logopedie({
         onFinish={() => {
           onEarn(`${sound}:${activity}`, SPEECH_STARS)
           sfx.fanfare()
-          void speakRo(`Bravo, ${name}!`)
+          void speakRo('Bravo!')
           setActivity(undefined)
           setParty(true)
         }}

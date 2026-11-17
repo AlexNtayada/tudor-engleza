@@ -227,7 +227,7 @@ export function SettingsScreen({
           <div className="set-row">
             <button
               className="text-link"
-              onClick={() => void speak(instruction(s.instructions, `Salut! Eu sunt ${mascot().title}.`, `Hi! I am ${mascot().name}.`))}
+              onClick={() => void speak(instruction(s.instructions, `Eu sunt ${mascot().title}!`, `I'm ${mascot().name}!`))}
             >
               🔊 Testează vocea
             </button>
