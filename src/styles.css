@@ -36,6 +36,11 @@ body,
   background: var(--bg);
 }
 
+/* keep room for the scrollbar so pages don't jump sideways when it appears */
+html {
+  scrollbar-gutter: stable;
+}
+
 body {
   overscroll-behavior: none;
   user-select: none;
