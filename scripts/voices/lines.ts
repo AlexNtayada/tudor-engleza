@@ -74,7 +74,7 @@ function englishInstructionLines(): string[] {
 /** Short English cheers said by the friend, in the friend's own voice. */
 function friendEnglish(m: MascotInfo): string[] {
   return [
-    m.hello, `Hello, ${CHILD}!`, `Good try, ${CHILD}!`, `Great job, ${CHILD}!`,
+    m.hello, 'Hello!', `Good try, ${CHILD}!`, `Great job, ${CHILD}!`,
     'Great job!', 'Yes!', 'Awesome!', 'Super!', 'Well done!', 'Perfect!', 'Super combo!', 'Thank you!', 'Yummy!',
     'Not that one!', 'No, thank you!', 'Wow! Thank you!', 'Hooray! You beat the boss!', 'Yes! That is right!', "No! It's not.",
   ]
