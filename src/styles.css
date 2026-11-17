@@ -3485,9 +3485,142 @@ body {
   filter: drop-shadow(0 4px 0 #e09a00) drop-shadow(0 8px 10px rgba(224, 154, 0, 0.3));
 }
 
-.finish-screen .finish-stars span:nth-child(1),
-.finish-screen .finish-stars span:nth-child(3) {
-  transform: translateY(10px);
+.finish-screen .finish-stars .finish-star:nth-child(1),
+.finish-screen .finish-stars .finish-star:nth-child(3) {
+  margin-top: 10px;
+}
+
+/* stars drop in one by one with a bounce and a little sparkle burst, then shimmer gently */
+.finish-screen .finish-star {
+  position: relative;
+  animation: starDrop 0.7s var(--d, 0.4s) backwards cubic-bezier(0.3, 1.6, 0.6, 1);
+}
+
+.finish-screen .finish-star.on svg {
+  transform-origin: 50% 55%;
+  animation: starShimmer 3.2s calc(var(--d, 0.4s) + 0.9s) ease-in-out infinite;
+}
+
+.star-sparks {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.star-sparks i {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 14px;
+  height: 14px;
+  margin: -7px;
+  border-radius: 50%;
+  background: #ffc21a;
+  box-shadow: 0 0 8px rgba(255, 194, 26, 0.8);
+  opacity: 0;
+  animation: starSpark 0.7s calc(var(--d, 0.4s) + 0.3s) ease-out both;
+}
+
+.star-sparks i:nth-child(1) { --sx: -38px; --sy: -30px; }
+.star-sparks i:nth-child(2) { --sx: 38px; --sy: -30px; background: #ff9f43; }
+.star-sparks i:nth-child(3) { --sx: -32px; --sy: 30px; background: #ff9f43; }
+.star-sparks i:nth-child(4) { --sx: 34px; --sy: 28px; }
+
+@keyframes starDrop {
+  0% {
+    transform: scale(0) rotate(-45deg);
+    opacity: 0;
+  }
+  60% {
+    transform: scale(1.25) rotate(8deg);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1) rotate(0);
+  }
+}
+
+@keyframes starSpark {
+  0% {
+    transform: translate(0, 0) scale(0.4);
+    opacity: 0;
+  }
+  25% {
+    opacity: 1;
+  }
+  60% {
+    transform: translate(calc(var(--sx) * 0.8), calc(var(--sy) * 0.8)) scale(1.1);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(var(--sx), var(--sy)) scale(0);
+    opacity: 0;
+  }
+}
+
+@keyframes starShimmer {
+  0%,
+  70%,
+  100% {
+    transform: scale(1) rotate(0);
+    filter: brightness(1);
+  }
+  80% {
+    transform: scale(1.08) rotate(-6deg);
+    filter: brightness(1.12);
+  }
+  90% {
+    transform: scale(1.03) rotate(4deg);
+  }
+}
+
+/* "Bravo, Tudor!" sits top-left, said by the big mascot in the frame */
+.trophy {
+  position: relative;
+}
+
+.finish-bubble {
+  position: absolute;
+  z-index: 2;
+  top: 18px;
+  right: calc(50% + 78px);
+  font-size: 19px;
+  white-space: nowrap;
+  transform: rotate(-5deg);
+  box-shadow: 0 4px 0 var(--lift), var(--soft);
+  animation: popIn 0.5s 0.5s backwards cubic-bezier(0.3, 1.6, 0.6, 1);
+}
+
+.finish-bubble::before {
+  left: auto;
+  right: -10px;
+  bottom: 12px;
+  border-right: 0;
+  border-left: 10px solid #fff;
+}
+
+@media (max-width: 640px) {
+  .trophy .finish-bubble {
+    right: calc(50% + 54px);
+    top: 4px;
+    width: max-content;
+    max-width: min(104px, calc(50vw - 74px));
+    white-space: normal;
+    text-align: center;
+    font-size: 17px;
+    padding: 7px 11px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .finish-screen .finish-star,
+  .finish-screen .finish-star.on svg,
+  .finish-bubble {
+    animation: none;
+  }
+  .star-sparks {
+    display: none;
+  }
 }
 
 .finish-screen .finish-sub {
@@ -3640,28 +3773,6 @@ body {
   font-size: 36px;
 }
 
-.finish-cheer {
-  display: flex;
-  align-items: flex-end;
-  gap: 4px;
-  margin-left: auto;
-}
-
-.finish-cheer .hero-bubble {
-  font-size: 18px;
-  white-space: nowrap;
-  transform: rotate(3deg);
-  margin-bottom: 40px;
-  box-shadow: 0 4px 0 var(--lift), var(--soft);
-}
-
-.finish-cheer .hero-bubble::before {
-  left: auto;
-  right: -10px;
-  border-right: 0;
-  border-left: 10px solid #fff;
-}
-
 .finish-actions .big-btn {
   min-width: 0;
 }
@@ -3789,14 +3900,6 @@ body {
   }
   .finish-bottom {
     margin-right: 0;
-  }
-  .finish-bottom:has(.chest) .hero-bubble {
-    display: none;
-  }
-  .finish-cheer .dino,
-  .finish-cheer .dino svg {
-    width: 84px !important;
-    height: 84px !important;
   }
 }
 
