@@ -467,17 +467,8 @@ export function ParentGate({ onPass, onBack }: { onPass: () => void; onBack: () 
   )
 }
 
-export function Parents({
-  progress,
-  onChange,
-  onBack,
-}: {
-  progress: Progress
-  onChange: (p: Progress) => void
-  onBack: () => void
-}) {
-  const s = progress.settings
-  const set = (patch: Partial<Settings>) => onChange({ ...progress, settings: { ...s, ...patch } })
+/** Parents' "Progres" section in Settings: totals, this week's minutes, boss tests. */
+export function ParentsProgress({ progress }: { progress: Progress }) {
   // This calendar week, Monday to Sunday (days still to come stay empty).
   const now = new Date()
   const sinceMonday = (now.getDay() + 6) % 7
@@ -491,16 +482,9 @@ export function Parents({
   const lessonsDone = Object.keys(progress.stars).length
 
   return (
-    <div className="page parents">
-      <header className="page-top">
-        <button className="icon-btn" onClick={onBack} aria-label="Înapoi">
-          ←
-        </button>
-        <h2>Progres și date</h2>
-      </header>
-
+    <div className="parents">
       <section className="panel">
-        <h3>Progres</h3>
+        <h3>Pe scurt</h3>
         <div className="stats">
           <div>
             <b>
@@ -567,15 +551,34 @@ export function Parents({
         </table>
       </section>
 
-      <SpeechPanel save={s.speechSave} onSave={(v) => set({ speechSave: v })} speechLog={progress.speechLog} />
+    </div>
+  )
+}
 
+/** Parents' "Înregistrări" section in Settings: the speech recordings. */
+export function ParentsRecordings({ progress, onChange }: { progress: Progress; onChange: (p: Progress) => void }) {
+  const s = progress.settings
+  return (
+    <div className="parents">
+      <SpeechPanel
+        save={s.speechSave}
+        onSave={(v) => onChange({ ...progress, settings: { ...s, speechSave: v } })}
+        speechLog={progress.speechLog}
+      />
+    </div>
+  )
+}
+
+/** Parents' "Date" section in Settings: move the progress to another device, or wipe it. */
+export function ParentsData({ progress, onChange }: { progress: Progress; onChange: (p: Progress) => void }) {
+  const s = progress.settings
+  return (
+    <div className="parents">
       <MoveProgress progress={progress} onChange={onChange} />
 
       <section className="panel">
-        <h3>Despre timp</h3>
-        <p className="note">
-          Nu există limită de timp. {mascot().name} propune o pauză după aproximativ 15 minute de joacă, dar nu blochează nimic.
-        </p>
+        <h3>Șterge progresul</h3>
+        <p className="note">Stelele, abțibildurile și timpul lui {s.childName || 'copilul'} pornesc de la zero. Setările rămân.</p>
         <button
           className="link-btn danger"
           onClick={() => {

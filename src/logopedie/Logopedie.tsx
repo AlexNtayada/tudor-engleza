@@ -42,7 +42,7 @@ function ParentBox({ s, onParents }: { s?: SoundInfo; onParents: () => void }) {
         ))}
       </ul>
       <button className="link-btn" onClick={onParents}>
-        🎧 Ascultă înregistrările lui Tudor (Zona părinților)
+        🎧 Ascultă înregistrările (Setări)
       </button>
     </details>
   )

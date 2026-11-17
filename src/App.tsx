@@ -8,12 +8,12 @@ import { addChild, applyFamily, familyFrom, loadStore, removeChild, saveStore, t
 import { accountsEnabled, fetchFamily, finishRedirect, saveFamily, signedInEmail, signOut } from './account'
 import { setSfxEnabled } from './sfx'
 import { OnboardLevel, OnboardName } from './screens/Onboarding'
-import { SettingsScreen } from './screens/Settings'
+import { SettingsScreen, type SettingsSection } from './screens/Settings'
 import { AccountScreen, SyncChoice } from './screens/Account'
 import { BOSS_BONUS, chestAvailable, CHEST_STARS, claimSetRewards, levelFor, streakDays, type Item } from './gamify'
 import { Home } from './screens/Home'
 import { LessonScreen, type BossResult } from './screens/Lesson'
-import { Album, BreakScreen, FinishScreen, ParentGate, Parents, StartScreen } from './screens/Other'
+import { Album, BreakScreen, FinishScreen, ParentGate, StartScreen } from './screens/Other'
 import { NinjaRoom, Playground } from './screens/Rewards'
 import { Nav, type Tab } from './components/Nav'
 import { OutfitContext } from './components/Outfit'
@@ -60,7 +60,8 @@ type Screen =
   | { name: 'break' }
   /** First run for a new child: name, then the friend picker, then the level. */
   | { name: 'onboard'; step: 'name' | 'level' }
-  | { name: 'settings' }
+  /** Settings; `section` is the open section (none: the list on a phone, the first section on a wide screen). */
+  | { name: 'settings'; section?: SettingsSection }
   | { name: 'account'; back: 'settings' | 'onboard' }
   | { name: 'sync'; remote: Family }
 
@@ -140,7 +141,7 @@ export default function App() {
     setEmail(who)
     const remote = await fetchFamily().catch(() => undefined)
     const local = familyFrom(loadStore(), progress)
-    const back: Screen = progress.onboarded === false ? { name: 'onboard', step: 'name' } : { name: 'settings' }
+    const back: Screen = progress.onboarded === false ? { name: 'onboard', step: 'name' } : { name: 'settings', section: 'cont' }
     if (!remote?.profiles?.length) {
       setSyncState('saving')
       await saveFamily(local).then(
@@ -382,7 +383,7 @@ export default function App() {
                   : screen.back === 'start'
                     ? { name: 'start' }
                     : screen.back === 'settings'
-                      ? { name: 'settings' }
+                      ? { name: 'settings', section: 'profil' }
                       : { name: screen.back },
               )
             }
@@ -400,7 +401,7 @@ export default function App() {
                 setScreen({ name: 'home' })
               } else {
                 void speak([{ text: m.hello, lang: 'en' }])
-                setScreen(screen.back === 'settings' ? { name: 'settings' } : { name: 'dino' })
+                setScreen(screen.back === 'settings' ? { name: 'settings', section: 'profil' } : { name: 'dino' })
               }
             }}
           />
@@ -448,28 +449,21 @@ export default function App() {
       case 'gate':
         return (
           <ParentGate
-            onPass={() => setScreen(screen.next === 'parents' ? { name: 'parents' } : { name: 'settings' })}
+            onPass={() => setScreen(screen.next === 'parents' ? { name: 'settings', section: 'inregistrari' } : { name: 'settings' })}
             onBack={() => setScreen({ name: 'home' })}
-          />
-        )
-      case 'parents':
-        return (
-          <Parents
-            progress={progress}
-            onChange={setProgress}
-            onBack={() => setScreen({ name: 'settings' })}
           />
         )
       case 'settings':
         return (
           <SettingsScreen
             progress={progress}
+            section={screen.section}
+            onSection={(section) => setScreen({ name: 'settings', section })}
             store={store}
             email={email}
             syncState={syncState}
             onChange={setProgress}
             onBack={() => setScreen({ name: 'home' })}
-            onProgress={() => setScreen({ name: 'parents' })}
             onPickFriend={() => setScreen({ name: 'pick', back: 'settings' })}
             onAccount={() => setScreen({ name: 'account', back: 'settings' })}
             onSignOut={() => {
@@ -525,7 +519,7 @@ export default function App() {
         return (
           <AccountScreen
             childName={progress.settings.childName}
-            onBack={() => setScreen(screen.back === 'onboard' ? { name: 'onboard', step: 'name' } : { name: 'settings' })}
+            onBack={() => setScreen(screen.back === 'onboard' ? { name: 'onboard', step: 'name' } : { name: 'settings', section: 'cont' })}
             onSignedIn={signedIn}
           />
         )
@@ -543,7 +537,7 @@ export default function App() {
                 () => setSyncState('saved'),
                 () => setSyncState('error'),
               )
-              setScreen({ name: 'settings' })
+              setScreen({ name: 'settings', section: 'cont' })
             }}
           />
         )
