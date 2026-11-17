@@ -134,7 +134,7 @@
   }
 }
 
-/* ---------- Tudoo! logo: the two o's are googly eyes ---------- */
+/* ---------- Tudoo! logo: candy-coloured letters ---------- */
 
 .tudoo {
   display: inline-flex;
@@ -153,41 +153,14 @@
   text-shadow: 0 0.06em 0 #3a2a14;
 }
 
-.tudoo-letter:nth-child(1) {
+.tudoo-letter:nth-child(odd) {
   transform: rotate(-7deg) translateY(0.03em);
 }
 
-.tudoo-letter:nth-child(2) {
+.tudoo-letter:nth-child(even) {
   transform: rotate(6deg) translateY(-0.05em);
+}
+
+.tudoo-letter + .tudoo-letter {
   margin-left: 0.01em;
-}
-
-.tudoo-letter:nth-child(3) {
-  transform: rotate(-5deg) translateY(0.01em);
-  margin-left: 0.01em;
-}
-
-.tudoo-eyes {
-  width: 1.12em;
-  height: 0.6em;
-  margin: 0 0.02em 0 0.04em;
-  overflow: visible;
-  align-self: baseline;
-  transform: translateY(0.05em) rotate(4deg);
-  filter: drop-shadow(0 0.05em 0 #3a2a14);
-}
-
-.tudoo-bang {
-  margin-left: 0.03em;
-  transform: rotate(8deg) translateY(-0.04em);
-}
-
-.tudoo-pupil {
-  animation: tudoo-look 6s ease-in-out infinite;
-}
-
-@keyframes tudoo-look {
-  0%, 40%, 100% { transform: translate(0, 0); }
-  50%, 70% { transform: translate(-9px, -2px); }
-  80% { transform: translate(0, 0); }
 }
