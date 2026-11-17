@@ -5,7 +5,7 @@ Merge în browser pe calculator și se poate instala pe telefon (PWA).
 
 ## Ce are prototipul
 
-- Harta cu lecții (3 teme: culori, animale, numere 1–10, câte 5 lecții)
+- Harta ilustrată cu 13 teme (câte un biom desenat: drum cu pietre, râu cu pod, stâncă, copaci), câte 5 lecții, ultima fiind un boss
 - Prezentarea cuvintelor cu poză mare și voce (normal și rar 🐢)
 - Exerciții: „Ascultă și atinge”, „Sparge balonul” și „Spune tu!” cu microfon 🎤
 - Stele, abțibilduri, album, mod „Joacă liberă”
