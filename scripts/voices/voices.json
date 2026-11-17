@@ -50,6 +50,9 @@
   "spoken": {
     "en": {
       "hat": "Hat."
+    },
+    "ninja": {
+      "Yes!": "Yes."
     }
   }
 }
