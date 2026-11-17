@@ -10,6 +10,7 @@
 //   --english-instructions    also record the English versions of the instructions
 //   --list-voices             print the voices on the account and exit
 //   --redo                    record again even when a clip exists (use with --voices)
+//   --match "^Hello"          only lines matching this regex (with --redo: re-record just those)
 
 import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { dirname, join } from 'node:path'
@@ -56,7 +57,7 @@ async function credits() {
 async function record(line: Line): Promise<Buffer> {
   const voice = config.voices[line.voice]
   const model = config.models[line.lang]
-  const body: Record<string, unknown> = { text: line.text, model_id: model, voice_settings: config.settings }
+  const body: Record<string, unknown> = { text: line.text, model_id: model, voice_settings: { ...config.settings, ...(voice.settings ?? {}) } }
   if (/v2_5|v3/.test(model)) body.language_code = line.lang
   for (let attempt = 1; ; attempt++) {
     try {
@@ -102,6 +103,8 @@ async function main() {
   let todo = collectLines({ englishInstructions: flag('english-instructions') })
     .filter((l) => !only || only.includes(l.voice))
     .filter((l) => flag('redo') || !existsSync(join(audioDir, l.voice, `${clipHash(l.voice, l.text)}.mp3`)))
+  const match = value('match')
+  if (match) todo = todo.filter((l) => new RegExp(match).test(l.text))
   if (flag('sample')) todo = todo.filter(SAMPLE)
   const limit = Number(value('limit') ?? Infinity)
   todo = todo.slice(0, limit)
