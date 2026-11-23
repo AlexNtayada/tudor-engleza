@@ -47,9 +47,15 @@
     "use_speaker_boost": true,
     "speed": 0.95
   },
+  "lineSettings": {
+    "en": {
+      "kite": { "speed": 0.8, "stability": 0.8, "style": 0 }
+    }
+  },
   "spoken": {
     "en": {
-      "hat": "Hat."
+      "hat": "Hat.",
+      "kite": "Kite."
     },
     "ninja": {
       "Yes!": "Yes.",

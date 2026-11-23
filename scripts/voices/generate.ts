@@ -14,6 +14,7 @@
 //
 // voices.json "spoken" can give a line a different text to send to ElevenLabs (same clip key), e.g.
 // "Hat." for "hat" when the bare word comes out with an extra vowel.
+// voices.json "lineSettings" can give one line its own voice settings, e.g. a slower "speed" for "kite".
 
 import { existsSync, mkdirSync, readdirSync, readFileSync, renameSync, writeFileSync } from 'node:fs'
 import { dirname, join } from 'node:path'
@@ -62,7 +63,7 @@ async function record(line: Line): Promise<Buffer> {
   const voice = config.voices[line.voice]
   const model = config.models[line.lang]
   const text = config.spoken?.[line.voice]?.[line.text] ?? line.text
-  const body: Record<string, unknown> = { text, model_id: model, voice_settings: { ...config.settings, ...(voice.settings ?? {}) } }
+  const body: Record<string, unknown> = { text, model_id: model, voice_settings: { ...config.settings, ...(voice.settings ?? {}), ...(config.lineSettings?.[line.voice]?.[line.text] ?? {}) } }
   if (/v2_5|v3/.test(model)) body.language_code = line.lang
   for (let attempt = 1; ; attempt++) {
     try {
