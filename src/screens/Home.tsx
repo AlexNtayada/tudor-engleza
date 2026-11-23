@@ -1,5 +1,5 @@
 import { mascot, g } from '../mascots'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { ALL_LESSONS, UNITS } from '../content'
 import { Mascot, type Mood } from '../components/Mascot'
 import { currentLessonIndex, learnedWordIds, today, type Progress } from '../progress'
@@ -148,6 +148,39 @@ function HomeHero({ progress, current, mood, onTab }: { progress: Progress; curr
 }
 
 /** Theme tiles: tap one to jump to it on the map. */
+/** Scrolls the map to the lesson the child has reached. */
+function scrollToCurrent() {
+  sfx.tap()
+  document.querySelector('.bm-current')?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+}
+
+/** Desktop: a copy of "Progresul meu" pinned left of the map while both the pill and the current lesson are off screen. */
+function SideJump() {
+  const [show, setShow] = useState(false)
+  useEffect(() => {
+    const pill = document.querySelector('.home .jump-current')
+    const node = document.querySelector('.bm-current')
+    if (!pill || !node) return
+    const seen = new Map<Element, boolean>()
+    const io = new IntersectionObserver((entries) => {
+      for (const e of entries) seen.set(e.target, e.isIntersecting)
+      setShow(!seen.get(pill) && !seen.get(node))
+    })
+    io.observe(pill)
+    io.observe(node)
+    return () => io.disconnect()
+  }, [])
+  if (!show) return null
+  return (
+    <button className="jump-current jump-side" onClick={scrollToCurrent} tabIndex={-1} aria-hidden>
+      <span className="jump-current-face">
+        <Mascot mood="happy" size={30} />
+      </span>
+      Progresul meu
+    </button>
+  )
+}
+
 function UnitTiles({ progress, current }: { progress: Progress; current: number }) {
   let start = 0
   return (
@@ -155,10 +188,7 @@ function UnitTiles({ progress, current }: { progress: Progress; current: number 
     {current < ALL_LESSONS.length && (
       <button
         className="jump-current"
-        onClick={() => {
-          sfx.tap()
-          document.querySelector('.bm-current')?.scrollIntoView({ behavior: 'smooth', block: 'center' })
-        }}
+        onClick={scrollToCurrent}
       >
         <span className="jump-current-face">
           <Mascot mood="happy" size={30} />
@@ -190,6 +220,7 @@ function UnitTiles({ progress, current }: { progress: Progress; current: number 
         )
       })}
     </nav>
+    {current < ALL_LESSONS.length && <SideJump />}
     </>
   )
 }
