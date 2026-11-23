@@ -115,6 +115,7 @@ export function FinishScreen({
   stars,
   sticker,
   gained,
+  multiplier = 1,
   combos,
   levelUp,
   chest,
@@ -138,6 +139,7 @@ export function FinishScreen({
   stars: number
   sticker?: string
   gained: number
+  multiplier?: number
   combos: number
   levelUp?: number
   chest: boolean
@@ -293,7 +295,10 @@ export function FinishScreen({
             <span className="stat-icon">⭐</span>
             <span>
               <b>+{gained}</b>
-              <small>stele{boss ? ` (+${BOSS_BONUS} boss)` : ''}</small>
+              <small>
+                stele{boss ? ` (+${BOSS_BONUS} boss)` : ''}
+                {multiplier > 1 && <span className="stat-mult"> × {multiplier}</span>}
+              </small>
             </span>
           </div>
           <div className="stat-tile">

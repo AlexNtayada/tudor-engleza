@@ -70,6 +70,18 @@ export const itemById = (id: string) => ITEMS.find((i) => i.id === id)
 /** Stars added on top of the lesson stars when a boss is beaten. */
 export const BOSS_BONUS = 5
 
+/**
+ * Experience for one play: the base (stars + combos + boss bonus) multiplied by the stars earned,
+ * so 1 star gives the base, 2 stars double and 3 stars triple (the parent asked for "3 stars = 3x").
+ * A boss that got away still gives just 1 star for trying.
+ */
+export function xpFor(stars: number, combos: number, boss?: { defeated: boolean }): { base: number; multiplier: number; gained: number } {
+  if (boss && !boss.defeated) return { base: 1, multiplier: 1, gained: 1 }
+  const multiplier = Math.max(1, stars)
+  const base = stars + combos + (boss ? BOSS_BONUS : 0)
+  return { base, multiplier, gained: base * multiplier }
+}
+
 export function setProgress(p: Progress, unit: Unit): { have: number; total: number } {
   const total = unit.lessons.length
   const have = unit.lessons.filter((l) => p.stickers.includes(l.sticker)).length
