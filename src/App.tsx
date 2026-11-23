@@ -22,6 +22,7 @@ import { micSupported } from './recorder'
 import { Logopedie } from './logopedie/Logopedie'
 import { Propozitii, SentenceLesson } from './propozitii/Propozitii'
 import { PACKS } from './propozitii/data'
+import { Tower } from './tower/Tower'
 import { buildSentenceLesson, type SentenceStep } from './propozitii/lessons'
 
 /** The greeting when the app opens is played softer, so it doesn't startle. */
@@ -66,7 +67,7 @@ type Screen =
   | { name: 'sync'; remote: Family }
 
 const BREAK_AFTER_SECONDS = 15 * 60
-const TABS: string[] = ['home', 'play', 'sentences', 'speech', 'album', 'dino', 'parents']
+const TABS: string[] = ['home', 'play', 'tower', 'sentences', 'speech', 'album', 'dino', 'parents']
 
 export default function App() {
   const [store, setStore] = useState<ProfileStore>(loadStore)
@@ -323,6 +324,8 @@ export default function App() {
       }
     })
 
+  const earnStars = (stars: number) => setProgress((p) => ({ ...p, wallet: p.wallet + stars, earned: p.earned + stars }))
+
   const goTab = (t: Tab) => setScreen(t === 'parents' ? { name: 'gate' } : { name: t })
 
   const page = () => {
@@ -355,6 +358,8 @@ export default function App() {
         return <Playground progress={progress} onPlay={startFreePlay} />
       case 'speech':
         return <Logopedie progress={progress} onEarn={earnSpeech} onParents={() => setScreen({ name: 'gate', next: 'parents' })} />
+      case 'tower':
+        return <Tower progress={progress} onEarn={earnStars} />
       case 'sentences':
         return <Propozitii progress={progress} onStart={startSentences} />
       case 'sentence': {
