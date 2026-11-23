@@ -364,7 +364,14 @@ export default function App() {
       case 'speech':
         return <Logopedie progress={progress} onEarn={earnSpeech} onParents={() => setScreen({ name: 'gate', next: 'parents' })} />
       case 'tower':
-        return <Tower progress={progress} onEarn={earnStars} />
+        return (
+          <Tower
+            progress={progress}
+            onEarn={earnStars}
+            onWin={(id) => setProgress((p) => ({ ...p, towerWins: [...new Set([...(p.towerWins ?? []), id])] }))}
+            onAlbum={() => setScreen({ name: 'album' })}
+          />
+        )
       case 'sentences':
         return <Propozitii progress={progress} onStart={startSentences} />
       case 'sentence': {
@@ -454,7 +461,7 @@ export default function App() {
       case 'break':
         return <BreakScreen onBack={() => setScreen({ name: 'home' })} />
       case 'album':
-        return <Album progress={progress} onBack={() => setScreen({ name: 'home' })} />
+        return <Album progress={progress} onBack={() => setScreen({ name: 'home' })} onPickCastle={(id) => setProgress((p) => ({ ...p, castle: id }))} />
       case 'gate':
         return (
           <ParentGate

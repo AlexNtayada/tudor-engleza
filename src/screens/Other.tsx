@@ -1,3 +1,5 @@
+import { CASTLES, CastleSticker, currentCastle, ownedCastles } from '../tower/castles'
+import { mapById } from '../tower/maps'
 import { mascot, g, MASCOTS, mascotById, type MascotId } from '../mascots'
 import { TudooLogo } from '../components/TudooLogo'
 import { useEffect, useMemo, useState } from 'react'
@@ -373,7 +375,18 @@ export function BreakScreen({ onBack }: { onBack: () => void }) {
   )
 }
 
-export function Album({ progress, onBack }: { progress: Progress; onBack: () => void }) {
+export function Album({
+  progress,
+  onBack,
+  onPickCastle,
+}: {
+  progress: Progress
+  onBack: () => void
+  /** Pick the castle that stands on the castle game's maps. */
+  onPickCastle: (id: string) => void
+}) {
+  const castles = ownedCastles(progress.towerWins ?? [])
+  const chosenCastle = currentCastle(progress.towerWins, progress.castle)
   const owned = new Set(progress.stickers)
   const [pop, setPop] = useState<string | null>(null)
   const tap = (sticker: string) => {
@@ -390,6 +403,38 @@ export function Album({ progress, onBack }: { progress: Progress; onBack: () => 
         <h2>Albumul meu</h2>
       </header>
       <p className="album-hint">Strânge toate abțibildurile unei teme și {mascot().name} primește un cadou special!</p>
+      <section className="album-unit album-castles">
+        <div className="album-head">
+          <h3 style={{ color: '#3463c4' }}>🏰 Castelele mele</h3>
+          <span className="album-count">
+            {castles.length}/{CASTLES.length}
+          </span>
+        </div>
+        <p className="album-castles-hint">Atinge un castel ca să apară în jocul Castelul.</p>
+        <div className="album-castle-grid">
+          {CASTLES.map((c) => {
+            const has = castles.includes(c.id)
+            const on = chosenCastle === c.id
+            return (
+              <button
+                key={c.id}
+                className={`album-castle ${has ? 'owned' : ''} ${on ? 'on' : ''}`}
+                onClick={() => {
+                  if (!has) return
+                  sfx.pop()
+                  onPickCastle(c.id)
+                }}
+                aria-pressed={on}
+                aria-label={has ? c.name : 'Castel lipsă'}
+              >
+                <CastleSticker id={c.id} size={92} locked={!has} />
+                <small>{has ? c.name : `Câștigă ${mapById(c.id).name}`}</small>
+                {on && <span className="album-castle-check">✓</span>}
+              </button>
+            )
+          })}
+        </div>
+      </section>
       {UNITS.map((u) => {
         const { have, total } = setProgress(progress, u)
         const reward = itemById(u.setReward)

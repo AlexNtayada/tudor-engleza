@@ -9,7 +9,10 @@ import type { Progress } from '../progress'
 import { sfx } from '../sfx'
 import { instruction, speak, stopSpeaking } from '../speech'
 import { Board } from './Board'
+import { CastleSticker, castleById, currentCastle } from './castles'
+import { MAPS, mapById, mapOpen, type TowerMap } from './maps'
 import {
+  ASKS,
   ALLIES,
   ALLY_ORDER,
   BOARD,
@@ -42,10 +45,27 @@ interface Fx {
   kind: 'poof' | 'hit'
 }
 
-export function Tower({ progress, onEarn }: { progress: Progress; onEarn: (stars: number) => void }) {
+/** One game on one land. */
+export function TowerGame({
+  map,
+  progress,
+  onEarn,
+  onWin,
+  onBack,
+}: {
+  map: TowerMap
+  progress: Progress
+  onEarn: (stars: number) => void
+  onWin: (mapId: string) => void
+  onBack: () => void
+}) {
   const mode = progress.settings.instructions
   const units = useMemo(() => questionUnits(progress), [progress.stars]) // eslint-disable-line react-hooks/exhaustive-deps
-  const game = useRef<Game>(newGame())
+  const game = useRef<Game>(newGame(map.path, map.speed))
+  /** The last words asked, kept out of the next questions. */
+  const recent = useRef<string[]>([])
+  /** Winning this land for the first time gives its castle sticker. */
+  const newCastle = useRef(!(progress.towerWins ?? []).includes(map.id))
   const fx = useRef<Fx[]>([])
   const fxId = useRef(0)
   const [, setFrame] = useState(0)
@@ -66,7 +86,9 @@ export function Tower({ progress, onEarn }: { progress: Progress; onEarn: (stars
   const ask = useCallback(
     (question: Question) => {
       setMood('talk')
-      void speak(instruction(mode, 'Unde e', `Where is ${question.target.say}?`, question.target.say))
+      const a = ASKS[question.ask]
+      const w = question.target.say
+      void speak(a.ro ? instruction(mode, a.ro, a.en.replace('{w}', w), w) : [{ text: w, lang: 'en' }])
     },
     [mode],
   )
@@ -98,7 +120,7 @@ export function Tower({ progress, onEarn }: { progress: Progress; onEarn: (stars
         } else if (e.type === 'won') {
           sfx.fanfare()
           setMood('dance')
-          void speak(instruction(mode, 'Ai câștigat!', 'You won!'))
+          void speak(newCastle.current ? instruction(mode, 'Abțibild nou!', 'New sticker!') : instruction(mode, 'Ai câștigat!', 'You won!'))
         } else if (e.type === 'lost') {
           setMood('oops')
           void speak(instruction(mode, 'Mai încercăm!', "Let's try again!"))
@@ -141,11 +163,13 @@ export function Tower({ progress, onEarn }: { progress: Progress; onEarn: (stars
       const stars = starsFor(g)
       setEarned(stars)
       if (stars > 0) onEarn(stars)
+      if (g.phase === 'won') onWin(map.id)
     }
-  }, [over, g, onEarn])
+  }, [over, g, onEarn, onWin, map.id])
 
   const nextQuestion = () => {
-    const nq = makeQuestion(units, Math.random, q.target.id)
+    recent.current = [...recent.current, q.target.id].slice(-5)
+    const nq = makeQuestion(units, Math.random, recent.current, q.ask)
     setQ(nq)
     setWrong([])
     setRight(false)
@@ -188,7 +212,7 @@ export function Tower({ progress, onEarn }: { progress: Progress; onEarn: (stars
   }
 
   const restart = () => {
-    game.current = newGame()
+    game.current = newGame(map.path, map.speed)
     rewarded.current = false
     fx.current = []
     setEarned(0)
@@ -208,6 +232,9 @@ export function Tower({ progress, onEarn }: { progress: Progress; onEarn: (stars
   return (
     <div className="td-page">
       <div className="td-hud">
+        <button className="td-pause td-back" onClick={onBack} aria-label="Înapoi la hărți">
+          ←
+        </button>
         <div className="td-wave">
           <small>Valul</small>
           <b>
@@ -232,19 +259,19 @@ export function Tower({ progress, onEarn }: { progress: Progress; onEarn: (stars
         </button>
       </div>
 
-      <div className="td-board">
+      <div className="td-board" style={{ boxShadow: `0 8px 0 ${map.edge}` }}>
         <svg viewBox={`0 0 ${BOARD.w} ${BOARD.h}`} preserveAspectRatio="xMidYMid meet" className="td-svg">
-          <Board />
+          <Board map={map} castle={currentCastle(progress.towerWins, progress.castle)} />
           {[...g.enemies]
             .sort((a, b) => a.s - b.s)
             .map((e) => {
-              const p = pointAt(e.s)
+              const p = pointAt(e.s, map.path)
               const max = ENEMIES[e.kind].hp
               return (
                 <g key={e.id} transform={`translate(${p.x} ${p.y})`}>
                   <g transform="scale(1.35)">
                     <g className={`td-walk ${e.hurt > 0 ? 'td-hurt' : ''}`}>
-                      <EnemySprite kind={e.kind} />
+                      <EnemySprite kind={e.kind} slime={map.slime} boss={map.boss} />
                     </g>
                   </g>
                   {max > 1 && (
@@ -258,7 +285,7 @@ export function Tower({ progress, onEarn }: { progress: Progress; onEarn: (stars
               )
             })}
           {g.allies.map((a) => {
-            const p = pointAt(a.s)
+            const p = pointAt(a.s, map.path)
             return (
               <g key={a.id} transform={`translate(${p.x} ${p.y})`}>
                 <g transform="scale(1.35)">
@@ -315,6 +342,14 @@ export function Tower({ progress, onEarn }: { progress: Progress; onEarn: (stars
             <div className="td-panel">
               <Mascot size={120} mood={g.phase === 'won' ? 'dance' : 'oops'} />
               <b className="td-panel-title">{g.phase === 'won' ? 'Castelul e salvat!' : 'Monștrii au intrat!'}</b>
+              {g.phase === 'won' && newCastle.current && (
+                <div className="td-new-castle">
+                  <CastleSticker id={map.id} size={120} />
+                  <span>
+                    Abțibild nou: <b>{castleById(map.id).name}</b>! Îl găsești în Album.
+                  </span>
+                </div>
+              )}
               <p>
                 Ai oprit {g.stopped} {g.stopped === 1 ? 'monstru' : 'monștri'}.
                 {earned > 0 && (
@@ -340,7 +375,9 @@ export function Tower({ progress, onEarn }: { progress: Progress; onEarn: (stars
             </span>
             <div className="td-bubble">
               <span>
-                Unde e <b>{q.target.en}</b>?
+                {ASKS[q.ask].bubble.split('{w}')[0]}
+                <b>{q.target.en}</b>
+                {ASKS[q.ask].bubble.split('{w}')[1]}
               </span>
               <button className="td-replay" onClick={() => ask(q)} aria-label="Ascultă din nou">
                 🔊
@@ -395,6 +432,66 @@ export function Tower({ progress, onEarn }: { progress: Progress; onEarn: (stars
             <span>🏰</span> Ține monștrii departe de castel 5 valuri
           </li>
         </ol>
+      </div>
+    </div>
+  )
+}
+
+/** The castle page: pick a land, then defend the castle there. */
+export function Tower({
+  progress,
+  onEarn,
+  onWin,
+  onAlbum,
+}: {
+  progress: Progress
+  onEarn: (stars: number) => void
+  onWin: (mapId: string) => void
+  onAlbum: () => void
+}) {
+  const wins = progress.towerWins ?? []
+  const [playing, setPlaying] = useState<string | null>(null)
+  if (playing) {
+    return <TowerGame key={playing} map={mapById(playing)} progress={progress} onEarn={onEarn} onWin={onWin} onBack={() => setPlaying(null)} />
+  }
+  const castle = castleById(currentCastle(wins, progress.castle))
+  return (
+    <div className="page page-white td-lands">
+      <header className="td-lands-head">
+        <h2>Apără castelul!</h2>
+        <button className="td-my-castle" onClick={onAlbum} aria-label="Schimbă castelul din Album">
+          <CastleSticker id={castle.id} size={84} />
+          <span>
+            <b>{castle.name}</b>
+            <small>📒 Schimbă-l din Album</small>
+          </span>
+        </button>
+      </header>
+      <div className="td-land-grid">
+        {MAPS.map((m, i) => {
+          const open = mapOpen(wins, i)
+          const won = wins.includes(m.id)
+          return (
+            <button
+              key={m.id}
+              className={`td-land ${open ? '' : 'td-land-locked'} ${won ? 'td-land-won' : ''}`}
+              style={{ background: `linear-gradient(180deg, ${m.ground[0]}, ${m.ground[1]})`, boxShadow: `0 6px 0 ${m.edge}` }}
+              onClick={() => {
+                if (!open) return sfx.wrong()
+                sfx.tap()
+                setPlaying(m.id)
+              }}
+              aria-label={open ? `${m.name}${won ? ', câștigată' : ''}` : `${m.name}, încuiată`}
+            >
+              <span className="td-land-icon">{open ? m.icon : '🔒'}</span>
+              <b>{m.name}</b>
+              <span className="td-land-prize">
+                <CastleSticker id={m.id} size={58} locked={!won} />
+                <small>{won ? 'Ai castelul ✓' : open ? 'Câștigă castelul!' : 'Câștigă harta de dinainte'}</small>
+              </span>
+            </button>
+          )
+        })}
       </div>
     </div>
   )

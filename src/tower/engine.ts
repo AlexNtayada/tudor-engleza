@@ -5,9 +5,22 @@
 import { UNITS, type Unit, type Word } from '../content'
 import { learnedWordIds, type Progress } from '../progress'
 
-/** The board is drawn in a 400 x 640 box; the path runs from the cave (top) to the castle gate (bottom). */
+/** The board is drawn in a 400 x 640 box; a path runs from the cave (top) to the castle gate (bottom). */
 export const BOARD = { w: 400, h: 640 }
-export const PATH: [number, number][] = [
+
+export interface Path {
+  points: [number, number][]
+  seg: number[]
+  len: number
+}
+
+export function makePath(points: [number, number][]): Path {
+  const seg = points.slice(1).map(([x, y], i) => Math.hypot(x - points[i][0], y - points[i][1]))
+  return { points, seg, len: seg.reduce((a, b) => a + b, 0) }
+}
+
+/** The first map's path (the forest). Every map starts at the cave (200, 92) and ends at the gate (200, 512). */
+export const PATH = makePath([
   [200, 92],
   [200, 150],
   [128, 200],
@@ -16,24 +29,23 @@ export const PATH: [number, number][] = [
   [272, 410],
   [200, 455],
   [200, 512],
-]
+])
+export const PATH_LEN = PATH.len
 
-const segLen = PATH.slice(1).map(([x, y], i) => Math.hypot(x - PATH[i][0], y - PATH[i][1]))
-export const PATH_LEN = segLen.reduce((a, b) => a + b, 0)
-
-/** Board point at distance `s` along the path (0 = cave, PATH_LEN = castle gate). */
-export function pointAt(s: number): { x: number; y: number } {
-  let d = Math.max(0, Math.min(PATH_LEN, s))
-  for (let i = 0; i < segLen.length; i++) {
-    if (d <= segLen[i] || i === segLen.length - 1) {
-      const t = segLen[i] ? Math.min(1, d / segLen[i]) : 0
-      const [ax, ay] = PATH[i]
-      const [bx, by] = PATH[i + 1]
+/** Board point at distance `s` along a path (0 = cave, path.len = castle gate). */
+export function pointAt(s: number, path: Path = PATH): { x: number; y: number } {
+  const { points, seg } = path
+  let d = Math.max(0, Math.min(path.len, s))
+  for (let i = 0; i < seg.length; i++) {
+    if (d <= seg[i] || i === seg.length - 1) {
+      const t = seg[i] ? Math.min(1, d / seg[i]) : 0
+      const [ax, ay] = points[i]
+      const [bx, by] = points[i + 1]
       return { x: ax + (bx - ax) * t, y: ay + (by - ay) * t }
     }
-    d -= segLen[i]
+    d -= seg[i]
   }
-  return { x: PATH[0][0], y: PATH[0][1] }
+  return { x: points[0][0], y: points[0][1] }
 }
 
 export type EnemyKind = 'slime' | 'bat' | 'rock' | 'boss'
@@ -105,10 +117,15 @@ export interface Game {
   nextId: number
   /** Enemies stopped so far (for the result screen). */
   stopped: number
+  /** The map's path, and how fast its monsters walk (1 = the forest). */
+  path: Path
+  speed: number
 }
 
-export function newGame(): Game {
+export function newGame(path: Path = PATH, speed = 1): Game {
   return {
+    path,
+    speed,
     wave: 0,
     phase: 'ready',
     enemies: [],
@@ -139,7 +156,7 @@ export function send(g: Game, kind: AllyKind): Game {
   return {
     ...g,
     coins: g.coins - a.cost,
-    allies: [...g.allies, { id: g.nextId, kind, power: a.power, s: PATH_LEN }],
+    allies: [...g.allies, { id: g.nextId, kind, power: a.power, s: g.path.len }],
     nextId: g.nextId + 1,
   }
 }
@@ -167,7 +184,7 @@ export function step(g: Game, dt: number): { game: Game; events: GameEvent[] } {
     }
   }
 
-  for (const e of enemies) e.s += ENEMIES[e.kind].speed * dt
+  for (const e of enemies) e.s += ENEMIES[e.kind].speed * g.speed * dt
   for (const a of allies) a.s -= ALLIES[a.kind].speed * dt
 
   // A friend meets the enemy closest to the castle that is at (or past) its spot on the path.
@@ -181,7 +198,7 @@ export function step(g: Game, dt: number): { game: Game; events: GameEvent[] } {
       target.hp -= dmg
       a.power -= dmg
       target.hurt = 0.35
-      const p = pointAt(target.s)
+      const p = pointAt(target.s, g.path)
       if (target.hp <= 0) {
         stopped++
         events.push({ type: 'defeat', ...p, kind: target.kind })
@@ -192,10 +209,10 @@ export function step(g: Game, dt: number): { game: Game; events: GameEvent[] } {
   allies = allies.filter((a) => a.power > 0 && a.s > 0)
 
   // Enemies that reach the gate knock a heart off the castle and go away.
-  const arrived = enemies.filter((e) => e.s >= PATH_LEN)
+  const arrived = enemies.filter((e) => e.s >= g.path.len)
   if (arrived.length) {
     castle = Math.max(0, castle - arrived.reduce((n, e) => n + (e.kind === 'boss' ? 2 : 1), 0))
-    enemies = enemies.filter((e) => e.s < PATH_LEN)
+    enemies = enemies.filter((e) => e.s < g.path.len)
     events.push({ type: 'castle' })
   }
 
@@ -231,7 +248,19 @@ export function starsFor(g: Game): number {
 export interface Question {
   target: Word
   options: Word[]
+  /** How the friend asks (see ASKS), so it doesn't always sound the same. */
+  ask: AskKind
 }
+
+/** Ways to ask for a picture; each uses lines the friends already have recorded. */
+export type AskKind = 'where' | 'pick' | 'listen' | 'word'
+export const ASKS: Record<AskKind, { ro: string; en: string; bubble: string }> = {
+  where: { ro: 'Unde e', en: 'Where is {w}?', bubble: 'Unde e {w}?' },
+  pick: { ro: 'Alege poza:', en: 'Find the picture: {w}', bubble: 'Alege poza: {w}' },
+  listen: { ro: 'Ascultă bine!', en: 'Listen! {w}', bubble: 'Ascultă bine: {w}' },
+  word: { ro: '', en: '{w}', bubble: '{w}?' },
+}
+const ASK_KINDS = Object.keys(ASKS) as AskKind[]
 
 /** Words the questions use: the ones learned on the map, or the first worlds for a new player. */
 export function questionUnits(p: Progress): Unit[] {
@@ -241,18 +270,24 @@ export function questionUnits(p: Progress): Unit[] {
 }
 
 /** "Where is the …?" with three pictures from the same world (so they are easy to tell apart). */
-export function makeQuestion(units: Unit[], rnd = Math.random, avoid?: string): Question {
+export function makeQuestion(units: Unit[], rnd = Math.random, avoid: string[] = [], prevAsk?: AskKind): Question {
   const unit = units[Math.floor(rnd() * units.length)]
   // The distractors come from the whole world, even words not learned yet: the target is a learned one.
   const full = UNITS.find((u) => u.id === unit.id)?.words ?? unit.words
-  let pool = unit.words.filter((w) => w.id !== avoid)
+  // Skip the words asked just before, so the same one doesn't keep coming back.
+  let pool = unit.words.filter((w) => !avoid.includes(w.id))
+  if (!pool.length) pool = unit.words.filter((w) => w.id !== avoid[avoid.length - 1])
   if (!pool.length) pool = unit.words
   const target = pool[Math.floor(rnd() * pool.length)]
   const others = shuffle(
     full.filter((w) => w.id !== target.id && visualKey(w) !== visualKey(target)),
     rnd,
   ).slice(0, 2)
-  return { target, options: shuffle([target, ...others], rnd) }
+  return { target, options: shuffle([target, ...others], rnd), ask: pick(ASK_KINDS.filter((k) => k !== prevAsk), rnd) }
+}
+
+function pick<T>(xs: T[], rnd: () => number): T {
+  return xs[Math.floor(rnd() * xs.length)]
 }
 
 function visualKey(w: Word): string {

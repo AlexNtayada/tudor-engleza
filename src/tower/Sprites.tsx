@@ -21,14 +21,14 @@ function Eyes({ y = -20, dx = 6, angry = false }: { y?: number; dx?: number; ang
   )
 }
 
-export function EnemySprite({ kind }: { kind: EnemyKind }) {
+export function EnemySprite({ kind, slime = '#7fd858', boss = '#c05be0' }: { kind: EnemyKind; slime?: string; boss?: string }) {
   switch (kind) {
     case 'slime':
       return (
         <g>
           <ellipse cx="0" cy="0" rx="15" ry="3.5" fill="rgba(0,0,0,.18)" />
           <path d="M-10 -26 l-4 -7 l7 3 Z M10 -26 l4 -7 l-7 3 Z" fill="#b46bff" {...ink} strokeWidth={1.8} />
-          <path d="M-16 0 Q -18 -30 0 -31 Q 18 -30 16 0 Q 8 -3 0 0 Q -8 -3 -16 0 Z" fill="#7fd858" {...ink} />
+          <path d="M-16 0 Q -18 -30 0 -31 Q 18 -30 16 0 Q 8 -3 0 0 Q -8 -3 -16 0 Z" fill={slime} {...ink} />
           <ellipse cx="-7" cy="-24" rx="4" ry="2.4" fill="#fff" opacity=".5" />
           <Eyes y={-16} dx={5.5} angry />
           <path d="M-4 -7 Q 0 -4 4 -7" fill="none" {...ink} strokeWidth={1.8} />
@@ -63,7 +63,7 @@ export function EnemySprite({ kind }: { kind: EnemyKind }) {
       return (
         <g>
           <ellipse cx="0" cy="0" rx="28" ry="5" fill="rgba(0,0,0,.2)" />
-          <path d="M-28 0 Q -32 -50 0 -52 Q 32 -50 28 0 Q 14 -5 0 0 Q -14 -5 -28 0 Z" fill="#c05be0" {...ink} />
+          <path d="M-28 0 Q -32 -50 0 -52 Q 32 -50 28 0 Q 14 -5 0 0 Q -14 -5 -28 0 Z" fill={boss} {...ink} />
           <ellipse cx="-12" cy="-40" rx="7" ry="4" fill="#fff" opacity=".45" />
           <path d="M-15 -50 L -17 -66 L -8 -58 L 0 -70 L 8 -58 L 17 -66 L 15 -50 Z" fill="#ffc21a" {...ink} />
           <circle cx="0" cy="-60" r="2.6" fill="#ff5a5f" />
