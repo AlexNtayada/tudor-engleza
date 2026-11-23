@@ -1,5 +1,5 @@
 import { mascot, g } from '../mascots'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { ALL_LESSONS, UNITS } from '../content'
 import { Mascot, type Mood } from '../components/Mascot'
 import { currentLessonIndex, learnedWordIds, today, type Progress } from '../progress'
@@ -86,7 +86,38 @@ export function Home({
         </div>
       </div>
       </div>
+      {current < ALL_LESSONS.length && <JumpToCurrent />}
     </>
+  )
+}
+
+/** Floating button that scrolls the map back to the lesson the child has reached, shown while it is off screen. */
+function JumpToCurrent() {
+  const [dir, setDir] = useState<'up' | 'down' | null>(null)
+  useEffect(() => {
+    const node = document.querySelector('.bm-current')
+    if (!node) return
+    const io = new IntersectionObserver(([e]) => {
+      if (e.isIntersecting) setDir(null)
+      else setDir(e.boundingClientRect.top < 0 ? 'up' : 'down')
+    })
+    io.observe(node)
+    return () => io.disconnect()
+  }, [])
+  if (!dir) return null
+  return (
+    <button
+      className="jump-current"
+      onClick={() => {
+        sfx.tap()
+        document.querySelector('.bm-current')?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+      }}
+    >
+      <span className="jump-current-face">
+        <Mascot mood="happy" size={40} />
+      </span>
+      Nivelul meu {dir === 'up' ? '↑' : '↓'}
+    </button>
   )
 }
 
