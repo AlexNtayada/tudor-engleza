@@ -1,7 +1,7 @@
 {
-  "_help": "Which ElevenLabs voice speaks for whom. Change a voiceId, delete that folder in public/audio and run the generator again. Romanian uses a model that can be told the language (language_code), so short words aren't read with an English accent. A voice can have its own \"settings\" (merged over the shared ones), e.g. calmer for Ninja.",
+  "_help": "Which ElevenLabs voice speaks for whom. Change a voiceId, delete that folder in public/audio and run the generator again. Romanian uses a model that can be told the language (language_code), so short words aren't read with an English accent. English uses it too (language_code en), because multilingual_v2 read single words like kite and robot as Romanian. A voice can have its own \"settings\" (merged over the shared ones), e.g. calmer for Ninja.",
   "models": {
-    "en": "eleven_multilingual_v2",
+    "en": "eleven_turbo_v2_5",
     "ro": "eleven_turbo_v2_5"
   },
   "voices": {
