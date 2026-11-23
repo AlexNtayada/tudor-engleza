@@ -1,5 +1,5 @@
 import { mascot, g } from '../mascots'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { ALL_LESSONS, UNITS } from '../content'
 import { Mascot, type Mood } from '../components/Mascot'
 import { currentLessonIndex, learnedWordIds, today, type Progress } from '../progress'
@@ -86,40 +86,10 @@ export function Home({
         </div>
       </div>
       </div>
-      {current < ALL_LESSONS.length && <JumpToCurrent />}
     </>
   )
 }
 
-/** Floating button that scrolls the map back to the lesson the child has reached, shown while it is off screen. */
-function JumpToCurrent() {
-  const [dir, setDir] = useState<'up' | 'down' | null>(null)
-  useEffect(() => {
-    const node = document.querySelector('.bm-current')
-    if (!node) return
-    const io = new IntersectionObserver(([e]) => {
-      if (e.isIntersecting) setDir(null)
-      else setDir(e.boundingClientRect.top < 0 ? 'up' : 'down')
-    })
-    io.observe(node)
-    return () => io.disconnect()
-  }, [])
-  if (!dir) return null
-  return (
-    <button
-      className="jump-current"
-      onClick={() => {
-        sfx.tap()
-        document.querySelector('.bm-current')?.scrollIntoView({ behavior: 'smooth', block: 'center' })
-      }}
-    >
-      <span className="jump-current-face">
-        <Mascot mood="happy" size={40} />
-      </span>
-      Nivelul meu {dir === 'up' ? '↑' : '↓'}
-    </button>
-  )
-}
 
 /** Sunny header: greeting, Ninja with a speech bubble, and the level card. */
 function HomeHero({ progress, current, mood, onTab }: { progress: Progress; current: number; mood: Mood; onTab: (t: Tab) => void }) {
@@ -181,6 +151,21 @@ function HomeHero({ progress, current, mood, onTab }: { progress: Progress; curr
 function UnitTiles({ progress, current }: { progress: Progress; current: number }) {
   let start = 0
   return (
+    <>
+    {current < ALL_LESSONS.length && (
+      <button
+        className="jump-current"
+        onClick={() => {
+          sfx.tap()
+          document.querySelector('.bm-current')?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+        }}
+      >
+        <span className="jump-current-face">
+          <Mascot mood="happy" size={30} />
+        </span>
+        Progresul meu ↓
+      </button>
+    )}
     <nav className="tiles" aria-label="Teme">
       {UNITS.map((u) => {
         const first = start
@@ -205,6 +190,7 @@ function UnitTiles({ progress, current }: { progress: Progress; current: number 
         )
       })}
     </nav>
+    </>
   )
 }
 

@@ -5179,44 +5179,33 @@ button.avatar:active {
   padding-left: 72px;
 }
 
-/* "Nivelul meu": floating button back to the lesson the child has reached on the map. */
+/* "Progresul meu": small pill above the theme tiles that scrolls the map to the current lesson. */
 .jump-current {
-  position: fixed;
-  right: 20px;
-  bottom: 24px;
-  z-index: 15;
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  gap: 8px;
-  padding: 6px 18px 6px 6px;
+  gap: 6px;
+  margin-top: 22px;
+  padding: 3px 14px 3px 3px;
   border-radius: 999px;
   background: var(--green);
   color: #fff;
-  font-size: 18px;
+  font-size: 15px;
   font-weight: 800;
-  box-shadow: 0 4px 0 #17925a, 0 10px 24px rgba(20, 90, 50, 0.3);
-  animation: jump-in 0.25s ease-out;
+  box-shadow: 0 3px 0 #17925a;
 }
 .jump-current:active {
-  transform: translateY(3px);
-  box-shadow: 0 1px 0 #17925a, 0 6px 16px rgba(20, 90, 50, 0.3);
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 #17925a;
 }
 .jump-current-face {
   display: grid;
   place-items: center;
-  width: 44px;
-  height: 44px;
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
   background: #fff;
   overflow: hidden;
 }
-@keyframes jump-in {
-  from { opacity: 0; transform: translateY(12px); }
-}
-@media (max-width: 900px) {
-  .jump-current {
-    right: 14px;
-    bottom: calc(84px + env(safe-area-inset-bottom));
-    font-size: 16px;
-  }
+.jump-current + .tiles {
+  margin-top: 12px;
 }
