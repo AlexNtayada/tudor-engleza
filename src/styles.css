@@ -5178,3 +5178,45 @@ button.avatar:active {
 .level-card .meter-text {
   padding-left: 72px;
 }
+
+/* "Nivelul meu": floating button back to the lesson the child has reached on the map. */
+.jump-current {
+  position: fixed;
+  right: 20px;
+  bottom: 24px;
+  z-index: 15;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 18px 6px 6px;
+  border-radius: 999px;
+  background: var(--green);
+  color: #fff;
+  font-size: 18px;
+  font-weight: 800;
+  box-shadow: 0 4px 0 #17925a, 0 10px 24px rgba(20, 90, 50, 0.3);
+  animation: jump-in 0.25s ease-out;
+}
+.jump-current:active {
+  transform: translateY(3px);
+  box-shadow: 0 1px 0 #17925a, 0 6px 16px rgba(20, 90, 50, 0.3);
+}
+.jump-current-face {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: #fff;
+  overflow: hidden;
+}
+@keyframes jump-in {
+  from { opacity: 0; transform: translateY(12px); }
+}
+@media (max-width: 900px) {
+  .jump-current {
+    right: 14px;
+    bottom: calc(84px + env(safe-area-inset-bottom));
+    font-size: 16px;
+  }
+}

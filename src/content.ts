@@ -380,7 +380,7 @@ export const UNITS: Unit[] = [
       thing('teddy', 'ursuleț', '🧸'),
       thing('doll', 'păpușă', '🪆'),
       thing('kite', 'zmeu', '🪁'),
-      thing('blocks', 'cuburi', '🧱'),
+      thing('bricks', 'cărămizi', '🧱'),
       thing('robot', 'robot', '🤖'),
       thing('drum', 'tobă', '🥁'),
       thing('puzzle', 'puzzle', '🧩'),
@@ -389,7 +389,7 @@ export const UNITS: Unit[] = [
     ],
     lessons: [
       { id: 'toys-1', newWords: ['ball', 'teddy', 'doll'], sticker: '🎠' },
-      { id: 'toys-2', newWords: ['kite', 'blocks', 'robot'], sticker: '🎡' },
+      { id: 'toys-2', newWords: ['kite', 'bricks', 'robot'], sticker: '🎡' },
       { id: 'toys-3', newWords: ['drum', 'puzzle'], sticker: '🃏' },
       {
         id: 'toys-4',

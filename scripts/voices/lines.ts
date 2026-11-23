@@ -36,6 +36,8 @@ function wordLines(englishInstructions: boolean): string[] {
     }
   }
   const filtered = out.filter((t) => !/^I (want|need my) /.test(t) || feedOrDress.has(t))
+  // Bonus "say it" sentences at the end of some lessons (e.g. "Let's play!").
+  for (const u of UNITS) for (const l of u.lessons) if (l.bonusSpeak) filtered.push(l.bonusSpeak.say)
   for (const p of PACKS)
     for (const s of p.sentences) {
       const { before, after } = splitAtKey(s)
