@@ -218,9 +218,12 @@ export function step(g: Game, dt: number): { game: Game; events: GameEvent[] } {
   return { game: { ...g, queue, spawnIn, nextId, castle, stopped, enemies, allies, phase, wave }, events }
 }
 
-/** Stars for a finished game: a win is worth 5, otherwise one per wave survived (only if a monster was stopped). */
+/**
+ * Stars for a finished game, on the same scale as lessons (3 stars x3 = 9 and up):
+ * a win is worth 15, otherwise 3 per wave survived (only if a monster was stopped).
+ */
 export function starsFor(g: Game): number {
-  return g.phase === 'won' ? 5 : Math.min(g.wave, g.stopped)
+  return g.phase === 'won' ? 15 : 3 * Math.min(g.wave, g.stopped)
 }
 
 // ---------- Questions ----------
