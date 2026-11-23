@@ -14,6 +14,9 @@ Merge în browser pe calculator și se poate instala pe telefon (PWA).
   început / mijloc / sfârșit și jocul „Urechiușa” (rață sau iață?). Înregistrările rămân pe dispozitiv și
   se ascultă din Zona părinților. Completează, nu înlocuiește, lucrul cu un logoped. Conținutul e în
   `src/logopedie/data.ts`.
+- **Castelul** (tower defense): monștrii vin pe drum spre castel; fiecare răspuns corect la „Unde e…?” dă o monedă,
+  iar cu monede trimiți Arcașul, Cavalerul sau Dragonelul să-i oprească. 5 valuri, cuvintele vin din lumile învățate.
+  Codul e în `src/tower/` (regulile în `engine.ts`).
 - Zona părinților (poartă cu numere): progres, minute pe zi, setări
 - Instrucțiuni în română (dacă dispozitivul are voce românească) sau engleză; cuvintele sunt mereu cu voce americană
 

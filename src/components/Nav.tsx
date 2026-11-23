@@ -5,13 +5,14 @@ import { TudooLogo } from './TudooLogo'
 import { levelFor } from '../gamify'
 import type { Progress } from '../progress'
 
-export type Tab = 'home' | 'play' | 'sentences' | 'speech' | 'album' | 'dino' | 'parents'
+export type Tab = 'home' | 'play' | 'tower' | 'sentences' | 'speech' | 'album' | 'dino' | 'parents'
 
 const FRIEND_ICON: Record<string, string> = { ninja: '🥷', pip: '🦊', bobo: '🐻', rici: '🦔', bip: '🤖', zuzu: '🐲' }
 
 const TABS: { id: Tab; icon: string; label: string }[] = [
   { id: 'home', icon: '🗺️', label: 'Hartă' },
   { id: 'play', icon: '🎈', label: 'Joacă' },
+  { id: 'tower', icon: '🏰', label: 'Castelul' },
   { id: 'sentences', icon: '💬', label: 'Propoziții' },
   { id: 'speech', icon: '👅', label: 'Sunete' },
   { id: 'album', icon: '📒', label: 'Album' },
