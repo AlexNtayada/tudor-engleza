@@ -3735,6 +3735,12 @@ body {
   font-weight: 600;
 }
 
+.stat-mult {
+  color: #e0631a;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
 .stat-wide {
   grid-column: 1 / -1;
 }

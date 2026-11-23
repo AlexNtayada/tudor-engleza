@@ -22,26 +22,27 @@ export interface Item {
 }
 
 export const ITEMS: Item[] = [
-  { id: 'party-hat', name: 'Coif de petrecere', slot: 'head', price: 5 },
-  { id: 'bow-tie', name: 'Papion', slot: 'neck', price: 6 },
-  { id: 'sunglasses', name: 'Ochelari de soare', slot: 'face', price: 8 },
-  { id: 'flower', name: 'Floare', slot: 'head', price: 8 },
-  { id: 'scarf', name: 'Fular', slot: 'neck', price: 10 },
-  { id: 'cap', name: 'Șapcă', slot: 'head', price: 12 },
-  { id: 'star-glasses', name: 'Ochelari-stea', slot: 'face', price: 15 },
-  { id: 'crown', name: 'Coroană', slot: 'head', price: 20 },
-  { id: 'mustache', name: 'Mustață', slot: 'face', price: 9 },
-  { id: 'balloon', name: 'Balon', slot: 'hand', price: 10 },
-  { id: 'lollipop', name: 'Acadea', slot: 'hand', price: 12 },
-  { id: 'backpack', name: 'Rucsac', slot: 'back', price: 14 },
-  { id: 'bunny-ears', name: 'Urechi de iepuraș', slot: 'head', price: 16 },
-  { id: 'red-cape', name: 'Pelerină roșie', slot: 'back', price: 18 },
-  { id: 'heart-glasses', name: 'Ochelari-inimioară', slot: 'face', price: 18 },
-  { id: 'pirate-hat', name: 'Pălărie de pirat', slot: 'head', price: 22 },
-  { id: 'medal', name: 'Medalie', slot: 'neck', price: 25 },
-  { id: 'star-wand', name: 'Baghetă cu stea', slot: 'hand', price: 25 },
-  { id: 'wizard-hat', name: 'Pălărie de vrăjitor', slot: 'head', price: 28 },
-  { id: 'wings', name: 'Aripi', slot: 'back', price: 35 },
+  // Prices were tripled when experience started being multiplied by the stars earned (x1-x3).
+  { id: 'party-hat', name: 'Coif de petrecere', slot: 'head', price: 15 },
+  { id: 'bow-tie', name: 'Papion', slot: 'neck', price: 18 },
+  { id: 'sunglasses', name: 'Ochelari de soare', slot: 'face', price: 24 },
+  { id: 'flower', name: 'Floare', slot: 'head', price: 24 },
+  { id: 'scarf', name: 'Fular', slot: 'neck', price: 30 },
+  { id: 'cap', name: 'Șapcă', slot: 'head', price: 36 },
+  { id: 'star-glasses', name: 'Ochelari-stea', slot: 'face', price: 45 },
+  { id: 'crown', name: 'Coroană', slot: 'head', price: 60 },
+  { id: 'mustache', name: 'Mustață', slot: 'face', price: 27 },
+  { id: 'balloon', name: 'Balon', slot: 'hand', price: 30 },
+  { id: 'lollipop', name: 'Acadea', slot: 'hand', price: 36 },
+  { id: 'backpack', name: 'Rucsac', slot: 'back', price: 42 },
+  { id: 'bunny-ears', name: 'Urechi de iepuraș', slot: 'head', price: 48 },
+  { id: 'red-cape', name: 'Pelerină roșie', slot: 'back', price: 54 },
+  { id: 'heart-glasses', name: 'Ochelari-inimioară', slot: 'face', price: 54 },
+  { id: 'pirate-hat', name: 'Pălărie de pirat', slot: 'head', price: 66 },
+  { id: 'medal', name: 'Medalie', slot: 'neck', price: 75 },
+  { id: 'star-wand', name: 'Baghetă cu stea', slot: 'hand', price: 75 },
+  { id: 'wizard-hat', name: 'Pălărie de vrăjitor', slot: 'head', price: 84 },
+  { id: 'wings', name: 'Aripi', slot: 'back', price: 105 },
   // Album rewards (one per unit), never sold.
   { id: 'rainbow-cape', name: 'Pelerină curcubeu', slot: 'back', price: 0, setOf: 'colors' },
   { id: 'cat-ears', name: 'Urechi de pisică', slot: 'head', price: 0, setOf: 'animals' },
@@ -69,6 +70,18 @@ export const itemById = (id: string) => ITEMS.find((i) => i.id === id)
 
 /** Stars added on top of the lesson stars when a boss is beaten. */
 export const BOSS_BONUS = 5
+
+/**
+ * Experience for one play: the base (stars + combos + boss bonus) multiplied by the stars earned,
+ * so 1 star gives the base, 2 stars double and 3 stars triple (the parent asked for "3 stars = 3x").
+ * A boss that got away still gives just 1 star for trying.
+ */
+export function xpFor(stars: number, combos: number, boss?: { defeated: boolean }): { base: number; multiplier: number; gained: number } {
+  if (boss && !boss.defeated) return { base: 1, multiplier: 1, gained: 1 }
+  const multiplier = Math.max(1, stars)
+  const base = stars + combos + (boss ? BOSS_BONUS : 0)
+  return { base, multiplier, gained: base * multiplier }
+}
 
 export function setProgress(p: Progress, unit: Unit): { have: number; total: number } {
   const total = unit.lessons.length

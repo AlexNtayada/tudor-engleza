@@ -10,7 +10,7 @@ import { setSfxEnabled } from './sfx'
 import { OnboardLevel, OnboardName } from './screens/Onboarding'
 import { SettingsScreen, type SettingsSection } from './screens/Settings'
 import { AccountScreen, SyncChoice } from './screens/Account'
-import { BOSS_BONUS, chestAvailable, CHEST_STARS, claimSetRewards, levelFor, streakDays, type Item } from './gamify'
+import { chestAvailable, CHEST_STARS, claimSetRewards, levelFor, streakDays, xpFor, type Item } from './gamify'
 import { Home } from './screens/Home'
 import { LessonScreen, type BossResult } from './screens/Lesson'
 import { Album, BreakScreen, FinishScreen, ParentGate, StartScreen } from './screens/Other'
@@ -44,6 +44,8 @@ type Screen =
       stars: number
       sticker?: string
       gained: number
+      /** How many times the base was multiplied (= the stars earned). */
+      multiplier?: number
       combos: number
       levelUp?: number
       chest: boolean
@@ -223,7 +225,7 @@ export default function App() {
     const lost = !!boss && !boss.defeated
     // A boss that got away gives no lesson stars (the next unit stays locked), only a star for trying.
     const stars = lost ? 0 : starsFor(mistakes)
-    const gained = lost ? 1 : stars + combos + (boss ? BOSS_BONUS : 0)
+    const { gained, multiplier } = xpFor(stars, combos, boss)
     const lesson = lost ? undefined : found?.lesson
     const sticker = lesson && !progress.stickers.includes(lesson.sticker) ? lesson.sticker : undefined
     const before = levelFor(progress.earned)
@@ -261,6 +263,7 @@ export default function App() {
       stars,
       sticker,
       gained,
+      multiplier,
       combos,
       levelUp: after > before ? after : undefined,
       chest: chestAvailable(progress, day),
@@ -280,19 +283,21 @@ export default function App() {
   const finishSentences = (packId: string, mistakes: number) => {
     const day = today()
     const stars = starsFor(mistakes)
+    const { gained, multiplier } = xpFor(stars, 0)
     const before = levelFor(progress.earned)
-    const after = levelFor(progress.earned + stars)
+    const after = levelFor(progress.earned + gained)
     setProgress({
       ...progress,
       sentences: { ...progress.sentences, [packId]: Math.max(progress.sentences[packId] ?? 0, stars) },
-      wallet: progress.wallet + stars,
-      earned: progress.earned + stars,
+      wallet: progress.wallet + gained,
+      earned: progress.earned + gained,
       daysPlayed: progress.daysPlayed.includes(day) ? progress.daysPlayed : [...progress.daysPlayed, day],
     })
     setScreen({
       name: 'finish',
       stars,
-      gained: stars,
+      gained,
+      multiplier,
       combos: 0,
       levelUp: after > before ? after : undefined,
       chest: chestAvailable(progress, day),
