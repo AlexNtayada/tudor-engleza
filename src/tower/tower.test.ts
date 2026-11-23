@@ -1,5 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { DEFAULT_PROGRESS } from '../progress'
+import { CASTLES, ownedCastles } from './castles'
+import { MAPS, mapOpen } from './maps'
 import {
   CASTLE_HP,
   PATH_LEN,
@@ -53,8 +55,8 @@ describe('tower defense', () => {
     expect(g.wave).toBe(1)
   })
 
-  it('friends stop enemies, and a game with steady answers is won', () => {
-    let g = startWave(newGame())
+  it.each(MAPS.map((m) => [m.id, m] as const))('%s: friends stop enemies, and steady answers win', (_id, map) => {
+    let g = startWave(newGame(map.path, map.speed))
     // Answer a question every 4 seconds and always send the best friend we can pay for.
     let clock = 0
     g = run(g, 600, (x) => {
@@ -84,5 +86,33 @@ describe('tower defense', () => {
       expect(q.options.map((w) => w.id)).toContain(q.target.id)
       expect(new Set(q.options.map((w) => JSON.stringify(w.visual))).size).toBe(3)
     }
+  })
+
+  it('questions change their wording and skip the words just asked', () => {
+    const units = questionUnits(DEFAULT_PROGRESS)
+    const rnd = seeded(3)
+    let q = makeQuestion(units, rnd)
+    const recent: string[] = []
+    for (let i = 0; i < 100; i++) {
+      recent.push(q.target.id)
+      recent.splice(0, recent.length - 5)
+      const next = makeQuestion(units, rnd, recent, q.ask)
+      expect(next.ask).not.toBe(q.ask)
+      expect(recent).not.toContain(next.target.id)
+      q = next
+    }
+  })
+
+  it('every map runs from the cave to the gate, and castles come with the maps', () => {
+    for (const m of MAPS) {
+      expect(m.path.points[0]).toEqual([200, 92])
+      expect(m.path.points[m.path.points.length - 1]).toEqual([200, 512])
+    }
+    expect(CASTLES.map((c) => c.id)).toEqual(MAPS.map((m) => m.id))
+    expect(mapOpen([], 0)).toBe(true)
+    expect(mapOpen([], 1)).toBe(false)
+    expect(mapOpen(['forest'], 1)).toBe(true)
+    expect(ownedCastles([])).toEqual(['forest'])
+    expect(ownedCastles(['desert'])).toEqual(['forest', 'desert'])
   })
 })

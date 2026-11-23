@@ -5246,3 +5246,55 @@ button.avatar:active {
     font-size: 24px;
   }
 }
+
+/* album: castles from the castle game */
+.album-castles-hint {
+  margin: 0 0 8px;
+  color: var(--muted);
+  font-size: 14px;
+}
+.album-castle-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 10px;
+}
+.album-castle {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 10px 6px 8px;
+  border-radius: 18px;
+  border: 3px dashed var(--line);
+  background: #fbf7ef;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--muted);
+  cursor: default;
+}
+.album-castle.owned {
+  border-style: solid;
+  background: #fff;
+  color: var(--ink);
+  cursor: pointer;
+}
+.album-castle.on {
+  border-color: var(--green);
+  background: #eafbf2;
+}
+.album-castle-check {
+  position: absolute;
+  top: 6px;
+  right: 8px;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--green);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+}

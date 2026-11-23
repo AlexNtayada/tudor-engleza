@@ -518,3 +518,146 @@
     display: none;
   }
 }
+
+.td-back {
+  font-size: 24px;
+  font-weight: 800;
+}
+
+.td-new-castle {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  background: #fff8dc;
+  border-radius: 18px;
+  padding: 8px 12px;
+  font-size: 15px;
+  animation: td-bump 0.6s ease;
+}
+
+/* ---------- the lands (map picker) ---------- */
+
+.td-lands {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 18px 20px 30px;
+}
+.td-lands-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+.td-lands-head h2 {
+  margin: 0;
+  font-size: 34px;
+}
+.td-my-castle {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 16px 6px 8px;
+  border-radius: 20px;
+  border: 2px solid var(--edge);
+  background: #fff;
+  box-shadow: 0 4px 0 var(--lift), var(--soft);
+  cursor: pointer;
+  font: inherit;
+  text-align: left;
+}
+.td-my-castle span {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
+}
+.td-my-castle small {
+  color: var(--muted);
+  font-weight: 700;
+}
+.td-land-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+}
+.td-land {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 16px 10px 14px;
+  border: 0;
+  border-radius: 26px;
+  cursor: pointer;
+  font: inherit;
+  color: var(--ink);
+  transition: transform 0.1s;
+}
+.td-land:active {
+  transform: translateY(4px);
+}
+.td-land b {
+  font-size: 20px;
+}
+.td-land-icon {
+  font-size: 46px;
+  line-height: 1.1;
+}
+.td-land-prize {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255, 255, 255, 0.75);
+  border-radius: 14px;
+  padding: 2px 10px 2px 4px;
+  font-size: 12px;
+  font-weight: 700;
+}
+.td-land-locked {
+  filter: grayscale(0.7);
+  opacity: 0.6;
+  cursor: default;
+}
+.td-land-won::after {
+  content: '👑';
+  position: absolute;
+  top: 8px;
+  right: 12px;
+  font-size: 26px;
+}
+@media (max-width: 640px) {
+  .td-lands {
+    padding: 12px 12px 20px;
+  }
+  .td-lands-head h2 {
+    font-size: 26px;
+  }
+  .td-land-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+  .td-land-icon {
+    font-size: 36px;
+  }
+  .td-land b {
+    font-size: 16px;
+  }
+  .td-land-prize {
+    flex-direction: column;
+    text-align: center;
+    padding: 4px 6px;
+  }
+}
+
+.td-pause,
+.td-wave,
+.td-coins {
+  flex-shrink: 0;
+}
+.td-hearts {
+  min-width: 0;
+  overflow: hidden;
+}
