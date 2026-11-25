@@ -9,7 +9,7 @@ import type { Progress } from '../progress'
 import { sfx } from '../sfx'
 import { instruction, speak, stopSpeaking } from '../speech'
 import { Board } from './Board'
-import { PaintedMap } from './PaintedMap'
+import { PaintedMap, PaintedSky } from './PaintedMap'
 import { LandsMap } from './LandsMap'
 import { CastleSticker, castleById, currentCastle } from './castles'
 import { mapById, type TowerMap } from './maps'
@@ -473,6 +473,7 @@ export function Tower({
   const castle = castleById(currentCastle(wins, progress.castle))
   return (
     <div className={`page page-white td-lands ${wide ? 'td-lands-wide' : ''}`}>
+      {wide && <PaintedSky />}
       <div className={wide ? 'td-isl-wrap' : ''}>
         <header className="td-lands-head">
           <h2>Apără castelul!</h2>

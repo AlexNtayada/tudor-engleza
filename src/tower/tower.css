@@ -846,11 +846,12 @@
 }
 .td-isl-wrap {
   /* leave sea around the island: its beach pokes past the drawing's edges */
-  width: min(100%, calc((100dvh - var(--appbar-h, 87px)) * 1.7778));
+  /* the island keeps a ring of sea around it */
+  width: min(92%, calc((100dvh - var(--appbar-h, 87px) - 70px) * 1.7593));
 }
 .td-lands-wide .td-lands-head {
   position: absolute;
-  z-index: 2;
+  z-index: 3;
   top: 14px;
   left: 18px;
   right: 18px;
@@ -949,6 +950,9 @@
 }
 
 /* the painted island picture under the stops */
+.td-painted {
+  z-index: 1;
+}
 .td-painted-img {
   position: absolute;
   inset: 0;
@@ -956,9 +960,34 @@
   height: 100%;
   display: block;
   user-select: none;
-  /* soften the picture's edges into the sea around it */
-  -webkit-mask-image: linear-gradient(90deg, transparent, #000 3%, #000 97%, transparent), linear-gradient(transparent, #000 4%, #000 96%, transparent);
-  -webkit-mask-composite: source-in;
-  mask-image: linear-gradient(90deg, transparent, #000 3%, #000 97%, transparent), linear-gradient(transparent, #000 4%, #000 96%, transparent);
-  mask-composite: intersect;
+  filter: drop-shadow(0 10px 18px rgba(0, 30, 70, 0.35));
+}
+/* the painted sea fills the page; clouds drift slowly at its edges */
+.td-sky {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  overflow: hidden;
+  pointer-events: none;
+}
+.td-cloud {
+  position: absolute;
+  width: clamp(240px, 24vw, 420px);
+  height: auto;
+  z-index: 2;
+  opacity: 0.96;
+  filter: drop-shadow(0 18px 14px rgba(0, 30, 70, 0.25));
+  animation: td-drift 26s ease-in-out infinite alternate;
+}
+.td-cloud-0 { left: -9%; top: -8%; }
+.td-cloud-1 { right: -10%; top: -6%; animation-duration: 31s; animation-delay: -8s; }
+.td-cloud-2 { left: -11%; bottom: -10%; animation-duration: 29s; animation-delay: -15s; }
+.td-cloud-3 { right: -9%; bottom: -9%; animation-duration: 23s; animation-delay: -4s; }
+@keyframes td-drift {
+  from { transform: translate(-14px, 0); }
+  to { transform: translate(22px, -8px); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .td-cloud { animation: none; }
 }
