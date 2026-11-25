@@ -991,3 +991,21 @@
 @media (prefers-reduced-motion: reduce) {
   .td-cloud { animation: none; }
 }
+/* castles and road are painted in the island: small stops at each gate */
+.td-painted .td-isl-stop .td-stop-btn {
+  width: 50px;
+  height: 50px;
+  border-width: 4px;
+}
+.td-painted .td-isl-stop .td-stop-icon {
+  font-size: 22px;
+}
+.td-painted .td-stop-crown,
+.td-painted .td-isl-prize {
+  display: none;
+}
+.td-painted .td-painted-img {
+  filter: none;
+  -webkit-mask-image: radial-gradient(ellipse 60% 62% at 50% 50%, #000 80%, transparent 100%);
+  mask-image: radial-gradient(ellipse 60% 62% at 50% 50%, #000 80%, transparent 100%);
+}

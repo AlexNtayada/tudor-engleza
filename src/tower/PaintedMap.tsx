@@ -1,13 +1,13 @@
 // Desktop view of the castle lands, built from painted pieces (made with Figma AI): the sea fills the
-// screen, the island sits on it, and clouds drift at the screen edges. A dotted trail joins the lands
-// in play order; the stretch already walked is gold.
+// screen, the island sits on it, and clouds drift at the screen edges. Each land's castle and the road
+// between them are painted into the island; the stops sit at the castle gates.
 
 import { Mascot } from '../components/Mascot'
 import { sfx } from '../sfx'
 import { CastleSticker } from './castles'
 import { Crown } from './Sprites'
 import { MAPS, mapOpen } from './maps'
-import islandUrl from './painted-island.webp'
+import islandUrl from './painted-island-castles.webp'
 import seaUrl from './painted-sea.webp'
 import cloud0 from './cloud-0.webp'
 import cloud1 from './cloud-1.webp'
@@ -16,64 +16,31 @@ import cloud3 from './cloud-3.webp'
 
 /** Size of the picture; everything below is placed in these pixels. */
 const W = 2048
-const H = 1147
+const H = 1152
 
 type Pt = { x: number; y: number }
 
 /** Where each land's stop sits on the picture, in play order. */
 export const PAINTED_SITES: Pt[] = [
-  { x: 413, y: 853 }, // forest
-  { x: 213, y: 493 }, // desert
-  { x: 440, y: 267 }, // snow
-  { x: 933, y: 160 }, // beach
-  { x: 1653, y: 333 }, // volcano
-  { x: 1680, y: 560 }, // candy
-  { x: 1667, y: 933 }, // farm
-  { x: 1307, y: 933 }, // jungle
-  { x: 840, y: 853 }, // sea (lagoon)
-  { x: 800, y: 560 }, // clouds
-  { x: 1240, y: 440 }, // space
+  { x: 304, y: 867 }, // forest
+  { x: 296, y: 541 }, // desert
+  { x: 517, y: 267 }, // snow
+  { x: 1020, y: 247 }, // beach
+  { x: 1573, y: 307 }, // volcano
+  { x: 1733, y: 581 }, // candy
+  { x: 1773, y: 867 }, // farm
+  { x: 1211, y: 921 }, // jungle
+  { x: 763, y: 987 }, // sea
+  { x: 789, y: 581 }, // clouds
+  { x: 1160, y: 561 }, // space
 ]
-
-const DOCK: Pt = { x: 200, y: 1067 }
-
-/** A gently bent trail from the dock through every stop. */
-const TRAIL: Pt[] = (() => {
-  const pts = [DOCK, ...PAINTED_SITES]
-  const out: Pt[] = []
-  for (let i = 0; i < pts.length - 1; i++) {
-    const a = pts[i]
-    const b = pts[i + 1]
-    const dx = b.x - a.x
-    const dy = b.y - a.y
-    const len = Math.hypot(dx, dy)
-    const bend = (i % 2 ? 1 : -1) * Math.min(40, len * 0.18)
-    const c = { x: (a.x + b.x) / 2 + (-dy / len) * bend, y: (a.y + b.y) / 2 + (dx / len) * bend }
-    for (let t = 0; t < 1; t += 0.02) {
-      const u = 1 - t
-      out.push({ x: u * u * a.x + 2 * u * t * c.x + t * t * b.x, y: u * u * a.y + 2 * u * t * c.y + t * t * b.y })
-    }
-  }
-  out.push(pts[pts.length - 1])
-  return out
-})()
-const STOP_AT = PAINTED_SITES.map((s) => TRAIL.findIndex((p) => p.x === s.x && p.y === s.y))
-const trailD = (upTo: number) => TRAIL.slice(0, upTo + 1).map((p, i) => `${i ? 'L' : 'M'} ${p.x.toFixed(1)} ${p.y.toFixed(1)}`).join(' ')
 
 export function PaintedMap({ wins, onPlay }: { wins: string[]; onPlay: (id: string) => void }) {
   const current = MAPS.findIndex((m, i) => mapOpen(wins, i) && !wins.includes(m.id))
-  const reached = current === -1 ? MAPS.length - 1 : current
 
   return (
     <div className="td-island td-painted" style={{ aspectRatio: `${W} / ${H}` }}>
       <img className="td-painted-img" src={islandUrl} alt="" draggable={false} />
-      <svg viewBox={`0 0 ${W} ${H}`} className="td-road-svg" aria-hidden>
-        {/* the whole trail as dots, then the walked part in gold */}
-        <path d={trailD(TRAIL.length - 1)} fill="none" stroke="#2b2118" strokeWidth="11" strokeDasharray="0.1 18" strokeLinecap="round" opacity=".55" />
-        <path d={trailD(TRAIL.length - 1)} fill="none" stroke="#fffaf0" strokeWidth="7" strokeDasharray="0.1 18" strokeLinecap="round" />
-        <path d={trailD(STOP_AT[reached])} fill="none" stroke="#2b2118" strokeWidth="15" strokeDasharray="0.1 18" strokeLinecap="round" />
-        <path d={trailD(STOP_AT[reached])} fill="none" stroke="#ffc83d" strokeWidth="10" strokeDasharray="0.1 18" strokeLinecap="round" />
-      </svg>
 
       {MAPS.map((m, i) => {
         const s = PAINTED_SITES[i]
