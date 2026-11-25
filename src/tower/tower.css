@@ -838,7 +838,7 @@
   padding: 0;
   height: calc(100dvh - var(--appbar-h, 87px));
   min-height: 0;
-  background: #4fb4e8;
+  background: radial-gradient(ellipse at center, #0a6aa6 0%, #055a95 70%, #044c80 100%);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -846,7 +846,7 @@
 }
 .td-isl-wrap {
   /* leave sea around the island: its beach pokes past the drawing's edges */
-  width: min(calc(100% - 90px), calc((100dvh - var(--appbar-h, 87px) - 70px) * 1.6667));
+  width: min(100%, calc((100dvh - var(--appbar-h, 87px)) * 1.7917));
 }
 .td-lands-wide .td-lands-head {
   position: absolute;
@@ -946,4 +946,19 @@
 }
 .td-lands-wide .td-my-castle {
   align-self: flex-end;
+}
+
+/* the painted island picture under the stops */
+.td-painted-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  user-select: none;
+  /* soften the picture's edges into the sea around it */
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 3%, #000 97%, transparent), linear-gradient(transparent, #000 4%, #000 96%, transparent);
+  -webkit-mask-composite: source-in;
+  mask-image: linear-gradient(90deg, transparent, #000 3%, #000 97%, transparent), linear-gradient(transparent, #000 4%, #000 96%, transparent);
+  mask-composite: intersect;
 }

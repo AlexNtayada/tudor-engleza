@@ -9,7 +9,7 @@ import type { Progress } from '../progress'
 import { sfx } from '../sfx'
 import { instruction, speak, stopSpeaking } from '../speech'
 import { Board } from './Board'
-import { IslandMap } from './IslandMap'
+import { PaintedMap } from './PaintedMap'
 import { LandsMap } from './LandsMap'
 import { CastleSticker, castleById, currentCastle } from './castles'
 import { mapById, type TowerMap } from './maps'
@@ -484,7 +484,7 @@ export function Tower({
             </span>
           </button>
         </header>
-        {wide ? <IslandMap wins={wins} onPlay={setPlaying} /> : <LandsMap wins={wins} onPlay={setPlaying} />}
+        {wide ? <PaintedMap wins={wins} onPlay={setPlaying} /> : <LandsMap wins={wins} onPlay={setPlaying} />}
       </div>
     </div>
   )
