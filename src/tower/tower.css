@@ -991,18 +991,46 @@
 @media (prefers-reduced-motion: reduce) {
   .td-cloud { animation: none; }
 }
-/* castles and road are painted in the island: small stops at each gate */
-.td-painted .td-isl-stop .td-stop-btn {
-  width: 50px;
-  height: 50px;
-  border-width: 4px;
+/* castles and road are painted in the island: a white name label at each gate */
+.td-gate-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+  font: inherit;
+  font-weight: 800;
+  font-size: 15px;
+  color: #2b2118;
+  background: #fff;
+  border: 3px solid #2b2118;
+  border-radius: 999px;
+  padding: 3px 12px;
+  cursor: pointer;
 }
-.td-painted .td-isl-stop .td-stop-icon {
-  font-size: 22px;
+.td-gate-label:active {
+  transform: scale(0.95);
 }
-.td-painted .td-stop-crown,
-.td-painted .td-isl-prize {
-  display: none;
+.td-stop-locked .td-gate-label {
+  color: #8a8178;
+  border-color: #b9b0a5;
+  cursor: default;
+}
+.td-stop-here .td-gate-label {
+  border-color: #ffb400;
+  box-shadow: 0 0 0 4px rgba(255, 200, 61, 0.6);
+  animation: td-pulse 1.4s ease-in-out infinite;
+}
+.td-gate-mark {
+  font-size: 13px;
+}
+.td-gate-won {
+  display: grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #22b573;
+  color: #fff;
 }
 .td-painted .td-painted-img {
   filter: none;

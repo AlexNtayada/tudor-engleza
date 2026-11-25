@@ -4,8 +4,6 @@
 
 import { Mascot } from '../components/Mascot'
 import { sfx } from '../sfx'
-import { CastleSticker } from './castles'
-import { Crown } from './Sprites'
 import { MAPS, mapOpen } from './maps'
 import islandUrl from './painted-island-castles.webp'
 import seaUrl from './painted-sea.webp'
@@ -55,8 +53,7 @@ export function PaintedMap({ wins, onPlay }: { wins: string[]; onPlay: (id: stri
             style={{ left: `${(s.x / W) * 100}%`, top: `${(s.y / H) * 100}%` }}
           >
             <button
-              className="td-stop-btn"
-              style={{ borderColor: m.edge, background: open ? m.ground[0] : '#e9e4da' }}
+              className="td-gate-label"
               onClick={() => {
                 if (!open) return sfx.wrong()
                 sfx.tap()
@@ -64,26 +61,14 @@ export function PaintedMap({ wins, onPlay }: { wins: string[]; onPlay: (id: stri
               }}
               aria-label={open ? `${i + 1}. ${m.name}${won ? ', câștigată' : ''}` : `${m.name}, încuiată`}
             >
-              <span className="td-stop-icon">{open ? m.icon : '🔒'}</span>
-              <span className="td-stop-num">{i + 1}</span>
-              {won && (
-                <span className="td-stop-crown">
-                  <Crown />
-                </span>
-              )}
-              {won && <span className="td-stop-check">✓</span>}
+              {m.name}
+              {won && <span className="td-gate-mark td-gate-won">✓</span>}
+              {!open && <span className="td-gate-mark">🔒</span>}
             </button>
-            <span className="td-stop-name">{m.name}</span>
             {isHere && (
-              <>
-                <span className={`td-stop-prize td-isl-prize ${right ? 'td-prize-right' : 'td-prize-left'}`}>
-                  <CastleSticker id={m.id} size={70} />
-                  <small>Câștigă-l!</small>
-                </span>
-                <span className={`td-stop-friend td-isl-friend ${right ? 'td-friend-left' : 'td-friend-right'}`}>
-                  <Mascot size={64} mood="happy" />
-                </span>
-              </>
+              <span className={`td-stop-friend td-isl-friend ${right ? 'td-friend-left' : 'td-friend-right'}`}>
+                <Mascot size={64} mood="happy" />
+              </span>
             )}
           </div>
         )
