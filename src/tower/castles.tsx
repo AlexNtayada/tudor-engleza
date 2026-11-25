@@ -15,7 +15,7 @@ export interface CastleLook {
   /** Round domes instead of pointy roofs. */
   dome?: boolean
   /** Little extra on the top: snow caps, a lollipop, a shell. */
-  top?: 'snow' | 'lolly' | 'shell' | 'flame' | 'leaf' | 'sun'
+  top?: 'snow' | 'lolly' | 'shell' | 'flame' | 'leaf' | 'sun' | 'star'
 }
 
 export const CASTLES: CastleLook[] = [
@@ -25,6 +25,11 @@ export const CASTLES: CastleLook[] = [
   { id: 'beach', name: 'Castelul de pe plajă', wall: '#f4d49a', tower: '#e9c47f', roof: '#3ec6c6', flag: '#ff8fb1', door: '#b98a52', dome: true, top: 'shell' },
   { id: 'volcano', name: 'Fortăreața de foc', wall: '#8b7d76', tower: '#7a6c66', roof: '#e0352b', flag: '#ffc21a', door: '#3a2a24', top: 'flame' },
   { id: 'candy', name: 'Castelul de bomboane', wall: '#ffd9ec', tower: '#ffc4e1', roof: '#7ee0c3', flag: '#b07de0', door: '#c05b8c', dome: true, top: 'lolly' },
+  { id: 'farm', name: 'Castelul fermei', wall: '#fff3e0', tower: '#f3e2c4', roof: '#e0533b', flag: '#ffd23f', door: '#8b5a2b', top: 'leaf' },
+  { id: 'jungle', name: 'Castelul din junglă', wall: '#cde8a8', tower: '#b9dc8c', roof: '#3fae7a', flag: '#ff8c1a', door: '#7a4a24', dome: true, top: 'leaf' },
+  { id: 'sea', name: 'Palatul de corali', wall: '#ffd1dc', tower: '#ffbfcf', roof: '#3ec6c6', flag: '#ffd23f', door: '#c05b8c', dome: true, top: 'shell' },
+  { id: 'clouds', name: 'Castelul din nori', wall: '#ffffff', tower: '#f1f6ff', roof: '#ffd23f', flag: '#ff7eb6', door: '#7fa8d6', dome: true, top: 'sun' },
+  { id: 'space', name: 'Castelul de pe Lună', wall: '#dfe4f0', tower: '#cfd6e6', roof: '#7b4fc9', flag: '#7ee0c3', door: '#4a4470', top: 'star' },
 ]
 
 export const castleById = (id: string | undefined): CastleLook => CASTLES.find((c) => c.id === id) ?? CASTLES[0]
@@ -92,6 +97,7 @@ export function CastleArt({ c }: { c: CastleLook }) {
       )}
       {c.top === 'shell' && <path d="M-10 -100 Q 0 -122 10 -100 Z M-5 -100 L 0 -116 L 5 -100" fill="#ffb3c7" {...ink} strokeWidth={1.8} />}
       {c.top === 'flame' && <path d="M0 -94 Q -10 -106 -4 -118 Q -2 -110 2 -112 Q 0 -122 8 -128 Q 6 -116 10 -108 Q 12 -100 0 -94 Z" fill="#ffa63d" {...ink} strokeWidth={1.8} />}
+      {c.top === 'star' && <path d="M0 -122 L 4 -112 L 14 -111 L 6 -104 L 9 -94 L 0 -100 L -9 -94 L -6 -104 L -14 -111 L -4 -112 Z" fill="#ffd23f" {...ink} strokeWidth={1.6} />}
       {c.top === 'sun' && <circle cx="0" cy="-108" r="8" fill="#ffd23f" {...ink} strokeWidth={1.8} />}
       {c.top === 'leaf' && <path d="M0 -96 V -110 l 12 4 l -12 4" fill="#ffc21a" {...ink} strokeWidth={1.8} />}
       <rect x="-9" y="-80" width="18" height="22" rx="2" fill="#ffc21a" {...ink} strokeWidth={2} />

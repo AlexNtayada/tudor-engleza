@@ -3,7 +3,7 @@
 
 import { makePath, type Path } from './engine'
 
-export type Deco = 'forest' | 'desert' | 'snow' | 'beach' | 'volcano' | 'candy'
+export type Deco = 'forest' | 'desert' | 'snow' | 'beach' | 'volcano' | 'candy' | 'farm' | 'jungle' | 'sea' | 'clouds' | 'space'
 
 export interface TowerMap {
   id: string
@@ -25,6 +25,21 @@ export interface TowerMap {
   boss: string
   /** Edge under the board (its "soil"). */
   edge: string
+}
+
+/**
+ * A smooth path that swings left and right as it comes down: `turns` full swings,
+ * `amp` wide, shrinking by `shrink` towards the castle (a funnel), from y=130 to y=460.
+ */
+function swing(turns: number, amp: number, shrink = 0): [number, number][] {
+  const pts: [number, number][] = [[200, 92]]
+  const n = 48
+  for (let i = 0; i <= n; i++) {
+    const t = i / n
+    pts.push([Math.round(200 + amp * (1 - shrink * t) * Math.sin(2 * Math.PI * turns * t)), Math.round(130 + 330 * t)])
+  }
+  pts.push([200, 512])
+  return pts
 }
 
 export const MAPS: TowerMap[] = [
@@ -177,6 +192,117 @@ export const MAPS: TowerMap[] = [
     slime: '#b07de0',
     boss: '#7b4fc9',
     edge: '#e58bbb',
+  },
+  {
+    // A big square loop round the edge of the farm.
+    id: 'farm',
+    name: 'Ferma',
+    icon: '🐄',
+    deco: 'farm',
+    path: makePath([
+      [200, 92],
+      [200, 125],
+      [62, 125],
+      [62, 300],
+      [338, 300],
+      [338, 425],
+      [200, 445],
+      [200, 512],
+    ]),
+    speed: 1.42,
+    ground: ['#b9e27a', '#aed66c'],
+    road: ['#d9b77a', '#b98f55'],
+    hill: '#9a8a70',
+    glow: '#ffd23f',
+    slime: '#ffb347',
+    boss: '#8b5a2b',
+    edge: '#8fbf4f',
+  },
+  {
+    // A snake: long left-right turns through the jungle.
+    id: 'jungle',
+    name: 'Jungla',
+    icon: '🦜',
+    deco: 'jungle',
+    path: makePath([
+      [200, 92],
+      [200, 120],
+      [330, 150],
+      [70, 215],
+      [330, 285],
+      [70, 355],
+      [200, 425],
+      [200, 512],
+    ]),
+    speed: 1.46,
+    ground: ['#5fb85a', '#55ad50'],
+    road: ['#b58a5a', '#8b6a44'],
+    hill: '#4f7a4a',
+    glow: '#7ee0c3',
+    slime: '#ff5a5f',
+    boss: '#ff8c1a',
+    edge: '#3f8a3c',
+  },
+  {
+    // Soft waves, like the sea moving.
+    id: 'sea',
+    name: 'Fundul mării',
+    icon: '🐠',
+    deco: 'sea',
+    path: makePath(swing(1.5, 125)),
+    speed: 1.5,
+    ground: ['#6cc6ef', '#5fbbe6'],
+    road: ['#f2dca8', '#e0c48a'],
+    hill: '#3e86b8',
+    glow: '#ffe066',
+    slime: '#ffd23f',
+    boss: '#ff7043',
+    edge: '#2f78b0',
+  },
+  {
+    // Steps going down from cloud to cloud.
+    id: 'clouds',
+    name: 'Țara norilor',
+    icon: '☁️',
+    deco: 'clouds',
+    path: makePath([
+      [200, 92],
+      [200, 118],
+      [80, 118],
+      [80, 190],
+      [160, 190],
+      [160, 262],
+      [240, 262],
+      [240, 334],
+      [320, 334],
+      [320, 420],
+      [200, 445],
+      [200, 512],
+    ]),
+    speed: 1.55,
+    ground: ['#d9efff', '#cbe6fb'],
+    road: ['#fff6d6', '#ffe08a'],
+    hill: '#a9c3dc',
+    glow: '#ff7eb6',
+    slime: '#9b4dde',
+    boss: '#4f86f7',
+    edge: '#9fc3e6',
+  },
+  {
+    // Wide swings that get smaller near the castle.
+    id: 'space',
+    name: 'Luna',
+    icon: '🌙',
+    deco: 'space',
+    path: makePath(swing(2, 140, 0.65)),
+    speed: 1.6,
+    ground: ['#3b3366', '#342d5c'],
+    road: ['#b9b4d6', '#8f88b8'],
+    hill: '#2a2450',
+    glow: '#7ee0c3',
+    slime: '#7ee0c3',
+    boss: '#ff7eb6',
+    edge: '#221d45',
   },
 ]
 

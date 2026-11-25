@@ -176,6 +176,112 @@ const DRAW: Record<Deco, (r: number, v: number) => ReactNode> = {
       </>
     )
   },
+  farm: (r, v) =>
+    v % 3 === 0 ? (
+      <>
+        {shadow(r * 0.8)}
+        <ellipse cx="0" cy={r * 0.2} rx={r * 0.8} ry={r * 0.6} fill="#f2c84b" {...ink} strokeWidth={2} />
+        <path d={`M${-r * 0.5} ${r * 0.05} q ${r * 0.5} -6 ${r} 0 M${-r * 0.5} ${r * 0.35} q ${r * 0.5} -6 ${r} 0`} fill="none" stroke="#c99a2e" strokeWidth="2" />
+      </>
+    ) : v % 3 === 1 ? (
+      <>
+        {shadow(r * 0.6)}
+        <path d={`M0 ${r * 0.9} V ${-r * 0.3}`} stroke="#3fae7a" strokeWidth="4" />
+        {[0, 45, 90, 135, 180, 225, 270, 315].map((a) => (
+          <ellipse key={a} cx="0" cy={-r * 0.75} rx={r * 0.14} ry={r * 0.3} transform={`rotate(${a} 0 ${-r * 0.45})`} fill="#ffd23f" stroke={L} strokeWidth={1.2} />
+        ))}
+        <circle cx="0" cy={-r * 0.45} r={r * 0.22} fill="#8b5a2b" {...ink} strokeWidth={1.6} />
+      </>
+    ) : (
+      <>
+        {shadow(r * 0.8)}
+        <ellipse cx="0" cy={r * 0.1} rx={r * 0.7} ry={r * 0.5} fill="#fff" {...ink} strokeWidth={2} />
+        <circle cx={r * 0.6} cy={-r * 0.1} r={r * 0.3} fill="#3a2a14" {...ink} strokeWidth={1.6} />
+        <path d={`M${-r * 0.4} ${r * 0.5} v ${r * 0.35} M${r * 0.3} ${r * 0.5} v ${r * 0.35}`} stroke={L} strokeWidth="3" strokeLinecap="round" />
+      </>
+    ),
+  jungle: (r, v) =>
+    v % 5 === 0 ? (
+      <>
+        {shadow(r * 0.6)}
+        <path d={`M0 ${r * 0.9} V ${-r * 0.1}`} stroke="#2f9566" strokeWidth="3" />
+        {[0, 72, 144, 216, 288].map((a) => (
+          <ellipse key={a} cx="0" cy={-r * 0.5} rx={r * 0.18} ry={r * 0.32} transform={`rotate(${a} 0 ${-r * 0.25})`} fill="#ff5a5f" stroke={L} strokeWidth={1.2} />
+        ))}
+        <circle cx="0" cy={-r * 0.25} r={r * 0.14} fill="#ffd23f" />
+      </>
+    ) : (
+      <>
+        {shadow(r)}
+        {[-60, -25, 15, 55].map((a, i) => (
+          <path
+            key={a}
+            d={`M0 ${r * 0.8} Q ${-r * 0.5} ${-r * 0.2} 0 ${-r * 1.05} Q ${r * 0.5} ${-r * 0.2} 0 ${r * 0.8} Z`}
+            transform={`rotate(${a} 0 ${r * 0.8})`}
+            fill={i % 2 ? '#2f9566' : '#46a047'}
+            {...ink}
+            strokeWidth={1.8}
+          />
+        ))}
+        <path d={`M0 ${r * 0.8} V ${-r * 0.2}`} stroke="rgba(0,0,0,.2)" strokeWidth="2" />
+      </>
+    ),
+  sea: (r, v) =>
+    v % 3 === 0 ? (
+      <>
+        {shadow(r * 0.6)}
+        <path d={`M0 ${r * 0.9} V 0 L ${-r * 0.5} ${-r * 0.6} M0 ${r * 0.2} L ${r * 0.5} ${-r * 0.4} M ${-r * 0.25} ${-r * 0.25} L ${-r * 0.1} ${-r * 0.8}`} fill="none" stroke={L} strokeWidth="9" strokeLinecap="round" />
+        <path d={`M0 ${r * 0.9} V 0 L ${-r * 0.5} ${-r * 0.6} M0 ${r * 0.2} L ${r * 0.5} ${-r * 0.4} M ${-r * 0.25} ${-r * 0.25} L ${-r * 0.1} ${-r * 0.8}`} fill="none" stroke={v % 2 ? '#ff7eb6' : '#ff8c5c'} strokeWidth="5" strokeLinecap="round" />
+      </>
+    ) : v % 3 === 1 ? (
+      <>
+        {[-0.35, 0, 0.35].map((dx) => (
+          <path key={dx} d={`M${r * dx} ${r * 0.9} q ${-r * 0.25} ${-r * 0.35} 0 ${-r * 0.7} q ${r * 0.25} ${-r * 0.35} 0 ${-r * 0.8}`} fill="none" stroke="#2f9566" strokeWidth="5" strokeLinecap="round" />
+        ))}
+      </>
+    ) : (
+      <>
+        <circle cx="0" cy="0" r={r * 0.28} fill="rgba(255,255,255,.5)" stroke="#fff" strokeWidth="2" />
+        <circle cx={r * 0.35} cy={-r * 0.5} r={r * 0.16} fill="rgba(255,255,255,.5)" stroke="#fff" strokeWidth="1.5" />
+        <path d={`M${-r * 0.4} ${r * 0.8} q ${r * 0.2} ${-r * 0.5} ${r * 0.4} 0 Z`} fill="#ffb3c7" {...ink} strokeWidth={1.6} />
+      </>
+    ),
+  clouds: (r, v) =>
+    v % 4 === 0 ? (
+      <>
+        {['#ff5a5f', '#ffc21a', '#3cc35a', '#4f86f7'].map((c, i) => (
+          <path key={c} d={`M${-r + i * 4} ${r * 0.6} A ${r - i * 4} ${r - i * 4} 0 0 1 ${r - i * 4} ${r * 0.6}`} fill="none" stroke={c} strokeWidth="4" />
+        ))}
+      </>
+    ) : (
+      <>
+        <ellipse cx="0" cy={r * 0.5} rx={r} ry={r * 0.18} fill="rgba(80,120,170,.15)" />
+        <circle cx={-r * 0.45} cy={r * 0.1} r={r * 0.42} fill="#fff" {...ink} strokeWidth={1.8} />
+        <circle cx={r * 0.45} cy={r * 0.1} r={r * 0.42} fill="#fff" {...ink} strokeWidth={1.8} />
+        <circle cx="0" cy={-r * 0.15} r={r * 0.55} fill="#fff" {...ink} strokeWidth={1.8} />
+        <rect x={-r * 0.8} y={r * 0.1} width={r * 1.6} height={r * 0.38} fill="#fff" />
+        {v % 3 === 1 && (
+          <>
+            <circle cx={-r * 0.15} cy={-r * 0.1} r="1.8" fill={L} />
+            <circle cx={r * 0.15} cy={-r * 0.1} r="1.8" fill={L} />
+          </>
+        )}
+      </>
+    ),
+  space: (r, v) =>
+    v % 4 === 0 ? (
+      <>
+        <circle cx="0" cy="0" r={r * 0.5} fill={['#ff8c5c', '#7ee0c3', '#ffd23f'][v % 3]} {...ink} strokeWidth={2} />
+        <ellipse cx="0" cy="0" rx={r * 0.85} ry={r * 0.2} fill="none" stroke="#fff" strokeWidth="2.5" />
+      </>
+    ) : v % 4 === 1 ? (
+      <path d={`M0 ${-r * 0.4} L ${r * 0.1} ${-r * 0.1} L ${r * 0.4} 0 L ${r * 0.1} ${r * 0.1} L 0 ${r * 0.4} L ${-r * 0.1} ${r * 0.1} L ${-r * 0.4} 0 L ${-r * 0.1} ${-r * 0.1} Z`} fill="#ffe066" />
+    ) : (
+      <>
+        <ellipse cx="0" cy={r * 0.3} rx={r * 0.85} ry={r * 0.42} fill="#5a5290" {...ink} strokeWidth={2} />
+        <ellipse cx="0" cy={r * 0.36} rx={r * 0.58} ry={r * 0.24} fill="#2a2450" />
+      </>
+    ),
 }
 
 function Fence({ x, y, n, color }: { x: number; y: number; n: number; color: string }) {
@@ -242,7 +348,7 @@ export const Board = memo(function Board({ map, castle }: { map: TowerMap; castl
     return out
   }, [map])
   const pid = `td-check-${map.id}`
-  const fence = { forest: '#c98a4b', desert: '#d9a066', snow: '#cbe8fb', beach: '#e0c08a', volcano: '#7a6c66', candy: '#fff' }[map.deco]
+  const fence = { forest: '#c98a4b', desert: '#d9a066', snow: '#cbe8fb', beach: '#e0c08a', volcano: '#7a6c66', candy: '#fff', farm: '#c98a4b', jungle: '#8b6a44', sea: '#f2dca8', clouds: '#fff', space: '#8f88b8' }[map.deco]
   return (
     <g>
       <defs>

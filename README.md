@@ -16,7 +16,8 @@ Merge în browser pe calculator și se poate instala pe telefon (PWA).
   `src/logopedie/data.ts`.
 - **Castelul** (tower defense): monștrii vin pe drum spre castel; fiecare răspuns corect la „Unde e…?” dă o monedă,
   iar cu monede trimiți Arcașul, Cavalerul sau Dragonelul să-i oprească. 5 valuri, cuvintele vin din lumile învățate.
-  6 hărți (Pădurea, Deșertul, Țara zăpezii, Plaja, Vulcanul, Țara dulciurilor), fiecare se deschide după cea de
+  11 hărți (Pădurea, Deșertul, Țara zăpezii, Plaja, Vulcanul, Țara dulciurilor, Ferma, Jungla, Fundul mării,
+  Țara norilor, Luna), fiecare cu alt drum,, fiecare se deschide după cea de
   dinainte și dă un abțibild cu un castel nou, care se alege din Album. Hărțile sunt în `src/tower/maps.ts`, castelele în `castles.tsx`.
   Codul e în `src/tower/` (regulile în `engine.ts`).
 - Zona părinților (poartă cu numere): progres, minute pe zi, setări
