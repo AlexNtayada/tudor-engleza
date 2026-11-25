@@ -5298,3 +5298,22 @@ button.avatar:active {
   justify-content: center;
   font-size: 14px;
 }
+
+/* Painted album stickers fill their slot like the emoji did. */
+.sticker-art {
+  position: absolute;
+  inset: 9%;
+  width: 82%;
+  height: 82%;
+  object-fit: contain;
+  filter: drop-shadow(0 2px 2px rgba(40, 30, 10, 0.18));
+}
+.album-slot.owned,
+.finish-sticker-card {
+  position: relative;
+}
+.finish-sticker-card .sticker-art {
+  inset: 4%;
+  width: 92%;
+  height: 92%;
+}

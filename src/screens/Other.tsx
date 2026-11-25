@@ -9,6 +9,7 @@ import { Boss, bossFor } from '../components/Boss'
 import type { BossResult } from './Lesson'
 import { BOSS_HP, BOSS_QUESTIONS } from '../lessons'
 import { Mascot } from '../components/Mascot'
+import { StickerArt } from '../components/StickerArt'
 import { instruction, speak } from '../speech'
 import { sfx } from '../sfx'
 import { SpeechPanel } from '../logopedie/Recordings'
@@ -272,7 +273,7 @@ export function FinishScreen({
           <div className="finish-sticker">
             <span className="finish-sub">Abțibild nou în album!</span>
             <span className="finish-sticker-card" aria-label="Abțibildul nou">
-              {sticker}
+              <StickerArt sticker={sticker} />
             </span>
           </div>
         )}
@@ -461,7 +462,7 @@ export function Album({
                       onClick={() => has && tap(l.sticker)}
                       aria-label={has ? 'Abțibild' : l.boss ? 'Abțibild boss' : 'Abțibild lipsă'}
                     >
-                      {has ? l.sticker : l.boss ? '⚔️' : '?'}
+                      {has ? <StickerArt sticker={l.sticker} /> : l.boss ? '⚔️' : '?'}
                     </button>
                   )
                 })}
