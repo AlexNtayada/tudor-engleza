@@ -845,7 +845,8 @@
   overflow: hidden;
 }
 .td-isl-wrap {
-  width: min(100%, calc((100dvh - var(--appbar-h, 87px)) * 1.6667));
+  /* leave sea around the island: its beach pokes past the drawing's edges */
+  width: min(calc(100% - 90px), calc((100dvh - var(--appbar-h, 87px) - 70px) * 1.6667));
 }
 .td-lands-wide .td-lands-head {
   position: absolute;
@@ -880,7 +881,9 @@
   position: relative;
   width: 100%;
   margin: 0 auto;
-  overflow: hidden;
+}
+.td-island > svg {
+  overflow: visible;
 }
 .td-isl-stop .td-stop-btn {
   width: 74px;
@@ -932,9 +935,14 @@
   font-size: 11px;
 }
 .td-isl-friend {
-  top: auto !important;
-  bottom: -30px;
-  left: -78px;
+  /* beside the circle, on the side away from the prize, above the name */
+  top: -34px !important;
+}
+.td-friend-left {
+  right: 34px;
+}
+.td-friend-right {
+  left: 34px;
 }
 .td-lands-wide .td-my-castle {
   align-self: flex-end;

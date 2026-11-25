@@ -286,7 +286,7 @@ export function IslandMap({ wins, onPlay }: { wins: string[]; onPlay: (id: strin
                   <CastleSticker id={m.id} size={70} />
                   <small>Câștigă-l!</small>
                 </span>
-                <span className="td-stop-friend td-isl-friend">
+                <span className={`td-stop-friend td-isl-friend ${right ? 'td-friend-left' : 'td-friend-right'}`}>
                   <Mascot size={64} mood="happy" />
                 </span>
               </>
