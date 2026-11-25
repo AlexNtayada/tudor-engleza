@@ -754,14 +754,16 @@
 }
 /* finished lands: gold ring, crown on top, green tick, gold name */
 .td-stop-won .td-stop-btn {
-  border-color: #f2b11c !important;
-  outline: 5px solid #ffe58a;
+  border-color: #fff !important;
 }
 .td-stop-won .td-stop-crown {
   right: auto;
   left: 50%;
-  transform: translateX(-50%) rotate(-8deg);
-  top: -30px;
+  transform: translateX(-50%) rotate(-6deg);
+  top: -40px;
+  line-height: 0;
+  filter: drop-shadow(0 3px 0 rgba(43, 33, 24, 0.3));
+  z-index: 1;
 }
 .td-stop-check {
   position: absolute;

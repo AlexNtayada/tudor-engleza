@@ -150,3 +150,27 @@ export function SpriteIcon({ ally, size = 56 }: { ally: AllyKind; size?: number 
     </svg>
   )
 }
+
+/** Big outlined crown for finished lands on the maps. */
+export function Crown({ size = 48 }: { size?: number }) {
+  return (
+    <svg width={size} height={size * 0.8} viewBox="0 0 60 48" aria-hidden>
+      <path
+        d="M6 16 L18 28 L30 6 L42 28 L54 16 L50 40 L10 40 Z"
+        fill="#ffcf2e"
+        stroke="#2b2118"
+        strokeWidth="3.5"
+        strokeLinejoin="round"
+      />
+      <path d="M10 34 L50 34" stroke="#e59a00" strokeWidth="4" />
+      <rect x="9" y="38" width="42" height="7" rx="3" fill="#f5a400" stroke="#2b2118" strokeWidth="3.5" />
+      <circle cx="30" cy="24" r="4" fill="#ff4d6d" stroke="#2b2118" strokeWidth="2" />
+      <circle cx="17" cy="31" r="3" fill="#4fb4e8" stroke="#2b2118" strokeWidth="2" />
+      <circle cx="43" cy="31" r="3" fill="#3fae5a" stroke="#2b2118" strokeWidth="2" />
+      <circle cx="6" cy="15" r="3.5" fill="#fff3c4" stroke="#2b2118" strokeWidth="2.5" />
+      <circle cx="30" cy="5" r="3.5" fill="#fff3c4" stroke="#2b2118" strokeWidth="2.5" />
+      <circle cx="54" cy="15" r="3.5" fill="#fff3c4" stroke="#2b2118" strokeWidth="2.5" />
+      <path d="M22 14 L26 10" stroke="#fff" strokeWidth="2.5" strokeLinecap="round" opacity="0.8" />
+    </svg>
+  )
+}
