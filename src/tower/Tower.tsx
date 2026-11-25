@@ -9,8 +9,9 @@ import type { Progress } from '../progress'
 import { sfx } from '../sfx'
 import { instruction, speak, stopSpeaking } from '../speech'
 import { Board } from './Board'
+import { LandsMap } from './LandsMap'
 import { CastleSticker, castleById, currentCastle } from './castles'
-import { MAPS, mapById, mapOpen, type TowerMap } from './maps'
+import { mapById, type TowerMap } from './maps'
 import {
   ASKS,
   ALLIES,
@@ -467,36 +468,7 @@ export function Tower({
           </span>
         </button>
       </header>
-      <div className="td-land-grid">
-        {MAPS.map((m, i) => {
-          const open = mapOpen(wins, i)
-          const won = wins.includes(m.id)
-          return (
-            <button
-              key={m.id}
-              className={`td-land ${open ? '' : 'td-land-locked'} ${won ? 'td-land-won' : ''}`}
-              style={{
-                background: `linear-gradient(180deg, ${m.ground[0]}, ${m.ground[1]})`,
-                boxShadow: `0 6px 0 ${m.edge}`,
-                color: m.deco === 'space' ? '#fff' : undefined,
-              }}
-              onClick={() => {
-                if (!open) return sfx.wrong()
-                sfx.tap()
-                setPlaying(m.id)
-              }}
-              aria-label={open ? `${m.name}${won ? ', câștigată' : ''}` : `${m.name}, încuiată`}
-            >
-              <span className="td-land-icon">{open ? m.icon : '🔒'}</span>
-              <b>{m.name}</b>
-              <span className="td-land-prize">
-                <CastleSticker id={m.id} size={58} locked={!won} />
-                <small>{won ? 'Ai castelul ✓' : open ? 'Câștigă castelul!' : 'Câștigă harta de dinainte'}</small>
-              </span>
-            </button>
-          )
-        })}
-      </div>
+      <LandsMap wins={wins} onPlay={setPlaying} />
     </div>
   )
 }
