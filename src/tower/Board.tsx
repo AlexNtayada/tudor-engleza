@@ -58,7 +58,7 @@ const TREE_COLORS = [
 ]
 
 /** One piece of scenery, drawn around (0, 0) with size r; `v` picks a variant. */
-const DRAW: Record<Deco, (r: number, v: number) => ReactNode> = {
+export const DRAW: Record<Deco, (r: number, v: number) => ReactNode> = {
   forest: (r, v) => {
     const [main, dark] = TREE_COLORS[v % TREE_COLORS.length]
     return (
