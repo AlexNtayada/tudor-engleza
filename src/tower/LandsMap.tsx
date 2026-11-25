@@ -6,6 +6,7 @@ import { Mascot } from '../components/Mascot'
 import { sfx } from '../sfx'
 import { DRAW } from './Board'
 import { CastleSticker } from './castles'
+import { Crown } from './Sprites'
 import { MAPS, mapOpen, type Deco } from './maps'
 
 const W = 400
@@ -342,7 +343,7 @@ export function LandsMap({ wins, onPlay }: { wins: string[]; onPlay: (id: string
             >
               <span className="td-stop-icon">{open ? m.icon : '🔒'}</span>
               <span className="td-stop-num">{i + 1}</span>
-              {won && <span className="td-stop-crown">👑</span>}
+              {won && <span className="td-stop-crown"><Crown /></span>}
               {won && <span className="td-stop-check">✓</span>}
             </button>
             <span className="td-stop-name">{m.name}</span>
