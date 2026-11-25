@@ -124,7 +124,7 @@ function Pillars({ fill, h = 44 }: { fill: string; h?: number }) {
 }
 
 /** The way into a land, drawn standing on (0, 8) across the road; each land has its own. */
-function Gate({ deco }: { deco: Deco }) {
+export function Gate({ deco }: { deco: Deco }) {
   switch (deco) {
     case 'desert':
       return (

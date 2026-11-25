@@ -9,6 +9,7 @@ import type { Progress } from '../progress'
 import { sfx } from '../sfx'
 import { instruction, speak, stopSpeaking } from '../speech'
 import { Board } from './Board'
+import { IslandMap } from './IslandMap'
 import { LandsMap } from './LandsMap'
 import { CastleSticker, castleById, currentCastle } from './castles'
 import { mapById, type TowerMap } from './maps'
@@ -438,6 +439,19 @@ export function TowerGame({
   )
 }
 
+/** Wide screens get the whole island at once; phones get the long road. */
+function useWide(): boolean {
+  const q = '(min-width: 901px)'
+  const [wide, setWide] = useState(() => typeof window !== 'undefined' && window.matchMedia(q).matches)
+  useEffect(() => {
+    const m = window.matchMedia(q)
+    const on = () => setWide(m.matches)
+    m.addEventListener('change', on)
+    return () => m.removeEventListener('change', on)
+  }, [])
+  return wide
+}
+
 /** The castle page: pick a land, then defend the castle there. */
 export function Tower({
   progress,
@@ -452,23 +466,26 @@ export function Tower({
 }) {
   const wins = progress.towerWins ?? []
   const [playing, setPlaying] = useState<string | null>(null)
+  const wide = useWide()
   if (playing) {
     return <TowerGame key={playing} map={mapById(playing)} progress={progress} onEarn={onEarn} onWin={onWin} onBack={() => setPlaying(null)} />
   }
   const castle = castleById(currentCastle(wins, progress.castle))
   return (
-    <div className="page page-white td-lands">
-      <header className="td-lands-head">
-        <h2>Apără castelul!</h2>
-        <button className="td-my-castle" onClick={onAlbum} aria-label="Schimbă castelul din Album">
-          <CastleSticker id={castle.id} size={84} />
-          <span>
-            <b>{castle.name}</b>
-            <small>📒 Schimbă-l din Album</small>
-          </span>
-        </button>
-      </header>
-      <LandsMap wins={wins} onPlay={setPlaying} />
+    <div className={`page page-white td-lands ${wide ? 'td-lands-wide' : ''}`}>
+      <div className={wide ? 'td-isl-wrap' : ''}>
+        <header className="td-lands-head">
+          <h2>Apără castelul!</h2>
+          <button className="td-my-castle" onClick={onAlbum} aria-label="Schimbă castelul din Album">
+            <CastleSticker id={castle.id} size={84} />
+            <span>
+              <b>{castle.name}</b>
+              <small>📒 Schimbă-l din Album</small>
+            </span>
+          </button>
+        </header>
+        {wide ? <IslandMap wins={wins} onPlay={setPlaying} /> : <LandsMap wins={wins} onPlay={setPlaying} />}
+      </div>
     </div>
   )
 }
