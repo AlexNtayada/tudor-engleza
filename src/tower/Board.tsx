@@ -384,15 +384,20 @@ export const Board = memo(function Board({ map, castle }: { map: TowerMap; castl
           {DRAW[map.deco](t.r, t.v)}
         </g>
       ))}
-      <Fence x={92} y={488} n={4} color={fence} />
-      <Fence x={246} y={488} n={4} color={fence} />
-      <Hut x={48} y={560} roof="#4f86f7" />
-      <Hut x={352} y={560} roof="#ff8a5c" />
-      <g transform="translate(46 612)">
-        <ellipse cx="0" cy="6" rx="24" ry="5" fill="rgba(30,40,20,.2)" />
-        <path d="M-22 6 Q -16 -14 0 -16 Q 16 -14 22 6 Z" fill="#ffc21a" {...ink} />
-        <circle cx="-6" cy="-6" r="3" fill="#fff6c2" />
-      </g>
+      {/* fences, huts and gold beside the castle: only on the drawn grounds */}
+      {!bg && (
+        <>
+          <Fence x={92} y={488} n={4} color={fence} />
+          <Fence x={246} y={488} n={4} color={fence} />
+          <Hut x={48} y={560} roof="#4f86f7" />
+          <Hut x={352} y={560} roof="#ff8a5c" />
+          <g transform="translate(46 612)">
+            <ellipse cx="0" cy="6" rx="24" ry="5" fill="rgba(30,40,20,.2)" />
+            <path d="M-22 6 Q -16 -14 0 -16 Q 16 -14 22 6 Z" fill="#ffc21a" {...ink} />
+            <circle cx="-6" cy="-6" r="3" fill="#fff6c2" />
+          </g>
+        </>
+      )}
       <g transform="translate(200 600)">
         <CastleArt c={castleById(castle)} />
       </g>

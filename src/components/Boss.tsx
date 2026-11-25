@@ -758,6 +758,9 @@ export const BOSSES: Record<string, BossInfo> = {
   },
 }
 
+/** Painted bosses (made with Figma AI), one per unit; the drawn one is kept as a fallback. */
+const PAINTED = import.meta.glob<string>('./boss/*.webp', { eager: true, import: 'default' })
+
 /** The boss guarding a unit (falls back to Mormăilă for anything unknown). */
 export function bossFor(unitId: string | undefined): BossInfo {
   return (unitId && BOSSES[unitId]) || BOSSES.animals
@@ -776,11 +779,18 @@ export function Boss({
   locked?: boolean
 }) {
   const boss = bossFor(unitId)
+  const painted = PAINTED[`./boss/${boss.id}.webp`]
   return (
     <div className={`boss boss-${mood} boss-${boss.id} ${locked ? 'boss-locked' : ''}`} style={{ width: size, height: size }} aria-hidden>
       <svg viewBox="0 0 200 200" width={size} height={size}>
         <ellipse cx="100" cy="194" rx="62" ry="7" fill="rgba(40,30,10,0.16)" />
-        <g className="boss-body">{boss.draw(locked ? 'idle' : mood)}</g>
+        <g className="boss-body">
+          {painted ? (
+            <image href={painted} x={6} y={4} width={188} height={190} preserveAspectRatio="xMidYMax meet" />
+          ) : (
+            boss.draw(locked ? 'idle' : mood)
+          )}
+        </g>
         {mood === 'down' && (
           <g className="boss-stars">
             <text x="40" y="30" fontSize="28">

@@ -61,8 +61,20 @@ function Roof({ c, h, w }: { c: CastleLook; h: number; w: number }) {
   )
 }
 
-/** A castle standing on (0, 0), about 200 wide and 150 tall. */
+/** Painted castles (made with Figma AI), one per land. */
+const PAINTED = import.meta.glob<string>('./castle/*.webp', { eager: true, import: 'default' })
+const paintedCastle = (id: string): string | undefined => PAINTED[`./castle/${id}.webp`]
+
+/** A castle standing on (0, 0): the painted one when there is one, else drawn (about 200 wide and 150 tall). */
 export function CastleArt({ c }: { c: CastleLook }) {
+  const img = paintedCastle(c.id)
+  if (img)
+    return (
+      <g>
+        <ellipse cx="0" cy="8" rx="100" ry="14" fill="rgba(30,40,20,.28)" />
+        <image href={img} x={-105} y={-188} width={210} height={204} preserveAspectRatio="xMidYMax meet" />
+      </g>
+    )
   const tower = (tx: number, ty: number, h: number) => (
     <g transform={`translate(${tx} ${ty})`}>
       <rect x="-17" y={-h} width="34" height={h} rx="4" fill={c.tower} {...ink} />
@@ -111,6 +123,21 @@ export function CastleArt({ c }: { c: CastleLook }) {
 
 /** The castle as a sticker (album, cards). */
 export function CastleSticker({ id, size = 80, locked = false }: { id: string; size?: number; locked?: boolean }) {
+  const img = paintedCastle(id)
+  const lockedStyle = locked ? { filter: 'grayscale(1) brightness(1.4)', opacity: 0.4 } : undefined
+  if (img)
+    return (
+      <img
+        className="castle-sticker-img"
+        src={img}
+        alt=""
+        draggable={false}
+        width={size}
+        height={size * 0.95}
+        style={{ objectFit: 'contain', ...lockedStyle }}
+        aria-hidden
+      />
+    )
   return (
     <svg viewBox="-110 -140 220 160" width={size} height={(size * 160) / 220} aria-hidden style={locked ? { filter: 'grayscale(1) brightness(1.4)', opacity: 0.4 } : undefined}>
       <CastleArt c={castleById(id)} />

@@ -4,6 +4,31 @@ import { PROPS, shade, type PropId } from './props'
 import { crossing, distToPath, edgePath, hash, seeded, wave, type MapLayout } from './geometry'
 
 const PATH_W = 44
+
+/** Painted grounds (made with Figma AI), one per unit; units without one keep the drawn scenery. */
+const PAINTED = import.meta.glob<string>('./bg/*.webp', { eager: true, import: 'default' })
+const PAINT_RATIO = 1536 / 864
+
+/** The painted ground stacked down the unit, every other copy mirrored so the joins match. */
+function PaintedGround({ src, W, H }: { src: string; W: number; H: number }) {
+  const th = W * PAINT_RATIO
+  return (
+    <>
+      {Array.from({ length: Math.ceil(H / th) }, (_, k) => (
+        <image
+          key={k}
+          href={src}
+          x={0}
+          y={0}
+          width={W}
+          height={th}
+          preserveAspectRatio="none"
+          transform={k % 2 ? `translate(0 ${(k + 1) * th}) scale(1 -1)` : `translate(0 ${k * th})`}
+        />
+      ))}
+    </>
+  )
+}
 /** Width of the trail and the strip of grass kept clear beside it. */
 const trailOf = (_b: Biome) => ({ w: 60, clear: 26 })
 
@@ -162,6 +187,22 @@ function Scene({ unitId, layout }: { unitId: string; layout: MapLayout }) {
   const bw = trail.w / PATH_W
   const marks = biome.pathDetail === 'road' || biome.pathDetail === 'glow' ? [] : pawPrints(samples, layout.nodes, [bridgeAt, stairsAt])
   const stoneMarks = biome.pathDetail === 'glow' ? samples.filter((_, i) => i % 3 === 0) : []
+  const painted = PAINTED[`./bg/${unitId}.webp`]
+
+  if (painted)
+    return (
+      <svg className="bm-scene" width={W} height={H} viewBox={`0 0 ${W} ${H}`} aria-hidden>
+        <rect x="0" y="0" width={W} height={H} fill={biome.ground} />
+        <PaintedGround src={painted} W={W} H={H} />
+        <path d={d} stroke="rgba(0,0,0,0.16)" strokeWidth={trail.w + 14} fill="none" strokeLinecap="round" transform="translate(0 6)" />
+        <path d={d} stroke={shade(biome.pathEdge, -0.45)} strokeWidth={trail.w + 12} fill="none" strokeLinecap="round" />
+        <path d={d} stroke={biome.pathEdge} strokeWidth={trail.w + 4} fill="none" strokeLinecap="round" />
+        <path d={d} stroke={biome.path} strokeWidth={trail.w - 6} fill="none" strokeLinecap="round" />
+        <path d={d} stroke="#fff" strokeWidth={trail.w * 0.22} fill="none" strokeLinecap="round" opacity="0.3" transform="translate(-6 -3)" />
+        {biome.pathDetail === 'road' && <path d={d} stroke="#fff" strokeWidth="4" strokeDasharray="16 14" fill="none" />}
+        {biome.pathDetail === 'glow' && stoneMarks.map((p, i) => <circle key={i} cx={p.x} cy={p.y} r="3.5" fill="#fff" opacity="0.9" />)}
+      </svg>
+    )
 
   return (
     <svg className="bm-scene" width={W} height={H} viewBox={`0 0 ${W} ${H}`} aria-hidden>
