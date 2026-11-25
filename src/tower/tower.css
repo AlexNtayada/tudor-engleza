@@ -830,13 +830,20 @@
 /* ---------- the island (wide screens) ---------- */
 
 .page.td-lands-wide {
+  /* desktop: the island fills the whole screen under the top bar */
+  position: relative;
   max-width: none;
-  padding: 10px 24px 16px;
+  padding: 0;
+  height: calc(100dvh - var(--appbar-h, 87px));
+  min-height: 0;
+  background: #4fb4e8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
 }
 .td-isl-wrap {
-  position: relative;
-  max-width: min(1500px, calc((100dvh - var(--appbar-h, 76px) - 40px) * 1.6667));
-  margin: 0 auto;
+  width: min(100%, calc((100dvh - var(--appbar-h, 87px)) * 1.6667));
 }
 .td-lands-wide .td-lands-head {
   position: absolute;
@@ -871,9 +878,7 @@
   position: relative;
   width: 100%;
   margin: 0 auto;
-  border-radius: 28px;
   overflow: hidden;
-  box-shadow: 0 8px 0 #2f78b0, var(--soft);
 }
 .td-isl-stop .td-stop-btn {
   width: 74px;
