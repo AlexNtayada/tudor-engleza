@@ -343,6 +343,7 @@ export function LandsMap({ wins, onPlay }: { wins: string[]; onPlay: (id: string
               <span className="td-stop-icon">{open ? m.icon : '🔒'}</span>
               <span className="td-stop-num">{i + 1}</span>
               {won && <span className="td-stop-crown">👑</span>}
+              {won && <span className="td-stop-check">✓</span>}
             </button>
             <span className="td-stop-name">{m.name}</span>
             <span className={`td-stop-prize ${left ? 'td-prize-right' : 'td-prize-left'}`}>

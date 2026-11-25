@@ -696,7 +696,6 @@
   height: 92px;
   border-radius: 50%;
   border: 6px solid;
-  box-shadow: 0 7px 0 rgba(43, 33, 24, 0.25);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -751,7 +750,38 @@
 }
 .td-stop-here .td-stop-btn {
   animation: td-pulse 1.1s ease-in-out infinite;
-  box-shadow: 0 7px 0 rgba(43, 33, 24, 0.25), 0 0 0 8px rgba(255, 255, 255, 0.7);
+  outline: 6px solid rgba(255, 255, 255, 0.8);
+}
+/* finished lands: gold ring, crown on top, green tick, gold name */
+.td-stop-won .td-stop-btn {
+  border-color: #f2b11c !important;
+  outline: 5px solid #ffe58a;
+}
+.td-stop-won .td-stop-crown {
+  right: auto;
+  left: 50%;
+  transform: translateX(-50%) rotate(-8deg);
+  top: -30px;
+}
+.td-stop-check {
+  position: absolute;
+  right: -8px;
+  bottom: -6px;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: #3fae5a;
+  border: 3px solid #fff;
+  color: #fff;
+  font-weight: 900;
+  font-size: 17px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.td-stop-won .td-stop-name {
+  background: #ffd54a;
+  color: #5a3d00;
 }
 .td-stop-prize,
 .td-stop-friend {
@@ -859,7 +889,12 @@
   font-size: 14px;
 }
 .td-isl-stop .td-stop-crown {
-  font-size: 24px;
+  font-size: 30px;
+}
+.td-isl-stop .td-stop-check {
+  width: 26px;
+  height: 26px;
+  font-size: 15px;
 }
 .td-isl-stop .td-stop-name {
   font-size: 14px;

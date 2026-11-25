@@ -275,6 +275,7 @@ export function IslandMap({ wins, onPlay }: { wins: string[]; onPlay: (id: strin
               <span className="td-stop-icon">{open ? m.icon : '🔒'}</span>
               <span className="td-stop-num">{i + 1}</span>
               {won && <span className="td-stop-crown">👑</span>}
+              {won && <span className="td-stop-check">✓</span>}
             </button>
             <span className="td-stop-name">{m.name}</span>
             {/* only the next land shows what it gives, to keep the island tidy */}
