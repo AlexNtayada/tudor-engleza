@@ -15,27 +15,27 @@ import cloud2 from './cloud-2.webp'
 import cloud3 from './cloud-3.webp'
 
 /** Size of the picture; everything below is placed in these pixels. */
-const W = 1506
-const H = 856
+const W = 2048
+const H = 1147
 
 type Pt = { x: number; y: number }
 
 /** Where each land's stop sits on the picture, in play order. */
 export const PAINTED_SITES: Pt[] = [
-  { x: 224, y: 596 }, // forest
-  { x: 174, y: 326 }, // desert
-  { x: 284, y: 186 }, // snow
-  { x: 684, y: 146 }, // beach
-  { x: 1064, y: 196 }, // volcano
-  { x: 1234, y: 376 }, // candy
-  { x: 1244, y: 556 }, // farm
-  { x: 824, y: 596 }, // jungle
-  { x: 584, y: 596 }, // sea (lagoon)
-  { x: 544, y: 376 }, // clouds
-  { x: 904, y: 326 }, // space
+  { x: 413, y: 853 }, // forest
+  { x: 213, y: 493 }, // desert
+  { x: 440, y: 267 }, // snow
+  { x: 933, y: 160 }, // beach
+  { x: 1653, y: 333 }, // volcano
+  { x: 1680, y: 560 }, // candy
+  { x: 1667, y: 933 }, // farm
+  { x: 1307, y: 933 }, // jungle
+  { x: 840, y: 853 }, // sea (lagoon)
+  { x: 800, y: 560 }, // clouds
+  { x: 1240, y: 440 }, // space
 ]
 
-const DOCK: Pt = { x: 244, y: 786 }
+const DOCK: Pt = { x: 200, y: 1067 }
 
 /** A gently bent trail from the dock through every stop. */
 const TRAIL: Pt[] = (() => {
