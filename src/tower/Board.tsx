@@ -7,6 +7,12 @@ import { BOARD, pointAt, type Path } from './engine'
 import type { Deco, TowerMap } from './maps'
 
 const L = '#2b2118'
+
+/** Painted ground pictures (Figma AI), one per land when we have it. */
+const BG = import.meta.glob<string>('./bg/*.webp', { eager: true, import: 'default' })
+const bgFor = (deco: Deco): string | undefined => BG[`./bg/${deco}.webp`]
+/** Where the square picture sits on the board: its open middle band runs under the path. */
+const BG_BOX = { x: -170, y: -40, size: 740 }
 const ink = { stroke: L, strokeWidth: 2.6, strokeLinejoin: 'round' as const, strokeLinecap: 'round' as const }
 
 /** Distance from a point to the path. */
@@ -348,6 +354,7 @@ export const Board = memo(function Board({ map, castle }: { map: TowerMap; castl
     return out
   }, [map])
   const pid = `td-check-${map.id}`
+  const bg = bgFor(map.deco)
   const fence = { forest: '#c98a4b', desert: '#d9a066', snow: '#cbe8fb', beach: '#e0c08a', volcano: '#7a6c66', candy: '#fff', farm: '#c98a4b', jungle: '#8b6a44', sea: '#f2dca8', clouds: '#fff', space: '#8f88b8' }[map.deco]
   return (
     <g>
@@ -359,6 +366,7 @@ export const Board = memo(function Board({ map, castle }: { map: TowerMap; castl
         </pattern>
       </defs>
       <rect x="-900" y="-300" width={BOARD.w + 1800} height={BOARD.h + 600} fill={`url(#${pid})`} />
+      {bg && <image href={bg} x={BG_BOX.x} y={BG_BOX.y} width={BG_BOX.size} height={BG_BOX.size} preserveAspectRatio="xMidYMid slice" />}
       <Cave map={map} />
       <polyline
         points={map.path.points.map((p) => p.join(',')).join(' ')}
@@ -371,7 +379,7 @@ export const Board = memo(function Board({ map, castle }: { map: TowerMap; castl
       {stones.map((s, i) => (
         <rect key={i} x={s.x - s.w / 2} y={s.y - 5} width={s.w} height="10" rx="4" fill={map.road[1]} stroke="rgba(0,0,0,.15)" strokeWidth="1.5" />
       ))}
-      {scenery.map((t, i) => (
+      {!bg && scenery.map((t, i) => (
         <g key={i} transform={`translate(${t.x} ${t.y})`}>
           {DRAW[map.deco](t.r, t.v)}
         </g>
