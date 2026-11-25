@@ -1,35 +1,41 @@
-// Desktop view of the castle lands on a painted island picture (made with Figma AI).
-// A dotted trail joins the lands in play order; the stretch already walked is gold.
+// Desktop view of the castle lands, built from painted pieces (made with Figma AI): the sea fills the
+// screen, the island sits on it, and clouds drift at the screen edges. A dotted trail joins the lands
+// in play order; the stretch already walked is gold.
 
 import { Mascot } from '../components/Mascot'
 import { sfx } from '../sfx'
 import { CastleSticker } from './castles'
 import { Crown } from './Sprites'
 import { MAPS, mapOpen } from './maps'
-import mapUrl from './painted-map.webp'
+import islandUrl from './painted-island.webp'
+import seaUrl from './painted-sea.webp'
+import cloud0 from './cloud-0.webp'
+import cloud1 from './cloud-1.webp'
+import cloud2 from './cloud-2.webp'
+import cloud3 from './cloud-3.webp'
 
 /** Size of the picture; everything below is placed in these pixels. */
-const W = 1376
-const H = 768
+const W = 1506
+const H = 856
 
 type Pt = { x: number; y: number }
 
 /** Where each land's stop sits on the picture, in play order. */
 export const PAINTED_SITES: Pt[] = [
-  { x: 285, y: 545 }, // forest
-  { x: 200, y: 395 }, // desert
-  { x: 455, y: 200 }, // snow
-  { x: 715, y: 205 }, // beach
-  { x: 985, y: 215 }, // volcano
-  { x: 1120, y: 355 }, // candy
-  { x: 1160, y: 585 }, // farm
-  { x: 870, y: 590 }, // jungle
-  { x: 630, y: 585 }, // sea (lagoon)
-  { x: 540, y: 360 }, // clouds
-  { x: 800, y: 355 }, // space
+  { x: 224, y: 596 }, // forest
+  { x: 174, y: 326 }, // desert
+  { x: 284, y: 186 }, // snow
+  { x: 684, y: 146 }, // beach
+  { x: 1064, y: 196 }, // volcano
+  { x: 1234, y: 376 }, // candy
+  { x: 1244, y: 556 }, // farm
+  { x: 824, y: 596 }, // jungle
+  { x: 584, y: 596 }, // sea (lagoon)
+  { x: 544, y: 376 }, // clouds
+  { x: 904, y: 326 }, // space
 ]
 
-const DOCK: Pt = { x: 190, y: 668 }
+const DOCK: Pt = { x: 244, y: 786 }
 
 /** A gently bent trail from the dock through every stop. */
 const TRAIL: Pt[] = (() => {
@@ -60,7 +66,7 @@ export function PaintedMap({ wins, onPlay }: { wins: string[]; onPlay: (id: stri
 
   return (
     <div className="td-island td-painted" style={{ aspectRatio: `${W} / ${H}` }}>
-      <img className="td-painted-img" src={mapUrl} alt="" draggable={false} />
+      <img className="td-painted-img" src={islandUrl} alt="" draggable={false} />
       <svg viewBox={`0 0 ${W} ${H}`} className="td-road-svg" aria-hidden>
         {/* the whole trail as dots, then the walked part in gold */}
         <path d={trailD(TRAIL.length - 1)} fill="none" stroke="#2b2118" strokeWidth="11" strokeDasharray="0.1 18" strokeLinecap="round" opacity=".55" />
@@ -115,6 +121,19 @@ export function PaintedMap({ wins, onPlay }: { wins: string[]; onPlay: (id: stri
           </div>
         )
       })}
+    </div>
+  )
+}
+
+const CLOUDS = [cloud0, cloud1, cloud2, cloud3]
+
+/** The sea under the whole page and clouds drifting at the screen edges. */
+export function PaintedSky() {
+  return (
+    <div className="td-sky" style={{ backgroundImage: `url(${seaUrl})` }} aria-hidden>
+      {CLOUDS.map((src, i) => (
+        <img key={i} className={`td-cloud td-cloud-${i}`} src={src} alt="" draggable={false} />
+      ))}
     </div>
   )
 }
