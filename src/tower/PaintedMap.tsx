@@ -1,4 +1,4 @@
-// Desktop view of the castle lands on a painted island picture (made with Figma AI).
+// Desktop view of the castle lands on a painted island picture (made with Figma AI, 1536×864).
 // A dotted trail joins the lands in play order; the stretch already walked is gold.
 
 import { Mascot } from '../components/Mascot'
@@ -9,27 +9,27 @@ import { MAPS, mapOpen } from './maps'
 import mapUrl from './painted-map.webp'
 
 /** Size of the picture; everything below is placed in these pixels. */
-const W = 1376
-const H = 768
+const W = 1536
+const H = 864
 
 type Pt = { x: number; y: number }
 
 /** Where each land's stop sits on the picture, in play order. */
 export const PAINTED_SITES: Pt[] = [
-  { x: 285, y: 545 }, // forest
-  { x: 200, y: 395 }, // desert
-  { x: 455, y: 200 }, // snow
-  { x: 715, y: 205 }, // beach
-  { x: 985, y: 215 }, // volcano
-  { x: 1120, y: 355 }, // candy
-  { x: 1160, y: 585 }, // farm
-  { x: 870, y: 590 }, // jungle
-  { x: 630, y: 585 }, // sea (lagoon)
-  { x: 540, y: 360 }, // clouds
-  { x: 800, y: 355 }, // space
+  { x: 330, y: 585 }, // forest
+  { x: 205, y: 330 }, // desert
+  { x: 305, y: 175 }, // snow
+  { x: 700, y: 150 }, // beach
+  { x: 1065, y: 195 }, // volcano
+  { x: 1300, y: 340 }, // candy
+  { x: 1185, y: 610 }, // farm
+  { x: 905, y: 600 }, // jungle
+  { x: 690, y: 610 }, // sea (lagoon)
+  { x: 615, y: 345 }, // clouds
+  { x: 960, y: 365 }, // space
 ]
 
-const DOCK: Pt = { x: 190, y: 668 }
+const DOCK: Pt = { x: 190, y: 715 }
 
 /** A gently bent trail from the dock through every stop. */
 const TRAIL: Pt[] = (() => {

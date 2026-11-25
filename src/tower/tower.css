@@ -838,7 +838,7 @@
   padding: 0;
   height: calc(100dvh - var(--appbar-h, 87px));
   min-height: 0;
-  background: radial-gradient(ellipse at center, #0a6aa6 0%, #055a95 70%, #044c80 100%);
+  background: radial-gradient(ellipse at center, #0368b8 0%, #025fae 70%, #01509c 100%);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -846,7 +846,7 @@
 }
 .td-isl-wrap {
   /* leave sea around the island: its beach pokes past the drawing's edges */
-  width: min(100%, calc((100dvh - var(--appbar-h, 87px)) * 1.7917));
+  width: min(100%, calc((100dvh - var(--appbar-h, 87px)) * 1.7778));
 }
 .td-lands-wide .td-lands-head {
   position: absolute;
