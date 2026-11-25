@@ -475,7 +475,11 @@ export function Tower({
             <button
               key={m.id}
               className={`td-land ${open ? '' : 'td-land-locked'} ${won ? 'td-land-won' : ''}`}
-              style={{ background: `linear-gradient(180deg, ${m.ground[0]}, ${m.ground[1]})`, boxShadow: `0 6px 0 ${m.edge}` }}
+              style={{
+                background: `linear-gradient(180deg, ${m.ground[0]}, ${m.ground[1]})`,
+                boxShadow: `0 6px 0 ${m.edge}`,
+                color: m.deco === 'space' ? '#fff' : undefined,
+              }}
               onClick={() => {
                 if (!open) return sfx.wrong()
                 sfx.tap()
