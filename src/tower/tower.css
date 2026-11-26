@@ -1064,6 +1064,12 @@
   transform: scale(1.15);
   box-shadow: 0 0 0 5px rgba(255, 200, 61, 0.7), 0 3px 0 rgba(90, 60, 26, 0.35);
 }
+.td-castle-tap {
+  cursor: pointer;
+}
+.td-castle-tap:hover image {
+  filter: brightness(1.08);
+}
 .td-castle-locked {
   filter: grayscale(1) brightness(1.1);
   opacity: 0.6;
