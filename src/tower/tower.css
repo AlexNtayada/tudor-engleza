@@ -847,7 +847,7 @@
 .td-isl-wrap {
   /* leave sea around the island: its beach pokes past the drawing's edges */
   /* the island keeps a ring of sea around it */
-  width: min(92%, calc((100dvh - var(--appbar-h, 87px) - 70px) * 1.7855));
+  width: min(92%, calc((100dvh - var(--appbar-h, 87px) - 70px) * 1.61));
 }
 .td-lands-wide .td-lands-head {
   position: absolute;

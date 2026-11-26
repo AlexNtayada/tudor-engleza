@@ -15,23 +15,24 @@ import cloud3 from './cloud-3.webp'
 
 /** Size of the picture; everything below is placed in these pixels. */
 const W = 2048
-const H = 1152
+/** The picture has 90 px of sea painted above the island and 30 below, so nothing touches its edge. */
+const H = 1272
 
 type Pt = { x: number; y: number }
 
 /** Where each land's castle stands: x is its middle, y the ground under its gate, w its width. */
 const CASTLE_AT: { x: number; y: number; w: number }[] = [
-  { x: 453, y: 759, w: 170 }, // forest
-  { x: 353, y: 488, w: 170 }, // farm
-  { x: 500, y: 265, w: 170 }, // desert
-  { x: 763, y: 152, w: 170 }, // snow
-  { x: 1136, y: 243, w: 170 }, // beach
-  { x: 1557, y: 263, w: 170 }, // volcano
-  { x: 1728, y: 532, w: 170 }, // candy
-  { x: 1213, y: 681, w: 170 }, // jungle
-  { x: 1260, y: 915, w: 170 }, // sea
-  { x: 1483, y: 928, w: 170 }, // clouds
-  { x: 1820, y: 949, w: 170 }, // space
+  { x: 453, y: 849, w: 170 }, // forest
+  { x: 353, y: 578, w: 170 }, // farm
+  { x: 500, y: 355, w: 170 }, // desert
+  { x: 763, y: 242, w: 170 }, // snow
+  { x: 1136, y: 333, w: 170 }, // beach
+  { x: 1557, y: 353, w: 170 }, // volcano
+  { x: 1728, y: 622, w: 170 }, // candy
+  { x: 1213, y: 771, w: 170 }, // jungle
+  { x: 1260, y: 1005, w: 170 }, // sea
+  { x: 1483, y: 1018, w: 170 }, // clouds
+  { x: 1820, y: 1039, w: 170 }, // space
 ]
 
 /** The name label sits on the road just in front of each castle gate. */
