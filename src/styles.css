@@ -5393,3 +5393,27 @@ button.avatar:active {
 .play-card-big .play-emoji {
   font-size: 76px !important;
 }
+
+/* ---------- start screen: painted meadow (style: docs/stil-imagini.md) ---------- */
+.intro.center-screen {
+  background: #bfe6f7 url('./assets/intro/intro-wide.webp') center bottom / cover no-repeat;
+}
+@media (max-aspect-ratio: 1/1) {
+  .intro.center-screen {
+    background-image: url('./assets/intro/intro-tall.webp');
+  }
+}
+.intro-cloud,
+.intro-bubble,
+.intro-hills {
+  display: none;
+}
+.intro-sub {
+  background: #fffaf0;
+  border: 2.5px solid #2b2118;
+  color: #5a3c1a;
+}
+.intro-play {
+  border: 2.5px solid #2b2118;
+  background: #fffaf0;
+}

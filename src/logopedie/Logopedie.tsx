@@ -10,6 +10,9 @@ import { ACTIVITIES, COMMON_TIPS, SOUNDS, type ActivityId, type SoundId, type So
 import { Listen, SoundRace, Syllables, WarmUp, Words, type ActivityProps } from './activities'
 import './logopedie.css'
 
+/** Painted landscape on each sound card (storybook style, docs/stil-imagini.md). */
+const SCENES = import.meta.glob<string>('./scene/*.webp', { eager: true, import: 'default' })
+
 export const SPEECH_STARS = 2
 
 const SCREENS: Record<ActivityId, (p: ActivityProps) => React.ReactElement> = {
@@ -178,7 +181,7 @@ export function Logopedie({
           <button
             key={s.id}
             className="lp-sound"
-            style={{ '--c': s.color, '--cd': s.colorDark } as React.CSSProperties}
+            style={{ '--c': s.color, '--cd': s.colorDark, backgroundImage: SCENES[`./scene/${s.id}.webp`] ? `url(${SCENES[`./scene/${s.id}.webp`]})` : undefined } as React.CSSProperties}
             onClick={() => {
               sfx.tap()
               setSound(s.id)
