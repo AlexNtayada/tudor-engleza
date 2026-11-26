@@ -920,3 +920,35 @@
     padding: 0 3px;
   }
 }
+
+/* ---------- painted sound cards (style: docs/stil-imagini.md) ---------- */
+.lp-sound {
+  min-height: 250px;
+  justify-content: space-between;
+  background-color: var(--c);
+  background-size: cover;
+  background-position: center bottom;
+  border: 2.5px solid #2b2118;
+  box-shadow: 0 6px 0 #d9c3a0;
+}
+.lp-sound:active {
+  box-shadow: 0 2px 0 #d9c3a0;
+}
+.lp-sound .lp-letter {
+  background: #fffaf0;
+  border: 2.5px solid #2b2118;
+  color: var(--cd, var(--c));
+  box-shadow: 0 4px 0 rgba(43, 33, 24, 0.25);
+}
+.lp-sound .lp-sound-emoji {
+  display: none;
+}
+.lp-sound .lp-sound-title {
+  background: #f8ebc8;
+  border: 2.5px solid #8a6a3e;
+  color: #5a3c1a;
+  border-radius: 12px;
+  padding: 0 16px;
+  -webkit-text-stroke: 0;
+  font-size: 24px;
+}
