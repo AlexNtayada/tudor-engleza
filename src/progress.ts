@@ -45,9 +45,8 @@ export interface Progress {
   speechLog: Record<string, string[]>
   /** Sentence packs: best stars per pack id. */
   sentences: Record<string, number>
-  /** Castle game: lands won (each one gives a castle sticker), and the castle the child picked. */
+  /** Castle game: lands won (each one gives a castle sticker for the Album). */
   towerWins?: string[]
-  castle?: string
   /** The friend picked in the intro; unset until the child picks one. */
   mascot?: MascotId
   /** False only for a brand-new child who has not gone through the first-run steps yet. */

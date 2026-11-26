@@ -555,28 +555,6 @@
   margin: 0;
   font-size: 34px;
 }
-.td-my-castle {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 6px 16px 6px 8px;
-  border-radius: 20px;
-  border: 2px solid var(--edge);
-  background: #fff;
-  box-shadow: 0 4px 0 var(--lift), var(--soft);
-  cursor: pointer;
-  font: inherit;
-  text-align: left;
-}
-.td-my-castle span {
-  display: flex;
-  flex-direction: column;
-  line-height: 1.2;
-}
-.td-my-castle small {
-  color: var(--muted);
-  font-weight: 700;
-}
 .td-land-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -874,10 +852,6 @@
   box-shadow: 0 4px 0 #c9a25e;
   transform: rotate(-2deg);
 }
-.td-lands-wide .td-my-castle svg {
-  width: 64px;
-  height: auto;
-}
 .td-island {
   position: relative;
   width: 100%;
@@ -944,9 +918,6 @@
 }
 .td-friend-right {
   left: 34px;
-}
-.td-lands-wide .td-my-castle {
-  align-self: flex-end;
 }
 
 /* the painted island picture under the stops */

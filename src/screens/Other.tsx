@@ -1,4 +1,4 @@
-import { CASTLES, CastleSticker, currentCastle, ownedCastles } from '../tower/castles'
+import { CASTLES, CastleSticker, ownedCastles } from '../tower/castles'
 import { mapById } from '../tower/maps'
 import { mascot, g, MASCOTS, mascotById, type MascotId } from '../mascots'
 import { TudooLogo } from '../components/TudooLogo'
@@ -379,15 +379,11 @@ export function BreakScreen({ onBack }: { onBack: () => void }) {
 export function Album({
   progress,
   onBack,
-  onPickCastle,
 }: {
   progress: Progress
   onBack: () => void
-  /** Pick the castle that stands on the castle game's maps. */
-  onPickCastle: (id: string) => void
 }) {
   const castles = ownedCastles(progress.towerWins ?? [])
-  const chosenCastle = currentCastle(progress.towerWins, progress.castle)
   const owned = new Set(progress.stickers)
   const [pop, setPop] = useState<string | null>(null)
   const tap = (sticker: string) => {
@@ -411,27 +407,14 @@ export function Album({
             {castles.length}/{CASTLES.length}
           </span>
         </div>
-        <p className="album-castles-hint">Atinge un castel ca să apară în jocul Castelul.</p>
         <div className="album-castle-grid">
           {CASTLES.map((c) => {
             const has = castles.includes(c.id)
-            const on = chosenCastle === c.id
             return (
-              <button
-                key={c.id}
-                className={`album-castle ${has ? 'owned' : ''} ${on ? 'on' : ''}`}
-                onClick={() => {
-                  if (!has) return
-                  sfx.pop()
-                  onPickCastle(c.id)
-                }}
-                aria-pressed={on}
-                aria-label={has ? c.name : 'Castel lipsă'}
-              >
+              <div key={c.id} className={`album-castle ${has ? 'owned' : ''}`} aria-label={has ? c.name : 'Castel lipsă'}>
                 <CastleSticker id={c.id} size={92} locked={!has} />
                 <small>{has ? c.name : `Câștigă ${mapById(c.id).name}`}</small>
-                {on && <span className="album-castle-check">✓</span>}
-              </button>
+              </div>
             )
           })}
         </div>

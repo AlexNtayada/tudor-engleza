@@ -39,11 +39,6 @@ export function ownedCastles(wins: string[]): string[] {
   return CASTLES.filter((c, i) => i === 0 || wins.includes(c.id)).map((c) => c.id)
 }
 
-/** The castle that stands on the maps: the chosen one if it has been earned, else the first. */
-export function currentCastle(wins: string[] = [], chosen?: string): string {
-  return chosen && ownedCastles(wins).includes(chosen) ? chosen : 'forest'
-}
-
 function Top({ kind, y }: { kind: CastleLook['top']; y: number }) {
   switch (kind) {
     case 'snow':
