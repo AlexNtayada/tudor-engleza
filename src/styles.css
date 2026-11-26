@@ -5342,10 +5342,13 @@ button.avatar:active {
   border: 2.5px solid #2b2118 !important;
 }
 /* the tail: same colour and ink line as the bubble, tucked under its edge */
+.play-hello .bubble {
+  border-radius: 20px;
+}
 .play-hello .bubble::before {
-  left: -13px;
-  width: 20px;
-  height: 20px;
+  left: -10px;
+  width: 15px;
+  height: 15px;
   background: #fffaf0;
   border-left: 2.5px solid #2b2118 !important;
   border-bottom: 2.5px solid #2b2118 !important;
