@@ -1032,3 +1032,171 @@
   background: #22b573;
   color: #fff;
 }
+
+/* ---------- name label variants (preview: .td-painted[data-label=a..e]) ---------- */
+.td-gate-num {
+  display: none;
+}
+.td-gate-label {
+  position: relative;
+}
+
+/* A: wooden sign on a post */
+[data-label='a'] .td-gate-label {
+  background: linear-gradient(#c58b52, #a8703d);
+  border: 3px solid #5c3b1e;
+  border-radius: 8px;
+  color: #fff6e3;
+  text-shadow: 0 2px 0 #5c3b1e;
+  font-size: 16px;
+  padding: 4px 16px;
+  box-shadow: inset 0 2px 0 rgba(255, 255, 255, 0.25), 0 4px 0 #5c3b1e;
+}
+[data-label='a'] .td-gate-label::before,
+[data-label='a'] .td-gate-label::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  width: 6px;
+  height: 6px;
+  margin-top: -3px;
+  border-radius: 50%;
+  background: #5c3b1e;
+}
+[data-label='a'] .td-gate-label::before {
+  left: 6px;
+}
+[data-label='a'] .td-gate-label::after {
+  right: 6px;
+}
+[data-label='a'] .td-stop-locked .td-gate-label {
+  background: linear-gradient(#b8a48c, #9c8a74);
+  color: #f1ebe2;
+}
+
+/* B: ribbon banner in the land's colour */
+[data-label='b'] .td-gate-label {
+  background: var(--land);
+  border: 3px solid #2b2118;
+  border-radius: 4px;
+  color: #fff;
+  text-shadow: 0 2px 0 rgba(0, 0, 0, 0.35);
+  font-size: 16px;
+  padding: 4px 18px;
+  box-shadow: 0 4px 0 rgba(0, 0, 0, 0.25);
+}
+[data-label='b'] .td-gate-label::before,
+[data-label='b'] .td-gate-label::after {
+  content: '';
+  position: absolute;
+  top: 8px;
+  z-index: -1;
+  width: 22px;
+  height: 100%;
+  background: var(--land);
+  filter: brightness(0.75);
+  border: 3px solid #2b2118;
+}
+[data-label='b'] .td-gate-label::before {
+  left: -16px;
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%, 40% 50%);
+}
+[data-label='b'] .td-gate-label::after {
+  right: -16px;
+  clip-path: polygon(0 0, 100% 0, 60% 50%, 100% 100%, 0 100%);
+}
+[data-label='b'] .td-stop-locked .td-gate-label,
+[data-label='b'] .td-stop-locked .td-gate-label::before,
+[data-label='b'] .td-stop-locked .td-gate-label::after {
+  background: #b9b0a5;
+  color: #fff;
+}
+
+/* C: parchment scroll */
+[data-label='c'] .td-gate-label {
+  background: #f8ebc8;
+  border: 3px solid #8a6a3e;
+  border-radius: 4px;
+  color: #5a3c1a;
+  font-size: 16px;
+  padding: 4px 22px;
+  box-shadow: 0 3px 0 rgba(90, 60, 26, 0.35);
+}
+[data-label='c'] .td-gate-label::before,
+[data-label='c'] .td-gate-label::after {
+  content: '';
+  position: absolute;
+  top: -5px;
+  bottom: -5px;
+  width: 12px;
+  background: linear-gradient(90deg, #e2c98f, #f8ebc8, #d4b676);
+  border: 3px solid #8a6a3e;
+  border-radius: 8px;
+}
+[data-label='c'] .td-gate-label::before {
+  left: -8px;
+}
+[data-label='c'] .td-gate-label::after {
+  right: -8px;
+}
+[data-label='c'] .td-stop-locked .td-gate-label {
+  color: #9a8a74;
+}
+
+/* D: level number medallion + name */
+[data-label='d'] .td-gate-label {
+  padding: 3px 14px 3px 40px;
+  border-color: var(--land);
+  border-width: 4px;
+  font-size: 16px;
+}
+[data-label='d'] .td-gate-num {
+  display: grid;
+  place-items: center;
+  position: absolute;
+  left: -10px;
+  top: 50%;
+  width: 42px;
+  height: 42px;
+  margin-top: -21px;
+  border-radius: 50%;
+  background: var(--land);
+  border: 3px solid #2b2118;
+  color: #fff;
+  font-size: 20px;
+  text-shadow: 0 2px 0 rgba(0, 0, 0, 0.35);
+}
+[data-label='d'] .td-stop-locked .td-gate-num {
+  background: #b9b0a5;
+}
+
+/* E: carved stone plaque with the number on top */
+[data-label='e'] .td-gate-label {
+  background: linear-gradient(#cfd3d8, #aab0b8);
+  border: 3px solid #4a4f57;
+  border-radius: 14px 14px 10px 10px;
+  color: #2f343b;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.7);
+  font-size: 16px;
+  padding: 10px 16px 4px;
+  box-shadow: 0 4px 0 #4a4f57;
+}
+[data-label='e'] .td-gate-num {
+  display: grid;
+  place-items: center;
+  position: absolute;
+  top: -16px;
+  left: 50%;
+  width: 28px;
+  height: 28px;
+  margin-left: -14px;
+  border-radius: 50%;
+  background: #ffc83d;
+  border: 3px solid #4a4f57;
+  color: #2b2118;
+  font-size: 14px;
+  text-shadow: none;
+}
+[data-label='e'] .td-stop-locked .td-gate-num {
+  background: #d9d4cc;
+}
