@@ -43,6 +43,12 @@ const MAP_CASTLES = import.meta.glob<string>('./map-castle/*.webp', { eager: tru
 
 export function PaintedMap({ wins, onPlay }: { wins: string[]; onPlay: (id: string) => void }) {
   const current = MAPS.findIndex((m, i) => mapOpen(wins, i) && !wins.includes(m.id))
+  /** The castle and its parchment both start the land, or buzz when it is still locked. */
+  const play = (i: number) => {
+    if (!mapOpen(wins, i)) return sfx.wrong()
+    sfx.tap()
+    onPlay(MAPS[i].id)
+  }
 
   return (
     <div className="td-island td-painted" style={{ aspectRatio: `${W} / ${H}` }}>
@@ -53,7 +59,7 @@ export function PaintedMap({ wins, onPlay }: { wins: string[]; onPlay: (id: stri
           const img = MAP_CASTLES[`./map-castle/${m.id}.webp`]
           if (!img) return null
           return (
-            <g key={m.id} className={mapOpen(wins, i) ? undefined : 'td-castle-locked'}>
+            <g key={m.id} className={`td-castle-tap ${mapOpen(wins, i) ? '' : 'td-castle-locked'}`} onClick={() => play(i)}>
               <ellipse cx={c.x} cy={c.y - 4} rx={c.w * 0.46} ry={c.w * 0.09} fill="rgba(40,40,30,.22)" />
               <image href={img} x={c.x - c.w / 2} y={c.y - c.w * 1.3} width={c.w} height={c.w * 1.3} preserveAspectRatio="xMidYMax meet" />
             </g>
@@ -76,11 +82,7 @@ export function PaintedMap({ wins, onPlay }: { wins: string[]; onPlay: (id: stri
             <button
               className="td-gate-label"
               style={{ ['--land' as string]: m.edge }}
-              onClick={() => {
-                if (!open) return sfx.wrong()
-                sfx.tap()
-                onPlay(m.id)
-              }}
+              onClick={() => play(i)}
               aria-label={open ? `${i + 1}. ${m.name}${won ? ', câștigată' : ''}` : `${m.name}, încuiată`}
             >
               <span className="td-gate-num">{i + 1}</span>
