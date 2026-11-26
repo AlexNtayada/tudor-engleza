@@ -21,17 +21,17 @@ type Pt = { x: number; y: number }
 
 /** Where each land's castle stands: x is its middle, y the ground under its gate, w its width. */
 const CASTLE_AT: { x: number; y: number; w: number }[] = [
-  { x: 400, y: 861, w: 200 }, // forest
-  { x: 367, y: 519, w: 200 }, // desert
-  { x: 567, y: 239, w: 200 }, // snow
-  { x: 1027, y: 219, w: 200 }, // beach
-  { x: 1527, y: 285, w: 200 }, // volcano
-  { x: 1720, y: 525, w: 200 }, // candy
-  { x: 1680, y: 825, w: 200 }, // farm
-  { x: 1267, y: 959, w: 200 }, // jungle
-  { x: 860, y: 925, w: 200 }, // sea
-  { x: 733, y: 545, w: 200 }, // clouds
-  { x: 1160, y: 545, w: 200 }, // space
+  { x: 453, y: 759, w: 170 }, // forest
+  { x: 353, y: 488, w: 170 }, // farm
+  { x: 500, y: 265, w: 170 }, // desert
+  { x: 763, y: 152, w: 170 }, // snow
+  { x: 1136, y: 243, w: 170 }, // beach
+  { x: 1557, y: 263, w: 170 }, // volcano
+  { x: 1728, y: 532, w: 170 }, // candy
+  { x: 1213, y: 681, w: 170 }, // jungle
+  { x: 1260, y: 915, w: 170 }, // sea
+  { x: 1483, y: 928, w: 170 }, // clouds
+  { x: 1820, y: 949, w: 170 }, // space
 ]
 
 /** The name label sits on the road just in front of each castle gate. */
@@ -52,7 +52,7 @@ export function PaintedMap({ wins, onPlay }: { wins: string[]; onPlay: (id: stri
           const img = MAP_CASTLES[`./map-castle/${m.id}.webp`]
           if (!img) return null
           return (
-            <g key={m.id}>
+            <g key={m.id} className={mapOpen(wins, i) ? undefined : 'td-castle-locked'}>
               <ellipse cx={c.x} cy={c.y - 4} rx={c.w * 0.46} ry={c.w * 0.09} fill="rgba(40,40,30,.22)" />
               <image href={img} x={c.x - c.w / 2} y={c.y - c.w * 1.3} width={c.w} height={c.w * 1.3} preserveAspectRatio="xMidYMax meet" />
             </g>
@@ -84,8 +84,6 @@ export function PaintedMap({ wins, onPlay }: { wins: string[]; onPlay: (id: stri
             >
               <span className="td-gate-num">{i + 1}</span>
               <span className="td-gate-name">{m.name}</span>
-              {won && <span className="td-gate-mark td-gate-won">✓</span>}
-              {!open && <span className="td-gate-mark">🔒</span>}
             </button>
             {isHere && (
               <span className={`td-stop-friend td-isl-friend ${right ? 'td-friend-left' : 'td-friend-right'}`}>
