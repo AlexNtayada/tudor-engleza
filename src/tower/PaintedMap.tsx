@@ -1,11 +1,12 @@
-// Desktop view of the castle lands, built from painted pieces (made with Figma AI): the sea fills the
-// screen, the island sits on it, and clouds drift at the screen edges. Each land's castle and the road
-// between them are painted into the island; the stops sit at the castle gates.
+// Desktop view of the castle lands, built from separate painted pieces (made with Figma AI): the sea
+// fills the screen, the island sits on it and clouds drift at the screen edges. Each land's castle is
+// its own picture (map-castle/<id>.webp) so one can be redrawn without repainting the island. The road
+// through every land in play order, with a bridge between lands, is painted into the island.
 
 import { Mascot } from '../components/Mascot'
 import { sfx } from '../sfx'
 import { MAPS, mapOpen } from './maps'
-import islandUrl from './painted-island-castles.webp'
+import islandUrl from './painted-island.webp'
 import seaUrl from './painted-sea.webp'
 import cloud0 from './cloud-0.webp'
 import cloud1 from './cloud-1.webp'
@@ -14,24 +15,31 @@ import cloud3 from './cloud-3.webp'
 
 /** Size of the picture; everything below is placed in these pixels. */
 const W = 2048
-const H = 1152
+/** The picture has 90 px of sea painted above the island and 30 below, so nothing touches its edge. */
+const H = 1272
 
 type Pt = { x: number; y: number }
 
-/** Where each land's stop sits on the picture, in play order. */
-export const PAINTED_SITES: Pt[] = [
-  { x: 304, y: 867 }, // forest
-  { x: 296, y: 541 }, // desert
-  { x: 517, y: 267 }, // snow
-  { x: 1020, y: 247 }, // beach
-  { x: 1573, y: 307 }, // volcano
-  { x: 1733, y: 581 }, // candy
-  { x: 1773, y: 867 }, // farm
-  { x: 1211, y: 921 }, // jungle
-  { x: 763, y: 987 }, // sea
-  { x: 789, y: 581 }, // clouds
-  { x: 1160, y: 561 }, // space
+/** Where each land's castle stands: x is its middle, y the ground under its gate, w its width. */
+const CASTLE_AT: { x: number; y: number; w: number }[] = [
+  { x: 453, y: 849, w: 170 }, // forest
+  { x: 353, y: 578, w: 170 }, // farm
+  { x: 500, y: 355, w: 170 }, // desert
+  { x: 763, y: 242, w: 170 }, // snow
+  { x: 1136, y: 333, w: 170 }, // beach
+  { x: 1557, y: 353, w: 170 }, // volcano
+  { x: 1728, y: 622, w: 170 }, // candy
+  { x: 1213, y: 771, w: 170 }, // jungle
+  { x: 1260, y: 1005, w: 170 }, // sea
+  { x: 1483, y: 1018, w: 170 }, // clouds
+  { x: 1820, y: 1039, w: 170 }, // space
 ]
+
+/** The name label sits on the road just in front of each castle gate. */
+export const PAINTED_SITES: Pt[] = CASTLE_AT.map((c) => ({ x: c.x, y: c.y + 46 }))
+
+/** Painted castles for the map, one picture per land. */
+const MAP_CASTLES = import.meta.glob<string>('./map-castle/*.webp', { eager: true, import: 'default' })
 
 export function PaintedMap({ wins, onPlay }: { wins: string[]; onPlay: (id: string) => void }) {
   const current = MAPS.findIndex((m, i) => mapOpen(wins, i) && !wins.includes(m.id))
@@ -39,6 +47,19 @@ export function PaintedMap({ wins, onPlay }: { wins: string[]; onPlay: (id: stri
   return (
     <div className="td-island td-painted" style={{ aspectRatio: `${W} / ${H}` }}>
       <img className="td-painted-img" src={islandUrl} alt="" draggable={false} />
+      <svg viewBox={`0 0 ${W} ${H}`} className="td-road-svg" aria-hidden>
+        {MAPS.map((m, i) => {
+          const c = CASTLE_AT[i]
+          const img = MAP_CASTLES[`./map-castle/${m.id}.webp`]
+          if (!img) return null
+          return (
+            <g key={m.id} className={mapOpen(wins, i) ? undefined : 'td-castle-locked'}>
+              <ellipse cx={c.x} cy={c.y - 4} rx={c.w * 0.46} ry={c.w * 0.09} fill="rgba(40,40,30,.22)" />
+              <image href={img} x={c.x - c.w / 2} y={c.y - c.w * 1.3} width={c.w} height={c.w * 1.3} preserveAspectRatio="xMidYMax meet" />
+            </g>
+          )
+        })}
+      </svg>
 
       {MAPS.map((m, i) => {
         const s = PAINTED_SITES[i]
@@ -54,6 +75,7 @@ export function PaintedMap({ wins, onPlay }: { wins: string[]; onPlay: (id: stri
           >
             <button
               className="td-gate-label"
+              style={{ ['--land' as string]: m.edge }}
               onClick={() => {
                 if (!open) return sfx.wrong()
                 sfx.tap()
@@ -61,9 +83,8 @@ export function PaintedMap({ wins, onPlay }: { wins: string[]; onPlay: (id: stri
               }}
               aria-label={open ? `${i + 1}. ${m.name}${won ? ', câștigată' : ''}` : `${m.name}, încuiată`}
             >
-              {m.name}
-              {won && <span className="td-gate-mark td-gate-won">✓</span>}
-              {!open && <span className="td-gate-mark">🔒</span>}
+              <span className="td-gate-num">{i + 1}</span>
+              <span className="td-gate-name">{m.name}</span>
             </button>
             {isHere && (
               <span className={`td-stop-friend td-isl-friend ${right ? 'td-friend-left' : 'td-friend-right'}`}>

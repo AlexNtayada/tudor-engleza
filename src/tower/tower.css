@@ -847,7 +847,7 @@
 .td-isl-wrap {
   /* leave sea around the island: its beach pokes past the drawing's edges */
   /* the island keeps a ring of sea around it */
-  width: min(92%, calc((100dvh - var(--appbar-h, 87px) - 70px) * 1.7855));
+  width: min(92%, calc((100dvh - var(--appbar-h, 87px) - 70px) * 1.61));
 }
 .td-lands-wide .td-lands-head {
   position: absolute;
@@ -1031,4 +1031,69 @@
   border-radius: 50%;
   background: #22b573;
   color: #fff;
+}
+
+/* the name label is a little parchment scroll: gold when won, glowing when it's the one to play,
+   washed-out grey when locked (no tick or lock icons) */
+.td-gate-num {
+  display: none;
+}
+.td-painted .td-gate-label {
+  position: relative;
+  font-family: 'Baloo 2', 'Nunito', sans-serif;
+  background: #f8ebc8;
+  border: 3px solid #8a6a3e;
+  border-radius: 4px;
+  color: #5a3c1a;
+  font-size: 17px;
+  line-height: 1.25;
+  padding: 3px 22px;
+  box-shadow: 0 3px 0 rgba(90, 60, 26, 0.35);
+}
+.td-painted .td-gate-label::before,
+.td-painted .td-gate-label::after {
+  content: '';
+  position: absolute;
+  top: -5px;
+  bottom: -5px;
+  width: 12px;
+  background: linear-gradient(90deg, #e2c98f, #f8ebc8, #d4b676);
+  border: 3px solid #8a6a3e;
+  border-radius: 8px;
+}
+.td-painted .td-gate-label::before {
+  left: -8px;
+}
+.td-painted .td-gate-label::after {
+  right: -8px;
+}
+.td-painted .td-stop-won .td-gate-label {
+  background: #ffe08a;
+  border-color: #b07d10;
+  color: #6b4300;
+}
+.td-painted .td-stop-won .td-gate-label::before,
+.td-painted .td-stop-won .td-gate-label::after {
+  background: linear-gradient(90deg, #f2c14e, #ffe9a8, #e0a92a);
+  border-color: #b07d10;
+}
+.td-painted .td-stop-locked .td-gate-label {
+  background: #e4ddd0;
+  border-color: #a99b88;
+  color: #9c8e7b;
+  box-shadow: none;
+}
+.td-painted .td-stop-locked .td-gate-label::before,
+.td-painted .td-stop-locked .td-gate-label::after {
+  background: #d6cdbd;
+  border-color: #a99b88;
+}
+.td-painted .td-stop-here .td-gate-label {
+  animation: none;
+  transform: scale(1.15);
+  box-shadow: 0 0 0 5px rgba(255, 200, 61, 0.7), 0 3px 0 rgba(90, 60, 26, 0.35);
+}
+.td-castle-locked {
+  filter: grayscale(1) brightness(1.1);
+  opacity: 0.6;
 }

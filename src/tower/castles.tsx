@@ -20,12 +20,12 @@ export interface CastleLook {
 
 export const CASTLES: CastleLook[] = [
   { id: 'forest', name: 'Castelul albastru', wall: '#e6e9f0', tower: '#d9dde6', roof: '#4f86f7', flag: '#ff5a5f', door: '#8b5a2b', top: 'leaf' },
+  { id: 'farm', name: 'Castelul fermei', wall: '#fff3e0', tower: '#f3e2c4', roof: '#e0533b', flag: '#ffd23f', door: '#8b5a2b', top: 'leaf' },
   { id: 'desert', name: 'Palatul de nisip', wall: '#f6dfa8', tower: '#efd18a', roof: '#ff9f43', flag: '#22b573', door: '#a8683a', dome: true, top: 'sun' },
   { id: 'snow', name: 'Castelul de gheață', wall: '#e3f4ff', tower: '#cbe8fb', roof: '#7fc8f8', flag: '#4f86f7', door: '#5a8fc0', top: 'snow' },
   { id: 'beach', name: 'Castelul de pe plajă', wall: '#f4d49a', tower: '#e9c47f', roof: '#3ec6c6', flag: '#ff8fb1', door: '#b98a52', dome: true, top: 'shell' },
   { id: 'volcano', name: 'Fortăreața de foc', wall: '#8b7d76', tower: '#7a6c66', roof: '#e0352b', flag: '#ffc21a', door: '#3a2a24', top: 'flame' },
   { id: 'candy', name: 'Castelul de bomboane', wall: '#ffd9ec', tower: '#ffc4e1', roof: '#7ee0c3', flag: '#b07de0', door: '#c05b8c', dome: true, top: 'lolly' },
-  { id: 'farm', name: 'Castelul fermei', wall: '#fff3e0', tower: '#f3e2c4', roof: '#e0533b', flag: '#ffd23f', door: '#8b5a2b', top: 'leaf' },
   { id: 'jungle', name: 'Castelul din junglă', wall: '#cde8a8', tower: '#b9dc8c', roof: '#3fae7a', flag: '#ff8c1a', door: '#7a4a24', dome: true, top: 'leaf' },
   { id: 'sea', name: 'Palatul de corali', wall: '#ffd1dc', tower: '#ffbfcf', roof: '#3ec6c6', flag: '#ffd23f', door: '#c05b8c', dome: true, top: 'shell' },
   { id: 'clouds', name: 'Castelul din nori', wall: '#ffffff', tower: '#f1f6ff', roof: '#ffd23f', flag: '#ff7eb6', door: '#7fa8d6', dome: true, top: 'sun' },
