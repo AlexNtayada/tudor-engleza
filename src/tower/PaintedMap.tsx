@@ -1,7 +1,7 @@
 // Desktop view of the castle lands, built from separate painted pieces (made with Figma AI): the sea
 // fills the screen, the island sits on it and clouds drift at the screen edges. Each land's castle is
 // its own picture (map-castle/<id>.webp) so one can be redrawn without repainting the island. The road
-// through every castle in play order is painted into the island (scripts/art/bake_island_road.py).
+// through every land in play order, with a bridge between lands, is painted into the island.
 
 import { Mascot } from '../components/Mascot'
 import { sfx } from '../sfx'
@@ -21,21 +21,21 @@ type Pt = { x: number; y: number }
 
 /** Where each land's castle stands: x is its middle, y the ground under its gate, w its width. */
 const CASTLE_AT: { x: number; y: number; w: number }[] = [
-  { x: 463, y: 827, w: 222 }, // forest
-  { x: 343, y: 480, w: 209 }, // desert
-  { x: 593, y: 220, w: 184 }, // snow
-  { x: 1016, y: 207, w: 142 }, // beach
-  { x: 1510, y: 287, w: 192 }, // volcano
-  { x: 1713, y: 507, w: 184 }, // candy
-  { x: 1643, y: 793, w: 228 }, // farm
-  { x: 1236, y: 947, w: 191 }, // jungle
-  { x: 880, y: 967, w: 218 }, // sea
-  { x: 770, y: 580, w: 192 }, // clouds
-  { x: 1090, y: 527, w: 192 }, // space
+  { x: 400, y: 861, w: 200 }, // forest
+  { x: 367, y: 519, w: 200 }, // desert
+  { x: 567, y: 239, w: 200 }, // snow
+  { x: 1027, y: 219, w: 200 }, // beach
+  { x: 1527, y: 285, w: 200 }, // volcano
+  { x: 1720, y: 525, w: 200 }, // candy
+  { x: 1680, y: 825, w: 200 }, // farm
+  { x: 1267, y: 959, w: 200 }, // jungle
+  { x: 860, y: 925, w: 200 }, // sea
+  { x: 733, y: 545, w: 200 }, // clouds
+  { x: 1160, y: 545, w: 200 }, // space
 ]
 
 /** The name label sits on the road just in front of each castle gate. */
-export const PAINTED_SITES: Pt[] = CASTLE_AT.map((c) => ({ x: c.x, y: c.y + 38 }))
+export const PAINTED_SITES: Pt[] = CASTLE_AT.map((c) => ({ x: c.x, y: c.y + 46 }))
 
 /** Painted castles for the map, one picture per land. */
 const MAP_CASTLES = import.meta.glob<string>('./map-castle/*.webp', { eager: true, import: 'default' })
