@@ -11,7 +11,7 @@ import { instruction, speak, stopSpeaking } from '../speech'
 import { Board } from './Board'
 import { PaintedMap, PaintedSky } from './PaintedMap'
 import { LandsMap } from './LandsMap'
-import { CastleSticker, castleById, currentCastle } from './castles'
+import { CastleSticker, castleById } from './castles'
 import { mapById, type TowerMap } from './maps'
 import {
   ASKS,
@@ -263,7 +263,7 @@ export function TowerGame({
 
       <div className="td-board" style={{ boxShadow: `0 8px 0 ${map.edge}` }}>
         <svg viewBox={`0 0 ${BOARD.w} ${BOARD.h}`} preserveAspectRatio="xMidYMid meet" className="td-svg">
-          <Board map={map} castle={currentCastle(progress.towerWins, progress.castle)} />
+          <Board map={map} castle={map.id} />
           {[...g.enemies]
             .sort((a, b) => a.s - b.s)
             .map((e) => {
@@ -457,12 +457,10 @@ export function Tower({
   progress,
   onEarn,
   onWin,
-  onAlbum,
 }: {
   progress: Progress
   onEarn: (stars: number) => void
   onWin: (mapId: string) => void
-  onAlbum: () => void
 }) {
   const wins = progress.towerWins ?? []
   const [playing, setPlaying] = useState<string | null>(null)
@@ -470,20 +468,12 @@ export function Tower({
   if (playing) {
     return <TowerGame key={playing} map={mapById(playing)} progress={progress} onEarn={onEarn} onWin={onWin} onBack={() => setPlaying(null)} />
   }
-  const castle = castleById(currentCastle(wins, progress.castle))
   return (
     <div className={`page page-white td-lands ${wide ? 'td-lands-wide' : ''}`}>
       {wide && <PaintedSky />}
       <div className={wide ? 'td-isl-wrap' : ''}>
         <header className="td-lands-head">
           <h2>Apără castelul!</h2>
-          <button className="td-my-castle" onClick={onAlbum} aria-label="Schimbă castelul din Album">
-            <CastleSticker id={castle.id} size={84} />
-            <span>
-              <b>{castle.name}</b>
-              <small>📒 Schimbă-l din Album</small>
-            </span>
-          </button>
         </header>
         {wide ? <PaintedMap wins={wins} onPlay={setPlaying} /> : <LandsMap wins={wins} onPlay={setPlaying} />}
       </div>

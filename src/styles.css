@@ -5248,11 +5248,6 @@ button.avatar:active {
 }
 
 /* album: castles from the castle game */
-.album-castles-hint {
-  margin: 0 0 8px;
-  color: var(--muted);
-  font-size: 14px;
-}
 .album-castle-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
@@ -5278,25 +5273,6 @@ button.avatar:active {
   border-style: solid;
   background: #fff;
   color: var(--ink);
-  cursor: pointer;
-}
-.album-castle.on {
-  border-color: var(--green);
-  background: #eafbf2;
-}
-.album-castle-check {
-  position: absolute;
-  top: 6px;
-  right: 8px;
-  width: 24px;
-  height: 24px;
-  border-radius: 50%;
-  background: var(--green);
-  color: #fff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 14px;
 }
 
 /* Painted album stickers fill their slot like the emoji did. */

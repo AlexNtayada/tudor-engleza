@@ -369,7 +369,6 @@ export default function App() {
             progress={progress}
             onEarn={earnStars}
             onWin={(id) => setProgress((p) => ({ ...p, towerWins: [...new Set([...(p.towerWins ?? []), id])] }))}
-            onAlbum={() => setScreen({ name: 'album' })}
           />
         )
       case 'sentences':
@@ -461,7 +460,7 @@ export default function App() {
       case 'break':
         return <BreakScreen onBack={() => setScreen({ name: 'home' })} />
       case 'album':
-        return <Album progress={progress} onBack={() => setScreen({ name: 'home' })} onPickCastle={(id) => setProgress((p) => ({ ...p, castle: id }))} />
+        return <Album progress={progress} onBack={() => setScreen({ name: 'home' })} />
       case 'gate':
         return (
           <ParentGate
