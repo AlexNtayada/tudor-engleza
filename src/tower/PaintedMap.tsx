@@ -20,17 +20,17 @@ type Pt = { x: number; y: number }
 
 /** Where each land's stop sits on the picture, in play order. */
 export const PAINTED_SITES: Pt[] = [
-  { x: 304, y: 867 }, // forest
-  { x: 296, y: 541 }, // desert
-  { x: 517, y: 267 }, // snow
-  { x: 1020, y: 247 }, // beach
-  { x: 1573, y: 307 }, // volcano
-  { x: 1733, y: 581 }, // candy
-  { x: 1773, y: 867 }, // farm
-  { x: 1211, y: 921 }, // jungle
-  { x: 763, y: 987 }, // sea
-  { x: 789, y: 581 }, // clouds
-  { x: 1160, y: 561 }, // space
+  { x: 464, y: 894 }, // forest
+  { x: 349, y: 534 }, // desert
+  { x: 596, y: 287 }, // snow
+  { x: 1027, y: 267 }, // beach
+  { x: 1507, y: 347 }, // volcano
+  { x: 1707, y: 561 }, // candy
+  { x: 1633, y: 861 }, // farm
+  { x: 1233, y: 1007 }, // jungle
+  { x: 873, y: 1027 }, // sea
+  { x: 771, y: 654 }, // clouds
+  { x: 1087, y: 594 }, // space
 ]
 
 export function PaintedMap({ wins, onPlay }: { wins: string[]; onPlay: (id: string) => void }) {
