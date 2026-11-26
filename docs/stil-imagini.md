@@ -1,8 +1,8 @@
 # Stilul imaginilor Tudoo! („desen simplu de poveste”)
 
-Stilul ales de părinte pe 26 nov 2026, pentru harta Castelului (`src/tower/painted-island-castles.webp`). Se folosește pentru **toate** imaginile noi din aplicație: hărți, fundaluri de luptă, castele, boși, abțibilduri.
+Stilul ales de părinte pe 26 nov 2026, pentru harta Castelului. Se folosește pentru **toate** imaginile noi din aplicație: hărți, fundaluri de luptă, castele, boși, abțibilduri.
 
-Referință vizuală: `src/tower/painted-island-castles.webp` și harta veche din Figma (fișier `2kft1INQWgNe7aXRll44Aq`, nodul `4:7`).
+Referință vizuală: `src/tower/painted-island.webp` (insula, fără castele), `src/tower/map-castle/*.webp` (castelele) și harta veche din Figma (fișier `2kft1INQWgNe7aXRll44Aq`, nodul `4:7`).
 
 ## Pe scurt
 
@@ -43,4 +43,5 @@ Mărimi: `1536x864` pentru imagini late (hărți desktop, fundaluri de luptă), 
 
 - Stilul „desenat detaliat” (contururi groase, multe pietricele, texturi), folosit înainte de 26 nov.
 - Aspect realist, 3D sau fotografic.
-- Elemente SVG puse „deasupra” unei picturi (castele plutitoare, drumuri trasate peste). Tot ce face parte din peisaj se pictează în imagine.
+- Să pictăm toată harta din nou pentru o schimbare mică. Harta se face din bucăți: insula separat, fiecare castel separat (desenat în același stil, pus pe pământ cu umbră), iar drumul pe niveluri e desenat în aplicație cu contur subțire maro și nisip în interior, auriu cât ai parcurs.
+- Să schimbăm stilul „puțin” când refacem ceva: aceeași rețetă, aceleași culori.
