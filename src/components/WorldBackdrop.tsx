@@ -1,4 +1,12 @@
-import type { World } from '../content'
+import { UNITS, type World } from '../content'
+
+/** Painted landscapes, one per world (simple storybook style, see docs/stil-imagini.md). */
+const SCENES = import.meta.glob<string>('./scene/*.webp', { eager: true, import: 'default' })
+
+export function sceneFor(world: World): string | undefined {
+  const id = world.scene ?? UNITS.find((u) => u.world === world)?.id
+  return id ? SCENES[`./scene/${id}.webp`] : undefined
+}
 
 // Where decorations sit, as % of the scene (left, bottom, size in px).
 const SPOTS: [number, number, number][] = [
@@ -10,8 +18,12 @@ const SPOTS: [number, number, number][] = [
   [92, 44, 32],
 ]
 
-/** Illustrated scenery: sky, clouds, two rolling hills and a few themed decorations. */
+/** The world's painted landscape, or (if it has none) sky, clouds, two rolling hills and a few themed decorations. */
 export function WorldBackdrop({ world, fixed = true }: { world: World; fixed?: boolean }) {
+  const scene = sceneFor(world)
+  if (scene) {
+    return <div className={`world world-painted ${fixed ? 'world-fixed' : ''}`} style={{ backgroundImage: `url(${scene})` }} aria-hidden />
+  }
   return (
     <div
       className={`world ${fixed ? 'world-fixed' : ''}`}

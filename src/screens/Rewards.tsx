@@ -13,6 +13,7 @@ import {
 import { learnedWordIds, type Progress } from "../progress";
 import { instruction, speak } from "../speech";
 import { sfx } from "../sfx";
+import { sceneFor } from "../components/WorldBackdrop";
 
 /** Playground: free practice over everything learned, or one world at a time. */
 export function Playground({
@@ -63,8 +64,8 @@ export function Playground({
             {units.map((u) => (
               <button
                 key={u.id}
-                className="play-card"
-                style={{ background: u.color }}
+                className="play-card play-card-scene"
+                style={{ backgroundColor: u.color, backgroundImage: sceneFor(u.world) ? `url(${sceneFor(u.world)})` : undefined }}
                 onClick={() => onPlay(u.id)}
               >
                 <span className="play-emoji">{u.world.icon}</span>

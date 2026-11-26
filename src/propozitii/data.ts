@@ -59,7 +59,7 @@ export const PACKS: Pack[] = [
     emoji: '😋',
     color: '#ff8a5c',
     colorDark: '#e0653a',
-    world: { sky: ['#fff1d6', '#fff8ec'], ground: '#ffe0b0', decor: ['🍎', '🍌', '🥛', '🍰'], icon: '😋' },
+    world: { scene: 'food', sky: ['#fff1d6', '#fff8ec'], ground: '#ffe0b0', decor: ['🍎', '🍌', '🥛', '🍰'], icon: '😋' },
     sentences: [
       s('like', 'I like apples', 'Îmi plac merele.', 'apples', [{ e: '🍎', n: 3 }]),
       s('like', 'I like bananas', 'Îmi plac bananele.', 'bananas', [{ e: '🍌', n: 3 }]),
@@ -74,7 +74,7 @@ export const PACKS: Pack[] = [
     emoji: '🐘',
     color: '#4fb6e8',
     colorDark: '#2a91c4',
-    world: { sky: ['#dff3ff', '#f4fbff'], ground: '#cdeccf', decor: ['🌳', '🌼', '🦋', '🌿'], icon: '🐘' },
+    world: { scene: 'nature', sky: ['#dff3ff', '#f4fbff'], ground: '#cdeccf', decor: ['🌳', '🌼', '🦋', '🌿'], icon: '🐘' },
     sentences: [
       s('size', 'The cat is big', 'Pisica este mare.', 'big', big('🐱'), [{ e: '🟠', s: 1.9 }]),
       s('size', 'The cat is small', 'Pisica este mică.', 'small', small('🐱'), [{ e: '🟠', s: 0.7 }]),
@@ -89,7 +89,7 @@ export const PACKS: Pack[] = [
     emoji: '🎨',
     color: '#9b6bdf',
     colorDark: '#7748c0',
-    world: { sky: ['#f1e6ff', '#fff4fb'], ground: '#ffd6e8', decor: ['🌈', '🖍️', '🌸', '🎨'], icon: '🎨' },
+    world: { scene: 'colors', sky: ['#f1e6ff', '#fff4fb'], ground: '#ffd6e8', decor: ['🌈', '🖍️', '🌸', '🎨'], icon: '🎨' },
     sentences: [
       s('colors', 'The apple is red', 'Mărul este roșu.', 'red', [{ e: '🍎', s: 1.5 }], [{ c: '#ef3b3b' }]),
       s('colors', 'The frog is green', 'Broasca este verde.', 'green', [{ e: '🐸', s: 1.5 }], [{ c: '#3cc35a' }]),
@@ -104,7 +104,7 @@ export const PACKS: Pack[] = [
     emoji: '🔢',
     color: '#22b573',
     colorDark: '#17925a',
-    world: { sky: ['#e3f8ec', '#f6fff9'], ground: '#c8efd6', decor: ['🌳', '🌷', '☁️', '🌼'], icon: '🔢' },
+    world: { scene: 'garden', sky: ['#e3f8ec', '#f6fff9'], ground: '#c8efd6', decor: ['🌳', '🌷', '☁️', '🌼'], icon: '🔢' },
     sentences: [
       s('count', 'I see two dogs', 'Văd doi câini.', 'two', [{ e: '🐶', n: 2 }], [{ digit: 2 }]),
       s('count', 'I see three birds', 'Văd trei păsări.', 'three', [{ e: '🐦', n: 3 }], [{ digit: 3 }]),
@@ -119,7 +119,7 @@ export const PACKS: Pack[] = [
     emoji: '🏠',
     color: '#ff7eb6',
     colorDark: '#e0558f',
-    world: { sky: ['#ffe6f1', '#fff6fa'], ground: '#ffd9e8', decor: ['💐', '🏠', '❤️', '🧸'], icon: '🏠' },
+    world: { scene: 'family', sky: ['#ffe6f1', '#fff6fa'], ground: '#ffd9e8', decor: ['💐', '🏠', '❤️', '🧸'], icon: '🏠' },
     sentences: [
       s('family', 'This is my mom', 'Ea este mama mea.', 'mom', [{ e: '👩', s: 1.5 }]),
       s('family', 'This is my dad', 'El este tata meu.', 'dad', [{ e: '👨', s: 1.5 }]),
@@ -134,7 +134,7 @@ export const PACKS: Pack[] = [
     emoji: '🧢',
     color: '#ffb52e',
     colorDark: '#e09300',
-    world: { sky: ['#fff4d6', '#fffaf0'], ground: '#ffe6a8', decor: ['🧢', '🧦', '🧥', '👢'], icon: '🧢' },
+    world: { scene: 'clothes', sky: ['#fff4d6', '#fffaf0'], ground: '#ffe6a8', decor: ['🧢', '🧦', '🧥', '👢'], icon: '🧢' },
     sentences: [
       s('clothes', 'I have a hat', 'Am o pălărie.', 'hat', [{ e: '🧢', s: 1.5 }]),
       s('clothes', 'I have a coat', 'Am o haină.', 'coat', [{ e: '🧥', s: 1.5 }]),
@@ -151,7 +151,7 @@ export const PACKS: Pack[] = [
     emoji: '👃',
     color: '#ff6f61',
     colorDark: '#d94c3f',
-    world: { sky: ['#ffe8e3', '#fff7f4'], ground: '#ffd4c8', decor: ['⭐', '🎵', '👏', '✨'], icon: '👃' },
+    world: { scene: 'body', sky: ['#ffe8e3', '#fff7f4'], ground: '#ffd4c8', decor: ['⭐', '🎵', '👏', '✨'], icon: '👃' },
     sentences: [
       s('body', 'Touch your nose', 'Atinge-ți nasul.', 'nose', [{ e: '👃', s: 1.5 }]),
       s('body', 'Clap your hands', 'Bate din palme.', 'hands', [{ e: '👏', s: 1.5 }]),
@@ -166,7 +166,7 @@ export const PACKS: Pack[] = [
     emoji: '⛅',
     color: '#5b8def',
     colorDark: '#3a6bcc',
-    world: { sky: ['#dcebff', '#f3f8ff'], ground: '#cfe3f5', decor: ['☁️', '☀️', '❄️', '🌈'], icon: '⛅' },
+    world: { scene: 'weather', sky: ['#dcebff', '#f3f8ff'], ground: '#cfe3f5', decor: ['☁️', '☀️', '❄️', '🌈'], icon: '⛅' },
     sentences: [
       s('weather', 'It is sunny', 'Este soare.', 'sunny', [{ e: '☀️', s: 1.6 }]),
       s('weather', 'It is rainy', 'Plouă.', 'rainy', [{ e: '🌧️', s: 1.6 }]),

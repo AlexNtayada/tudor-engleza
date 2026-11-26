@@ -27,6 +27,8 @@ export interface World {
   /** Emoji scattered on the scenery. */
   decor: string[]
   icon: string
+  /** Painted landscape behind lessons (components/scene/<id>.webp); defaults to the unit's own. */
+  scene?: string
 }
 
 export interface Lesson {
@@ -715,6 +717,7 @@ export const UNITS: Unit[] = [
 
 /** Scenery for free play and other screens not tied to a unit. */
 export const PLAYGROUND: World = {
+  scene: 'body',
   sky: ['#d8f3ff', '#f4fff0'],
   ground: '#bdeba0',
   decor: ['🎈', '🌳', '🪁', '🌼', '⛱️', '🦋'],
