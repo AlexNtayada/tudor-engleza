@@ -5293,3 +5293,100 @@ button.avatar:active {
   width: 92%;
   height: 92%;
 }
+
+/* ---------- lessons on a painted landscape (style: docs/stil-imagini.md) ---------- */
+.world-painted {
+  background-size: cover;
+  background-position: center bottom;
+  background-color: #a9dcf7;
+}
+/* the lesson's word card is not the onboarding intro screen */
+.lesson-stage .intro {
+  background: none;
+  padding: 0;
+}
+.lesson-wrap .card,
+.lesson-wrap .bubble,
+.lesson-wrap .icon-btn,
+.lesson-wrap .speak-btn {
+  border: 2.5px solid #2b2118 !important;
+}
+.lesson-wrap .card,
+.lesson-wrap .bubble,
+.lesson-wrap .bubble::before,
+.lesson-wrap .icon-btn {
+  background-color: #fffaf0;
+}
+.lesson-wrap .bubble::before {
+  border-color: #2b2118 !important;
+}
+.lesson-wrap .card {
+  box-shadow: 0 6px 0 #d9c3a0 !important;
+}
+.lesson-wrap .card-right {
+  background-color: #e7fbf1;
+  border-color: var(--green) !important;
+}
+.lesson-wrap .speak-btn {
+  background: #f8ebc8;
+  box-shadow: 0 4px 0 #d9c3a0;
+}
+.lesson-wrap .progress {
+  background: #f8ebc8;
+  border: 2.5px solid #2b2118;
+}
+
+/* ---------- Joacă: postcards with each world's painted landscape ---------- */
+.play-hello .bubble {
+  background: #fffaf0;
+  border: 2.5px solid #2b2118 !important;
+}
+/* the tail: same colour and ink line as the bubble, tucked under its edge */
+.play-hello .bubble::before {
+  left: -13px;
+  width: 20px;
+  height: 20px;
+  background: #fffaf0;
+  border-left: 2.5px solid #2b2118 !important;
+  border-bottom: 2.5px solid #2b2118 !important;
+  border-top: 0;
+  border-right: 0;
+}
+.play-card {
+  border: 2.5px solid #2b2118 !important;
+  box-shadow: 0 6px 0 #d9c3a0 !important;
+  border-radius: 22px;
+}
+.play-card-scene {
+  position: relative;
+  overflow: hidden;
+  justify-content: space-between !important;
+  min-height: 190px;
+  padding: 18px 10px 12px !important;
+  background-size: cover !important;
+  background-position: center bottom !important;
+}
+.play-card-scene .play-emoji {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 76px !important;
+  line-height: 1;
+  filter: drop-shadow(0 0 6px #fffaf0) drop-shadow(0 0 12px rgba(255, 250, 240, 0.8));
+}
+.play-card-scene > span:last-child {
+  background: #f8ebc8;
+  border: 2.5px solid #8a6a3e;
+  color: #5a3c1a;
+  border-radius: 12px;
+  padding: 0 14px;
+  font-size: 22px;
+}
+.play-card-big {
+  background: #f8ebc8 !important;
+  color: #5a3c1a;
+}
+.play-card-big .play-emoji {
+  font-size: 76px !important;
+}
